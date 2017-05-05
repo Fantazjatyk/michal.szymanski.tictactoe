@@ -5,7 +5,18 @@
  */
 package pl.michal.szymanski.ticktacktoe.core.model;
 
-import pl.michal.szymanski.ticktacktoe.transport.Endpoint;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import static java.util.Collections.list;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import pl.michal.szymanski.ticktacktoe.transport.Connector;
 
 /**
  *
@@ -13,11 +24,34 @@ import pl.michal.szymanski.ticktacktoe.transport.Endpoint;
  */
 public class GameMaster {
 
-    public boolean isDone(Board board) {
+    public static boolean isDone(Board board) {
         return false;
     }
 
-    public Endpoint getWinner(Board board) {
-        return null;
+    public static Player getWinner(Board board) {
+        Player winner;
+        Map<Player, List<BoardField>> map = mapBoard(board);
+        List result = map.entrySet().stream().sorted((a, b)
+                -> ((Integer) b.getValue().size()).compareTo(((Integer) a.getValue().size()))
+        ).map((el)->el.getKey()).collect(Collectors.toList());
+
+        return result.isEmpty() ? null : (Player) result.get(0);
     }
+
+    private static Map<Player, List<BoardField>> mapBoard(Board board) {
+        Map<Player, List<BoardField>> map = new HashMap();
+        Stream.of(board.getBoard()).flatMap(x -> Arrays.stream(x)).filter((el)->el.getOwner().isPresent())
+                .forEach(el -> {
+                    Player owner = el.getOwner().get();
+                    if (map.containsKey(owner)) {
+                        map.get(owner).add(el);
+                    } else {
+                        List list = new ArrayList();
+                        list.add(el);
+                        map.put(owner, list);
+                    }
+                });
+        return map;
+    }
+
 }

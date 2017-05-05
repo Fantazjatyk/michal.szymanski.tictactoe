@@ -14,14 +14,19 @@ import java.lang.ref.WeakReference;
 public class Move {
 
     private WeakReference<Player> invoker;
+    private Point<Integer> point;
 
-    public Move(Player p) {
+    public Move(Player p, Point point) {
         this.invoker = new WeakReference(p);
+        this.point = point;
     }
 
     public WeakReference<Player> getInvoker() {
         return invoker;
     }
 
+    public Point<Integer> getPoint() {
+        return point;
+    }
+
 }
- F

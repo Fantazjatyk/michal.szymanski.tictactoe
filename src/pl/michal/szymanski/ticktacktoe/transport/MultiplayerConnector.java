@@ -9,7 +9,7 @@ package pl.michal.szymanski.ticktacktoe.transport;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface MultiplayerEndpoint extends Endpoint {
+public interface MultiplayerConnector extends Connector {
 
     boolean isConnected();
 }

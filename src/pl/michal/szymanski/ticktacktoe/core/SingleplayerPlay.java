@@ -9,14 +9,14 @@ import java.util.Optional;
 import pl.michal.szymanski.ticktacktoe.ai.Difficulty;
 import pl.michal.szymanski.ticktacktoe.core.model.Board;
 import pl.michal.szymanski.ticktacktoe.core.model.Move;
-import pl.michal.szymanski.ticktacktoe.transport.AIEndpoint;
-import pl.michal.szymanski.ticktacktoe.transport.SingleplayerEndpoint;
+import pl.michal.szymanski.ticktacktoe.ai.AIEndpoint;
+import pl.michal.szymanski.ticktacktoe.transport.SingleplayerConnector;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class SingleplayerPlay extends Play<SingleplayerEndpoint> {
+public class SingleplayerPlay extends Play<SingleplayerConnector> {
 
     private Difficulty difficulty = Difficulty.EASY;
 
@@ -25,7 +25,7 @@ public class SingleplayerPlay extends Play<SingleplayerEndpoint> {
     }
 
     @Override
-    public boolean join(SingleplayerEndpoint t) {
+    public boolean join(SingleplayerConnector t) {
 
         if (!super.players().firstPlayer().isPresent()) {
             super.players().firstPlayer(t);
@@ -36,7 +36,7 @@ public class SingleplayerPlay extends Play<SingleplayerEndpoint> {
     }
 
     public Move getAIMove() {
-        return super.players().secondPlayer().get().endpoint().getMove();
+        return super.players().secondPlayer().get().connector().getMove();
     }
 
     @Override

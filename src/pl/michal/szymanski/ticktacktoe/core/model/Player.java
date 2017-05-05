@@ -5,21 +5,35 @@
  */
 package pl.michal.szymanski.ticktacktoe.core.model;
 
-import pl.michal.szymanski.ticktacktoe.transport.Endpoint;
+import java.util.UUID;
+import pl.michal.szymanski.ticktacktoe.transport.Connector;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class Player<T extends Endpoint> {
+public class Player<T extends Connector> {
 
-    private T endpoint;
+    private String id;
+    private T connector;
 
     public Player(T e) {
-        this.endpoint = e;
+        this.connector = e;
+        this.id = UUID.randomUUID().toString();
     }
 
-    public T endpoint() {
-        return this.endpoint;
+    public T connector() {
+        return this.connector;
     }
+
+    public String getId() {
+        return id;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean test = obj instanceof Player && ((Player) obj).getId().equals(this.getId());
+        return test;
+    }
+
 }
