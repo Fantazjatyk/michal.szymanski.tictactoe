@@ -29,18 +29,23 @@ public class GameMaster {
     }
 
     public static Player getWinner(Board board) {
-        Player winner;
         Map<Player, List<BoardField>> map = mapBoard(board);
         List result = map.entrySet().stream().sorted((a, b)
                 -> ((Integer) b.getValue().size()).compareTo(((Integer) a.getValue().size()))
-        ).map((el)->el.getKey()).collect(Collectors.toList());
+        ).map((el) -> el.getKey()).collect(Collectors.toList());
 
-        return result.isEmpty() ? null : (Player) result.get(0);
+        return result.isEmpty() || isRemis(map, result) ? null : (Player) result.get(0);
+
+    }
+
+    private static boolean isRemis(Map<Player, List<BoardField>> map, List<Player> result) {
+        boolean test = !(result.size() <= 1) && map.get(result.get(0)).size() == map.get(result.get(1)).size();
+        return test;
     }
 
     private static Map<Player, List<BoardField>> mapBoard(Board board) {
         Map<Player, List<BoardField>> map = new HashMap();
-        Stream.of(board.getBoard()).flatMap(x -> Arrays.stream(x)).filter((el)->el.getOwner().isPresent())
+        Stream.of(board.getBoard()).flatMap(x -> Arrays.stream(x)).filter((el) -> el.getOwner().isPresent())
                 .forEach(el -> {
                     Player owner = el.getOwner().get();
                     if (map.containsKey(owner)) {
@@ -51,6 +56,7 @@ public class GameMaster {
                         map.put(owner, list);
                     }
                 });
+
         return map;
     }
 

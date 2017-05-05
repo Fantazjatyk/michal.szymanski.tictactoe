@@ -106,4 +106,15 @@ public class GameMasterTest {
 
     }
 
+    @Test
+    public void testGetWinner_Remis() {
+        board.doMove(new Move(player1, new Point(2, 2)));
+        board.doMove(new Move(player3, new Point(1, 0)));
+        board.doMove(new Move(player2, new Point(0, 0)));
+        board.doMove(new Move(player1, new Point(2, 1)));
+        board.doMove(new Move(player3, new Point(0, 1)));
+
+        Player winner = GameMaster.getWinner(board);
+        assertNull(winner);
+    }
 }
