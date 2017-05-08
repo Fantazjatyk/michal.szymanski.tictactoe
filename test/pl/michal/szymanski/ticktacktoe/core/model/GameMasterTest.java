@@ -23,11 +23,12 @@
  */
 package pl.michal.szymanski.ticktacktoe.core.model;
 
+import java.util.Optional;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import pl.michal.szymanski.ticktacktoe.transport.Connector;
+import pl.michal.szymanski.ticktacktoe.transport.Participant;
 
 /**
  *
@@ -49,7 +50,7 @@ public class GameMasterTest {
 
     @Before
     public void setUp() {
-        player1 = new Player(new Connector() {
+        player1 = new Player(new Participant() {
             @Override
             public Move getMove() {
                 return null;
@@ -59,7 +60,7 @@ public class GameMasterTest {
             public void receiveBoard(Board board) {
             }
         });
-        player2 = new Player(new Connector() {
+        player2 = new Player(new Participant() {
             @Override
             public Move getMove() {
                 return null;
@@ -69,7 +70,7 @@ public class GameMasterTest {
             public void receiveBoard(Board board) {
             }
         });
-        player3 = new Player(new Connector() {
+        player3 = new Player(new Participant() {
             @Override
             public Move getMove() {
                 return null;
@@ -79,7 +80,7 @@ public class GameMasterTest {
             public void receiveBoard(Board board) {
             }
         });
-        board = new Board(3, 3);
+        board = new Board(3);
     }
 
     /**
@@ -94,27 +95,38 @@ public class GameMasterTest {
      */
     @Test
     public void testGetWinner() {
+        board.doMove(new Move(player1, new Point(0, 0)));
         board.doMove(new Move(player1, new Point(1, 1)));
-        board.doMove(new Move(player1, new Point(2, 2)));
         board.doMove(new Move(player3, new Point(1, 0)));
-        board.doMove(new Move(player2, new Point(0, 0)));
-        board.doMove(new Move(player1, new Point(2, 1)));
+        board.doMove(new Move(player2, new Point(0, 2)));
+        board.doMove(new Move(player1, new Point(2, 2)));
         board.doMove(new Move(player3, new Point(0, 1)));
 
-        Player winner = GameMaster.getWinner(board);
-        assertEquals(player1, winner);
+        Optional<Player> winner = GameMaster.getWinner(board);
+        assertEquals(player1, winner.get());
 
     }
 
     @Test
     public void testGetWinner_Remis() {
-        board.doMove(new Move(player1, new Point(2, 2)));
-        board.doMove(new Move(player3, new Point(1, 0)));
-        board.doMove(new Move(player2, new Point(0, 0)));
-        board.doMove(new Move(player1, new Point(2, 1)));
-        board.doMove(new Move(player3, new Point(0, 1)));
+        board.doMove(new Move(player1, new Point(0, 0)));
+        board.doMove(new Move(player1, new Point(0, 1)));
+        board.doMove(new Move(player1, new Point(0, 2)));
 
-        Player winner = GameMaster.getWinner(board);
-        assertNull(winner);
+        board.doMove(new Move(player3, new Point(1, 0)));
+        board.doMove(new Move(player3, new Point(1, 1)));
+        board.doMove(new Move(player3, new Point(1, 2)));
+
+
+
+        Optional<Player> winner = GameMaster.getWinner(board);
+        assertFalse(winner.isPresent());
+    }
+
+    /**
+     * Test of isValidMove method, of class GameMaster.
+     */
+    @Test
+    public void testIsValidMove() {
     }
 }

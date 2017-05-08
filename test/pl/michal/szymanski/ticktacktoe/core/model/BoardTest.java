@@ -23,6 +23,8 @@
  */
 package pl.michal.szymanski.ticktacktoe.core.model;
 
+import java.util.Arrays;
+import java.util.List;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,16 +47,16 @@ public class BoardTest {
 
     @Before
     public void setUp() {
-        board = new Board(3, 3);
+        board = new Board(3);
     }
 
     /**
      * Test of isValid method, of class Board.
      */
-
-    public void testCreateBoard(){
-        assertEquals(9, board.getBoard().length);
+    public void testCreateBoard() {
+        assertEquals(9, board.getSizeX() * board.getSizeY());
     }
+
     @Test
     public void testIsValid() {
     }
@@ -66,4 +68,115 @@ public class BoardTest {
     public void testDoMove() {
     }
 
+    /**
+     * Test of getSizeX method, of class Board.
+     */
+    @Test
+    public void testGetSizeX() {
+    }
+
+    /**
+     * Test of getSizeY method, of class Board.
+     */
+    @Test
+    public void testGetSizeY() {
+    }
+
+    /**
+     * Test of getBoard method, of class Board.
+     */
+    @Test
+    public void testGetBoard() {
+    }
+
+    /**
+     * Test of getRow method, of class Board.
+     */
+    @Test
+    public void testGetRow() {
+        BoardField[] row = board.getRow(1);
+        assertEquals(0, row[0].getX());
+        assertEquals(1, row[0].getY());
+
+        assertEquals(1, row[1].getX());
+        assertEquals(1, row[1].getY());
+    }
+
+    /**
+     * Test of getColumn method, of class Board.
+     */
+    @Test
+    public void testGetColumn() {
+        BoardField[] column = board.getColumn(1);
+        assertEquals(1, column[0].getX());
+        assertEquals(0, column[0].getY());
+
+        assertEquals(1, column[1].getX());
+        assertEquals(1, column[1].getY());
+
+    }
+
+    /**
+     * Test of getRows method, of class Board.
+     */
+    @Test
+    public void testGetColumns() {
+        List<BoardField[]> columns = board.getColumns();
+        BoardField[] column1 = columns.get(2);
+
+        assertEquals(3, columns.size());
+        assertEquals(2, column1[0].getX());
+        assertEquals(0, column1[0].getY());
+    }
+
+    /**
+     * Test of getColumns method, of class Board.
+     */
+    @Test
+    public void testGetRows() {
+        List<BoardField[]> rows = board.getRows();
+        BoardField[] column1 = rows.get(1);
+
+        assertEquals(3, rows.size());
+        assertEquals(0, column1[0].getX());
+        assertEquals(1, column1[0].getY());
+
+    }
+
+    /**
+     * Test of getLeftRightDiagonal method, of class Board.
+     */
+    @Test
+    public void getDiagonals() {
+        List<BoardField[]> diagonals =board.getDiagonals();
+        assertEquals(2, diagonals.size());
+
+        BoardField[] leftRightDiagonal = diagonals.get(0); // always starts with diagonal from 0,0 to max, max
+        BoardField f1 = leftRightDiagonal[0];
+        BoardField f2 = leftRightDiagonal[1];
+        BoardField f3 = leftRightDiagonal[2];
+
+        assertEquals(0, f1.getX());
+        assertEquals(0, f1.getY());
+
+        assertEquals(1, f2.getX());
+        assertEquals(1, f2.getY());
+
+        assertEquals(2, f3.getX());
+        assertEquals(2, f3.getY());
+
+    }
+
+    /**
+     * Test of getDiagonals method, of class Board.
+     */
+    @Test
+    public void testGetDiagonals() {
+    }
+
+    @Test
+    public void testGetAll() {
+        List fields = board.getAllFields();
+        assertEquals(9, fields.size());
+    }
 }

@@ -12,7 +12,7 @@ import pl.michal.szymanski.ticktacktoe.core.model.Move;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface Connector extends GameWatcher{
+public interface Participant extends GameWatcher{
 
     Move getMove();
 }

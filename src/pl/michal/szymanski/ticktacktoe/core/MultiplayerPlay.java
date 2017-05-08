@@ -6,16 +6,16 @@
 package pl.michal.szymanski.ticktacktoe.core;
 
 import java.util.Optional;
-import pl.michal.szymanski.ticktacktoe.transport.MultiplayerConnector;
+import pl.michal.szymanski.ticktacktoe.transport.MultiplayerParticipant;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class MultiplayerPlay extends Play<MultiplayerConnector> {
+public class MultiplayerPlay extends Play<MultiplayerParticipant> {
 
     @Override
-    public boolean join(MultiplayerConnector t) {
+    public boolean join(MultiplayerParticipant t) {
         if (!super.players().firstPlayer().isPresent()) {
             super.players().firstPlayer(t);
             return true;
@@ -26,17 +26,11 @@ public class MultiplayerPlay extends Play<MultiplayerConnector> {
         return false;
     }
 
-    protected void start() {
+    protected void onStart() {
     }
 
     @Override
-    protected void finish() {
-    }
-
-    @Override
-    protected boolean isDone() {
-        boolean superTest = super.isDone();
-        return superTest;
+    protected void onFinish() {
     }
 
 }

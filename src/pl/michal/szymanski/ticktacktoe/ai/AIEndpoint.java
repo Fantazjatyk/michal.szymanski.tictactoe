@@ -8,14 +8,14 @@ package pl.michal.szymanski.ticktacktoe.ai;
 import pl.michal.szymanski.ticktacktoe.ai.Difficulty;
 import pl.michal.szymanski.ticktacktoe.core.model.Board;
 import pl.michal.szymanski.ticktacktoe.core.model.Move;
-import pl.michal.szymanski.ticktacktoe.transport.SingleplayerConnector;
-import pl.michal.szymanski.ticktacktoe.transport.SingleplayerConnector;
+import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
+import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class AIEndpoint implements SingleplayerConnector {
+public class AIEndpoint implements SingleplayerParticipant {
 
     private Difficulty difficulty;
 

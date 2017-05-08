@@ -12,7 +12,7 @@ import pl.michal.szymanski.ticktacktoe.core.MultiplayerPlay;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface AbstractServer extends MultiplayerConnector {
+public interface AbstractServer extends MultiplayerParticipant {
 
     public static ConcurrentHashMap<String, MultiplayerPlay> activeSessions = new ConcurrentHashMap();
 

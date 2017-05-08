@@ -7,13 +7,13 @@ package pl.michal.szymanski.ticktacktoe.core;
 
 import java.util.Optional;
 import pl.michal.szymanski.ticktacktoe.core.model.Player;
-import pl.michal.szymanski.ticktacktoe.transport.Connector;
+import pl.michal.szymanski.ticktacktoe.transport.Participant;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class PlayersPair<T extends Connector> {
+public class PlayersPair<T extends Participant> {
 
     private Optional<Player<T>> firstPlayer = Optional.empty();
     private Optional<Player<T>> secondPlayer = Optional.empty();

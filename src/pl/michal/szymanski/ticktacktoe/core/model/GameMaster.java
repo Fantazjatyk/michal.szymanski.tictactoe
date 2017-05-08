@@ -13,10 +13,12 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import pl.michal.szymanski.ticktacktoe.transport.Connector;
+import pl.michal.szymanski.ticktacktoe.transport.Participant;
 
 /**
  *
@@ -25,39 +27,34 @@ import pl.michal.szymanski.ticktacktoe.transport.Connector;
 public class GameMaster {
 
     public static boolean isDone(Board board) {
-        return false;
+        return getWinner(board).isPresent();
     }
 
-    public static Player getWinner(Board board) {
-        Map<Player, List<BoardField>> map = mapBoard(board);
-        List result = map.entrySet().stream().sorted((a, b)
-                -> ((Integer) b.getValue().size()).compareTo(((Integer) a.getValue().size()))
-        ).map((el) -> el.getKey()).collect(Collectors.toList());
+    public static Optional<Player> getWinner(Board board) {
+        List<BoardField[]> possibleLines = new ArrayList();
+        possibleLines.addAll(board.getDiagonals());
+        possibleLines.addAll(board.getRows());
 
-        return result.isEmpty() || isRemis(map, result) ? null : (Player) result.get(0);
+        Set<Player> players = findAllPlayersOnBoard(board);
+        if (players.isEmpty()) {
+            return Optional.empty();
+        }
+        List<Player> winners = players.stream().filter(player
+                -> possibleLines
+                        .stream()
+                        .anyMatch(line -> Stream.of(line)
+                        .allMatch(field -> field.getOwner().isPresent() && field.getOwner().get().equals(player)))
+        ).collect(Collectors.toList());
 
+        return winners.size() == 1 ? Optional.of(winners.get(0)) : Optional.empty();
     }
 
-    private static boolean isRemis(Map<Player, List<BoardField>> map, List<Player> result) {
-        boolean test = !(result.size() <= 1) && map.get(result.get(0)).size() == map.get(result.get(1)).size();
-        return test;
+    private static Set<Player> findAllPlayersOnBoard(Board board) {
+        return board.getAllFields().stream().map(el -> el.getOwner().orElse(null)).filter(el -> el != null).collect(Collectors.toSet());
     }
 
-    private static Map<Player, List<BoardField>> mapBoard(Board board) {
-        Map<Player, List<BoardField>> map = new HashMap();
-        Stream.of(board.getBoard()).flatMap(x -> Arrays.stream(x)).filter((el) -> el.getOwner().isPresent())
-                .forEach(el -> {
-                    Player owner = el.getOwner().get();
-                    if (map.containsKey(owner)) {
-                        map.get(owner).add(el);
-                    } else {
-                        List list = new ArrayList();
-                        list.add(el);
-                        map.put(owner, list);
-                    }
-                });
-
-        return map;
+    public static boolean isValidMove(Move move) {
+        return true;
     }
 
 }

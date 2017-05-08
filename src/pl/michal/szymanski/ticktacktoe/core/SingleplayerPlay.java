@@ -10,13 +10,13 @@ import pl.michal.szymanski.ticktacktoe.ai.Difficulty;
 import pl.michal.szymanski.ticktacktoe.core.model.Board;
 import pl.michal.szymanski.ticktacktoe.core.model.Move;
 import pl.michal.szymanski.ticktacktoe.ai.AIEndpoint;
-import pl.michal.szymanski.ticktacktoe.transport.SingleplayerConnector;
+import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class SingleplayerPlay extends Play<SingleplayerConnector> {
+public class SingleplayerPlay extends Play<SingleplayerParticipant> {
 
     private Difficulty difficulty = Difficulty.EASY;
 
@@ -25,7 +25,7 @@ public class SingleplayerPlay extends Play<SingleplayerConnector> {
     }
 
     @Override
-    public boolean join(SingleplayerConnector t) {
+    public boolean join(SingleplayerParticipant t) {
 
         if (!super.players().firstPlayer().isPresent()) {
             super.players().firstPlayer(t);
@@ -40,17 +40,12 @@ public class SingleplayerPlay extends Play<SingleplayerConnector> {
     }
 
     @Override
-    protected boolean isDone() {
-        return false;
-    }
-
-    @Override
-    protected void start() {
+    protected void onStart() {
         super.players().secondPlayer(new AIEndpoint(difficulty));
     }
 
     @Override
-    protected void finish() {
+    protected void onFinish() {
     }
 
 }

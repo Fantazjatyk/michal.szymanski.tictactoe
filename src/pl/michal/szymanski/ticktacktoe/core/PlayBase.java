@@ -13,9 +13,9 @@ public abstract class PlayBase<T> {
 
     public String id;
 
-    protected abstract void start();
+    protected abstract void onStart();
 
-    protected abstract void finish();
+    protected abstract void onFinish();
 
     public abstract boolean join(T t);
 }

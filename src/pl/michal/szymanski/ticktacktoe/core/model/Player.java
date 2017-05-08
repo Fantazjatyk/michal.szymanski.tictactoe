@@ -6,13 +6,13 @@
 package pl.michal.szymanski.ticktacktoe.core.model;
 
 import java.util.UUID;
-import pl.michal.szymanski.ticktacktoe.transport.Connector;
+import pl.michal.szymanski.ticktacktoe.transport.Participant;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class Player<T extends Connector> {
+public class Player<T extends Participant> {
 
     private String id;
     private T connector;
