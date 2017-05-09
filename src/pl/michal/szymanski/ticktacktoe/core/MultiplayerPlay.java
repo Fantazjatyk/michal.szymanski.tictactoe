@@ -15,22 +15,17 @@ import pl.michal.szymanski.ticktacktoe.transport.MultiplayerParticipant;
 public class MultiplayerPlay extends Play<MultiplayerParticipant> {
 
     @Override
-    public boolean join(MultiplayerParticipant t) {
+    public boolean join(MultiplayerParticipant t, String username) {
         if (!super.players().firstPlayer().isPresent()) {
-            super.players().firstPlayer(t);
+            super.players().firstPlayer(t, username);
             return true;
         } else if (!super.players().secondPlayer().isPresent()) {
-            super.players().secondPlayer(t);
+            super.players().secondPlayer(t, username);
             return true;
         }
         return false;
     }
 
-    protected void onStart() {
-    }
 
-    @Override
-    protected void onFinish() {
-    }
 
 }

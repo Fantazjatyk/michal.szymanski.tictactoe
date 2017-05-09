@@ -10,6 +10,8 @@ import pl.michal.szymanski.ticktacktoe.ai.Difficulty;
 import pl.michal.szymanski.ticktacktoe.core.model.Board;
 import pl.michal.szymanski.ticktacktoe.core.model.Move;
 import pl.michal.szymanski.ticktacktoe.ai.AIEndpoint;
+import pl.michal.szymanski.ticktacktoe.core.model.Player;
+import pl.michal.szymanski.ticktacktoe.core.model.Point;
 import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
 
 /**
@@ -25,10 +27,10 @@ public class SingleplayerPlay extends Play<SingleplayerParticipant> {
     }
 
     @Override
-    public boolean join(SingleplayerParticipant t) {
+    public boolean join(SingleplayerParticipant t, String username) {
 
         if (!super.players().firstPlayer().isPresent()) {
-            super.players().firstPlayer(t);
+            super.players().firstPlayer(t, username);
             return true;
         }
         return false;
@@ -36,16 +38,14 @@ public class SingleplayerPlay extends Play<SingleplayerParticipant> {
     }
 
     public Move getAIMove() {
-        return super.players().secondPlayer().get().connector().getMove();
+        Player ai = super.players().secondPlayer().get();
+        Point field = ai.connector().getMoveField();
+        return new Move(ai, field);
     }
 
     @Override
     protected void onStart() {
-        super.players().secondPlayer(new AIEndpoint(difficulty));
+        super.onStart();
+        super.players().secondPlayer(new AIEndpoint(difficulty), "Komputer");
     }
-
-    @Override
-    protected void onFinish() {
-    }
-
 }

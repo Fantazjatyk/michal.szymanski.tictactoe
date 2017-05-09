@@ -13,12 +13,15 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
+import pl.michal.szymanski.ticktacktoe.core.PlaySettings.PlaySettingsSetters;
 import pl.michal.szymanski.ticktacktoe.core.model.Board;
 import pl.michal.szymanski.ticktacktoe.core.model.BoardField;
 import pl.michal.szymanski.ticktacktoe.core.model.GameMaster;
 import pl.michal.szymanski.ticktacktoe.core.model.Move;
 import pl.michal.szymanski.ticktacktoe.core.model.Player;
+import pl.michal.szymanski.ticktacktoe.core.model.Point;
 import pl.michal.szymanski.ticktacktoe.transport.GameWatcher;
 import pl.michal.szymanski.ticktacktoe.transport.Participant;
 import pl.michal.szymanski.ticktacktoe.transport.MultiplayerParticipant;
@@ -33,7 +36,8 @@ public abstract class Play<T extends Participant> extends PlayBase<T> {
     private PlayersPair<T> players = new PlayersPair();
     private LinkedBlockingDeque<Move> moves = new LinkedBlockingDeque(9);
     private LinkedBlockingDeque<GameWatcher> watchers = new LinkedBlockingDeque(100);
-    private PlayLimits limits = new PlayLimits();
+    private PlaySettings limits = new PlaySettings();
+    private Optional<Player> winner = Optional.empty();
 
     protected Board getBoard() {
         return this.board;
@@ -47,44 +51,58 @@ public abstract class Play<T extends Participant> extends PlayBase<T> {
         this.watchers.add(watcher);
     }
 
-    protected boolean isDone() {
+    private boolean isDone() {
         return GameMaster.isDone(board);
+    }
+
+    public PlaySettingsSetters settings() {
+        return this.limits.setters();
     }
 
     public void begin() {
         onStart();
         while (!isDone()) {
             Player<T> player = this.moves.isEmpty() ? getRandomPlayer() : getNextPlayer();
-            doTurn(player, limits.getTurnLimit());
+            doTurn(player, limits.getters().getTurnLimit());
             sendBoard();
         }
         onFinish();
     }
 
-    public void sendBoard() {
-        players.firstPlayer().get().connector().receiveBoard(board);
-        players.secondPlayer().get().connector().receiveBoard(board);
+    public Optional<Player> getWinner() {
+        return winner;
+    }
 
+    private void sendBoard() {
         watchers.stream().forEach((el) -> el.receiveBoard(board));
     }
 
-    public void doTurn(Player<T> player, long timeout) {
+    private void doTurn(Player<T> player, long timeout) {
         Move move = null;
         Stopwatch stopwatch = Stopwatch.createStarted();
 
         while (stopwatch.elapsed(TimeUnit.SECONDS) < timeout) {
-            move = player.connector().getMove();
+            Point field = player.connector().getMoveField();
+            move = new Move(player, field);
 
             if (move != null && GameMaster.isValidMove(move)) {
                 board.doMove(move);
+                this.moves.addLast(move);
                 break;
             }
         }
-
     }
 
-    public void end() {
+    @Override
+    protected  void onStart() {
+        this.watchers.add((GameWatcher) this.players.firstPlayer().get().connector());
+        this.watchers.add((GameWatcher) this.players.secondPlayer().get().connector());
+    }
 
+    @Override
+    protected void onFinish() {
+        this.winner = GameMaster.getWinner(board);
+        watchers.stream().forEach((el) -> el.onGameEnd(this));
     }
 
     private Player<T> getRandomPlayer() {

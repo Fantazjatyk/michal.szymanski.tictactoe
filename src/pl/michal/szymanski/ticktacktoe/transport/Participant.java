@@ -7,6 +7,7 @@ package pl.michal.szymanski.ticktacktoe.transport;
 
 import pl.michal.szymanski.ticktacktoe.core.model.Board;
 import pl.michal.szymanski.ticktacktoe.core.model.Move;
+import pl.michal.szymanski.ticktacktoe.core.model.Point;
 
 /**
  *
@@ -14,5 +15,5 @@ import pl.michal.szymanski.ticktacktoe.core.model.Move;
  */
 public interface Participant extends GameWatcher{
 
-    Move getMove();
+    Point getMoveField();
 }

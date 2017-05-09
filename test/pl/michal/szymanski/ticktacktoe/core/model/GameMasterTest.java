@@ -28,6 +28,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import pl.michal.szymanski.ticktacktoe.core.Play;
 import pl.michal.szymanski.ticktacktoe.transport.Participant;
 
 /**
@@ -52,34 +53,46 @@ public class GameMasterTest {
     public void setUp() {
         player1 = new Player(new Participant() {
             @Override
-            public Move getMove() {
+            public Point getMoveField() {
                 return null;
             }
 
             @Override
             public void receiveBoard(Board board) {
             }
-        });
+
+            @Override
+            public void onGameEnd(Play play) {
+            }
+        }, "");
         player2 = new Player(new Participant() {
             @Override
-            public Move getMove() {
+            public Point getMoveField() {
                 return null;
             }
 
             @Override
             public void receiveBoard(Board board) {
             }
-        });
+
+            @Override
+            public void onGameEnd(Play play) {
+            }
+        }, "");
         player3 = new Player(new Participant() {
             @Override
-            public Move getMove() {
+            public Point getMoveField() {
                 return null;
             }
 
             @Override
             public void receiveBoard(Board board) {
             }
-        });
+
+            @Override
+            public void onGameEnd(Play play) {
+            }
+        }, "");
         board = new Board(3);
     }
 

@@ -15,11 +15,14 @@ import pl.michal.szymanski.ticktacktoe.transport.Participant;
 public class Player<T extends Participant> {
 
     private String id;
+    private String username;
+
     private T connector;
 
-    public Player(T e) {
+    public Player(T e, String username) {
         this.connector = e;
         this.id = UUID.randomUUID().toString();
+        this.username = username;
     }
 
     public T connector() {
@@ -28,6 +31,10 @@ public class Player<T extends Participant> {
 
     public String getId() {
         return id;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     @Override

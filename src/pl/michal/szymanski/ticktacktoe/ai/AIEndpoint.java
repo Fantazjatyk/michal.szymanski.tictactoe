@@ -6,8 +6,10 @@
 package pl.michal.szymanski.ticktacktoe.ai;
 
 import pl.michal.szymanski.ticktacktoe.ai.Difficulty;
+import pl.michal.szymanski.ticktacktoe.core.Play;
 import pl.michal.szymanski.ticktacktoe.core.model.Board;
 import pl.michal.szymanski.ticktacktoe.core.model.Move;
+import pl.michal.szymanski.ticktacktoe.core.model.Point;
 import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
 import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
 
@@ -23,13 +25,21 @@ public class AIEndpoint implements SingleplayerParticipant {
         this.difficulty = difficulty;
     }
 
-    @Override
-    public Move getMove() {
-        return null;
-    }
+
 
     @Override
     public void receiveBoard(Board board) {
     }
+
+    @Override
+    public Point getMoveField() {
+        return null;
+    }
+
+    @Override
+    public void onGameEnd(Play play) {
+    }
+
+
 
 }

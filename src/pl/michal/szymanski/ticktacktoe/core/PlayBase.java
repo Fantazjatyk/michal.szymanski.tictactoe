@@ -11,11 +11,11 @@ package pl.michal.szymanski.ticktacktoe.core;
  */
 public abstract class PlayBase<T> {
 
-    public String id;
+    private String id;
 
     protected abstract void onStart();
 
     protected abstract void onFinish();
 
-    public abstract boolean join(T t);
+    public abstract boolean join(T t, String username);
 }

@@ -5,7 +5,10 @@
  */
 package pl.michal.szymanski.ticktacktoe.core;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 import pl.michal.szymanski.ticktacktoe.core.model.Player;
 import pl.michal.szymanski.ticktacktoe.transport.Participant;
 
@@ -26,11 +29,11 @@ public class PlayersPair<T extends Participant> {
         return secondPlayer;
     }
 
-    protected void firstPlayer(T firstPlayer) {
-        this.firstPlayer = Optional.ofNullable(new Player(firstPlayer));
+    protected void firstPlayer(T firstPlayer, String username) {
+        this.firstPlayer = Optional.ofNullable(new Player(firstPlayer, username));
     }
 
-    protected void secondPlayer(T secondPlayer) {
-        this.secondPlayer = Optional.ofNullable(new Player(secondPlayer));
+    protected void secondPlayer(T secondPlayer, String username) {
+        this.secondPlayer = Optional.ofNullable(new Player(secondPlayer, username));
     }
 }
