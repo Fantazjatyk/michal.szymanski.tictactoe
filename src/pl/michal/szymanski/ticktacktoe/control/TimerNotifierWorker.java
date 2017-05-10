@@ -42,6 +42,7 @@ public class TimerNotifierWorker extends Thread {
     public TimerNotifierWorker(long timeout, TimerNotifier notifier) {
         this.timeout = timeout;
         this.notfier = notifier;
+        this.setDaemon(true);
     }
 
     @Override

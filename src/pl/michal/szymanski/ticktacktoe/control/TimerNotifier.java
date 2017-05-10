@@ -40,7 +40,6 @@ import pl.michal.szymanski.ticktacktoe.transport.WatchdogHandler;
  */
 public class TimerNotifier<Type extends WatchdogHandler> {
 
-    private long timeout;
     private List<WeakReference<Type>> observers = new ArrayList();
     private TimerNotify<Type> strategy;
     private TimerNotifierWorker worker;

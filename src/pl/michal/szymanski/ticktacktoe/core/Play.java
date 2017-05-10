@@ -33,7 +33,7 @@ import pl.michal.szymanski.ticktacktoe.transport.WatchdogHandler;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public abstract class Play<T extends Participant> extends PlayBase<T> implements GameTimeoutHandler {
+public abstract class Play<T extends Participant> extends PlayBase<T> implements GameTimeoutHandler, TurnTimeoutHandler {
 
     private Board board = new Board(3);
     private PlayersPair<T> players = new PlayersPair();
@@ -45,6 +45,7 @@ public abstract class Play<T extends Participant> extends PlayBase<T> implements
     private TimerNotifier gameTimeoutNotifier;
     private boolean isTimedOut = false;
     private TimerNotifier turnTimeoutNotifier;
+    private Thread moveLoader;
 
     protected Board getBoard() {
         return this.board;
@@ -57,7 +58,15 @@ public abstract class Play<T extends Participant> extends PlayBase<T> implements
     @Override
     public void onGameTimeout() {
         this.isTimedOut = true;
+        onTurnTimeout();
         onFinish();
+    }
+
+    @Override
+    public void onTurnTimeout() {
+        if (moveLoader != null) {
+            moveLoader.interrupt();
+        }
     }
 
     public void watch(GameWatcher watcher) {
@@ -94,15 +103,48 @@ public abstract class Play<T extends Participant> extends PlayBase<T> implements
         this.turnTimeoutNotifier.start(this.limits.getters().getTurnLimit());
         this.turns.addLast(new Turn(player, board));
 
-        Point field = player.connector().getMoveField();
-        Move move = null;
-        move = new Move(player, field);
-
-        if (move != null && GameMaster.isValidMove(move, board)) {
-            board.doMove(move);
-            moves.addLast(move);
+        moveLoader = getConnectorMoveLoader(player);
+        moveLoader.setDaemon(true);
+        synchronized (moveLoader) {
+            moveLoader.start();
+            try {
+                moveLoader.wait();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Play.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+
         this.turnTimeoutNotifier.stop();
+    }
+
+    private Thread getConnectorMoveLoader(Player<T> player) {
+        Thread thread = new Thread() {
+            @Override
+            public void run() {
+                Move move = null;
+                while (move == null || !this.isInterrupted()) {
+                    Point field = player.connector().getMoveField();
+                    move = new Move(player, field);
+
+                    if (move != null && GameMaster.isValidMove(move, board)) {
+                        board.doMove(move);
+                        moves.addLast(move);
+                    }
+                }
+
+            }
+
+            @Override
+            public void interrupt() {
+                super.interrupt(); //To change body of generated methods, choose Tools | Templates.
+                synchronized (this) {
+                    this.notifyAll();
+                }
+            }
+
+        };
+
+        return thread;
     }
 
     @Override
@@ -116,6 +158,7 @@ public abstract class Play<T extends Participant> extends PlayBase<T> implements
         this.turnTimeoutNotifier = TimerNotifier.create(this.limits.getters().getTurnLimit(), new TurnTimeoutNotify());
         this.turnTimeoutNotifier.addObserver(this.players.secondPlayer().get().connector());
         this.turnTimeoutNotifier.addObserver(this.players.firstPlayer().get().connector());
+        this.turnTimeoutNotifier.addObserver(this);
     }
 
     @Override
