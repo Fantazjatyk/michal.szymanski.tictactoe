@@ -34,7 +34,9 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import pl.michal.szymanski.ticktacktoe.core.Play;
+import pl.michal.szymanski.ticktacktoe.core.PlayFlow;
+import pl.michal.szymanski.ticktacktoe.core.PlayInfo;
+import pl.michal.szymanski.ticktacktoe.core.PlaySettings;
 import pl.michal.szymanski.ticktacktoe.transport.Participant;
 
 /**
@@ -68,12 +70,11 @@ public class GameMasterTest {
             }
 
             @Override
-            public void onGameEnd(Play play) {
+            public void onTurnTimeout() {
             }
 
-
             @Override
-            public void onTurnTimeout() {
+            public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
             }
 
         }, "");
@@ -88,14 +89,12 @@ public class GameMasterTest {
             }
 
             @Override
-            public void onGameEnd(Play play) {
-            }
-
-            @Override
             public void onTurnTimeout() {
             }
 
-
+            @Override
+            public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
+            }
 
         }, "");
         player3 = new Player(new Participant() {
@@ -109,14 +108,12 @@ public class GameMasterTest {
             }
 
             @Override
-            public void onGameEnd(Play play) {
-            }
-
-            @Override
             public void onTurnTimeout() {
             }
 
-
+            @Override
+            public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
+            }
 
         }, "");
         board = new Board(3);
@@ -202,6 +199,5 @@ public class GameMasterTest {
         Move move = new Move(player2, new Point(2, 2));
         assertTrue(GameMaster.isValidMove(move, board));
     }
-
 
 }

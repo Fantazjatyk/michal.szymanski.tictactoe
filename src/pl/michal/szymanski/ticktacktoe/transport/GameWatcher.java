@@ -5,8 +5,10 @@
  */
 package pl.michal.szymanski.ticktacktoe.transport;
 
-import pl.michal.szymanski.ticktacktoe.core.Play;
+import pl.michal.szymanski.ticktacktoe.core.PlayFlow;
 import pl.michal.szymanski.ticktacktoe.core.Board;
+import pl.michal.szymanski.ticktacktoe.core.PlayInfo;
+import pl.michal.szymanski.ticktacktoe.core.PlaySettings;
 
 /**
  *
@@ -15,5 +17,6 @@ import pl.michal.szymanski.ticktacktoe.core.Board;
 public interface GameWatcher {
 
     void receiveBoard(Board board);
-    void onGameEnd(Play play);
+
+    void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings);
 }

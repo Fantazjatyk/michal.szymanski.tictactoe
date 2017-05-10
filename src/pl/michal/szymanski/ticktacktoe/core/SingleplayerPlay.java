@@ -14,7 +14,7 @@ import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class SingleplayerPlay extends Play<SingleplayerParticipant> {
+public class SingleplayerPlay extends PlayFlow<SingleplayerParticipant> {
 
     private Difficulty difficulty = Difficulty.EASY;
 
@@ -25,8 +25,8 @@ public class SingleplayerPlay extends Play<SingleplayerParticipant> {
     @Override
     public boolean join(SingleplayerParticipant t, String username) {
 
-        if (!super.players().firstPlayer().isPresent()) {
-            super.players().firstPlayer(t, username);
+        if (!super.getInfo().getPlayers().firstPlayer().isPresent()) {
+            super.getInfo().getPlayers().firstPlayer(t, username);
             return true;
         }
         return false;
@@ -34,7 +34,7 @@ public class SingleplayerPlay extends Play<SingleplayerParticipant> {
     }
 
     public Move getAIMove() {
-        Player ai = super.players().secondPlayer().get();
+        Player ai = super.getInfo().getPlayers().secondPlayer().get();
         Point field = ai.connector().getMoveField();
         return new Move(ai, field);
     }
@@ -42,7 +42,7 @@ public class SingleplayerPlay extends Play<SingleplayerParticipant> {
     @Override
     protected void onStart() {
         super.onStart();
-        super.players().secondPlayer(new AIEndpoint(difficulty), "Komputer");
+        super.getInfo().getPlayers().secondPlayer(new AIEndpoint(difficulty), "Komputer");
     }
 
 }

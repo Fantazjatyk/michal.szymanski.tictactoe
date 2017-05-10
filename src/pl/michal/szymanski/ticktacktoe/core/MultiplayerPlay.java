@@ -12,15 +12,15 @@ import pl.michal.szymanski.ticktacktoe.transport.MultiplayerParticipant;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class MultiplayerPlay extends Play<MultiplayerParticipant> {
+public class MultiplayerPlay extends PlayFlow<MultiplayerParticipant> {
 
     @Override
     public boolean join(MultiplayerParticipant t, String username) {
-        if (!super.players().firstPlayer().isPresent()) {
-            super.players().firstPlayer(t, username);
+        if (!super.getInfo().getPlayers().firstPlayer().isPresent()) {
+            super.getInfo().getPlayers().firstPlayer(t, username);
             return true;
-        } else if (!super.players().secondPlayer().isPresent()) {
-            super.players().secondPlayer(t, username);
+        } else if (!super.getInfo().getPlayers().secondPlayer().isPresent()) {
+            super.getInfo().getPlayers().secondPlayer(t, username);
             return true;
         }
         return false;

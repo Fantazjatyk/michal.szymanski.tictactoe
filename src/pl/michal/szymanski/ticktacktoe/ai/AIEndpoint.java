@@ -8,9 +8,11 @@ package pl.michal.szymanski.ticktacktoe.ai;
 import java.util.ArrayList;
 import java.util.List;
 import pl.michal.szymanski.ticktacktoe.ai.Difficulty;
-import pl.michal.szymanski.ticktacktoe.core.Play;
+import pl.michal.szymanski.ticktacktoe.core.PlayFlow;
 import pl.michal.szymanski.ticktacktoe.core.Board;
 import pl.michal.szymanski.ticktacktoe.core.Move;
+import pl.michal.szymanski.ticktacktoe.core.PlayInfo;
+import pl.michal.szymanski.ticktacktoe.core.PlaySettings;
 import pl.michal.szymanski.ticktacktoe.core.Point;
 import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
 import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
@@ -50,13 +52,11 @@ public class AIEndpoint implements SingleplayerParticipant {
     }
 
     @Override
-    public void onGameEnd(Play play) {
-    }
-
-    @Override
     public void onTurnTimeout() {
     }
 
-
+    @Override
+    public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
+    }
 
 }
