@@ -35,7 +35,6 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import pl.michal.szymanski.ticktacktoe.core.Play;
-import pl.michal.szymanski.ticktacktoe.exceptions.TurnTimeoutException;
 import pl.michal.szymanski.ticktacktoe.transport.Participant;
 
 /**
@@ -72,8 +71,9 @@ public class GameMasterTest {
             public void onGameEnd(Play play) {
             }
 
+
             @Override
-            public void handle(TurnTimeoutException e) {
+            public void onTurnTimeout() {
             }
 
         }, "");
@@ -92,8 +92,10 @@ public class GameMasterTest {
             }
 
             @Override
-            public void handle(TurnTimeoutException e) {
+            public void onTurnTimeout() {
             }
+
+
 
         }, "");
         player3 = new Player(new Participant() {
@@ -111,8 +113,10 @@ public class GameMasterTest {
             }
 
             @Override
-            public void handle(TurnTimeoutException e) {
+            public void onTurnTimeout() {
             }
+
+
 
         }, "");
         board = new Board(3);
@@ -198,4 +202,6 @@ public class GameMasterTest {
         Move move = new Move(player2, new Point(2, 2));
         assertTrue(GameMaster.isValidMove(move, board));
     }
+
+
 }

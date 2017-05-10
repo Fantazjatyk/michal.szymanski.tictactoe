@@ -21,12 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.ticktacktoe.exceptions;
+package pl.michal.szymanski.ticktacktoe.control;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
+import pl.michal.szymanski.ticktacktoe.transport.WatchdogHandler;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class TurnTimeoutException extends GameException{
+public interface TimerNotify<T extends WatchdogHandler> {
 
+    void notifyObservers(List<WeakReference<T>> observers);
 }

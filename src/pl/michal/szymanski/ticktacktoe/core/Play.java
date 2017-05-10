@@ -5,6 +5,7 @@
  */
 package pl.michal.szymanski.ticktacktoe.core;
 
+import pl.michal.szymanski.ticktacktoe.control.TimerNotifier;
 import com.google.common.base.Stopwatch;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,17 +19,21 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import pl.michal.szymanski.ticktacktoe.control.GameTimeoutNotify;
 import pl.michal.szymanski.ticktacktoe.core.PlaySettings.PlaySettingsSetters;
-import pl.michal.szymanski.ticktacktoe.exceptions.TurnTimeoutExceptionHandler;
 import pl.michal.szymanski.ticktacktoe.transport.GameWatcher;
 import pl.michal.szymanski.ticktacktoe.transport.Participant;
 import pl.michal.szymanski.ticktacktoe.transport.MultiplayerParticipant;
+import pl.michal.szymanski.ticktacktoe.transport.TurnTimeoutHandler;
+import pl.michal.szymanski.ticktacktoe.control.TurnTimeoutNotify;
+import pl.michal.szymanski.ticktacktoe.transport.GameTimeoutHandler;
+import pl.michal.szymanski.ticktacktoe.transport.WatchdogHandler;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public abstract class Play<T extends Participant> extends PlayBase<T> {
+public abstract class Play<T extends Participant> extends PlayBase<T> implements GameTimeoutHandler {
 
     private Board board = new Board(3);
     private PlayersPair<T> players = new PlayersPair();
@@ -37,6 +42,9 @@ public abstract class Play<T extends Participant> extends PlayBase<T> {
     private PlaySettings limits = new PlaySettings();
     private LinkedBlockingDeque<Turn> turns = new LinkedBlockingDeque();
     private Optional<Player> winner = Optional.empty();
+    private TimerNotifier gameTimeoutNotifier;
+    private boolean isTimedOut = false;
+    private TimerNotifier turnTimeoutNotifier;
 
     protected Board getBoard() {
         return this.board;
@@ -46,12 +54,18 @@ public abstract class Play<T extends Participant> extends PlayBase<T> {
         return this.players;
     }
 
+    @Override
+    public void onGameTimeout() {
+        this.isTimedOut = true;
+        onFinish();
+    }
+
     public void watch(GameWatcher watcher) {
         this.watchers.add(watcher);
     }
 
     private boolean isDone() {
-        return GameMaster.isDone(board);
+        return GameMaster.isDone(board) || this.isTimedOut;
     }
 
     public PlaySettingsSetters settings() {
@@ -62,7 +76,7 @@ public abstract class Play<T extends Participant> extends PlayBase<T> {
         onStart();
         while (!isDone()) {
             Player<T> player = this.turns.isEmpty() ? getRandomPlayer() : getNextPlayer();
-            doTurn(player, limits.getters().getTurnLimit());
+            doTurn(player);
             sendBoard();
         }
         onFinish();
@@ -76,14 +90,9 @@ public abstract class Play<T extends Participant> extends PlayBase<T> {
         watchers.stream().forEach((el) -> el.receiveBoard(board));
     }
 
-    private void doTurn(Player<T> player, long timeout) {
-
+    private void doTurn(Player<T> player) {
+        this.turnTimeoutNotifier.start(this.limits.getters().getTurnLimit());
         this.turns.addLast(new Turn(player, board));
-
-        TimeoutWatcher watcher = new TimeoutWatcher();
-        watcher.setTimeout(timeout);
-        watcher.addObserver(player.connector());
-        watcher.start();
 
         Point field = player.connector().getMoveField();
         Move move = null;
@@ -93,7 +102,7 @@ public abstract class Play<T extends Participant> extends PlayBase<T> {
             board.doMove(move);
             moves.addLast(move);
         }
-        watcher.interrupt();
+        this.turnTimeoutNotifier.stop();
     }
 
     @Override
@@ -101,6 +110,12 @@ public abstract class Play<T extends Participant> extends PlayBase<T> {
         this.watchers.add((GameWatcher) this.players.firstPlayer().get().connector());
         this.watchers.add((GameWatcher) this.players.secondPlayer().get().connector());
         assignBoardFieldsMarks();
+        this.gameTimeoutNotifier = TimerNotifier.createStarted(this.limits.getters().getTimeout(), new GameTimeoutNotify());
+        this.gameTimeoutNotifier.addObserver(this);
+
+        this.turnTimeoutNotifier = TimerNotifier.create(this.limits.getters().getTurnLimit(), new TurnTimeoutNotify());
+        this.turnTimeoutNotifier.addObserver(this.players.secondPlayer().get().connector());
+        this.turnTimeoutNotifier.addObserver(this.players.firstPlayer().get().connector());
     }
 
     @Override

@@ -65,7 +65,6 @@ public class Board {
 
         a = a < 0 ? a + (2 * a) : a;
 
-        int numberOfFields = (int) (a * Math.sqrt(2));
         boolean incrementX = p2.getX() > p1.getX();
         boolean incrementY = p2.getY() > p1.getY();
 

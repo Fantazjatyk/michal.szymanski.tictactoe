@@ -21,12 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.ticktacktoe.exceptions;
+package pl.michal.szymanski.ticktacktoe.control;
+
+import com.google.common.base.Stopwatch;
+import java.util.concurrent.TimeUnit;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface TurnTimeoutExceptionHandler {
-void handle(TurnTimeoutException e);
+public class TimerNotifierWorker extends Thread {
+
+    private long timeout;
+    private TimerNotifier notfier;
+
+    public long getTimeout() {
+        return timeout;
+    }
+
+    public TimerNotifierWorker(long timeout, TimerNotifier notifier) {
+        this.timeout = timeout;
+        this.notfier = notifier;
+    }
+
+    @Override
+    public void run() {
+        Stopwatch watch = Stopwatch.createStarted();
+
+        while (!this.isInterrupted() && watch.elapsed(TimeUnit.MILLISECONDS) <= timeout) {
+        }
+        if (watch.elapsed(TimeUnit.MILLISECONDS) > timeout) {
+            this.notfier.notifyObservers();
+        }
+        watch.stop();
+    }
+
 }

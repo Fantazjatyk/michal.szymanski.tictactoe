@@ -12,7 +12,6 @@ import pl.michal.szymanski.ticktacktoe.core.Play;
 import pl.michal.szymanski.ticktacktoe.core.Board;
 import pl.michal.szymanski.ticktacktoe.core.Move;
 import pl.michal.szymanski.ticktacktoe.core.Point;
-import pl.michal.szymanski.ticktacktoe.exceptions.TurnTimeoutException;
 import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
 import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
 
@@ -55,7 +54,7 @@ public class AIEndpoint implements SingleplayerParticipant {
     }
 
     @Override
-    public void handle(TurnTimeoutException e) {
+    public void onTurnTimeout() {
     }
 
 

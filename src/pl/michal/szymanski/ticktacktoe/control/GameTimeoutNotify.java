@@ -21,41 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.ticktacktoe.core;
+package pl.michal.szymanski.ticktacktoe.control;
 
-import com.google.common.base.Stopwatch;
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import pl.michal.szymanski.ticktacktoe.exceptions.TurnTimeoutException;
-import pl.michal.szymanski.ticktacktoe.exceptions.TurnTimeoutExceptionHandler;
+import pl.michal.szymanski.ticktacktoe.transport.GameTimeoutHandler;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class TimeoutWatcher extends Thread {
-
-    private long timeout;
-    private List<WeakReference<TurnTimeoutExceptionHandler>> observers = new ArrayList();
-
-    public void addObserver(TurnTimeoutExceptionHandler ob) {
-        if (!observers.stream().anyMatch(el -> el.get().equals(ob))) {
-            this.observers.add(new WeakReference(ob));
-        }
-    }
-
-    public void setTimeout(long timeout) {
-        this.timeout = timeout;
-    }
+public class GameTimeoutNotify implements TimerNotify<GameTimeoutHandler> {
 
     @Override
-    public void run() {
-        Stopwatch watch = Stopwatch.createStarted();
-        while (!this.isInterrupted() && watch.elapsed(TimeUnit.MILLISECONDS) < timeout) {
-
-        }
-        observers.forEach(el -> el.get().handle(new TurnTimeoutException()));
+    public void notifyObservers(List<WeakReference<GameTimeoutHandler>> observers) {
+        observers.forEach(el -> el.get().onGameTimeout());
     }
+
 }

@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.ticktacktoe.exceptions;
+package pl.michal.szymanski.ticktacktoe.transport;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class GameException extends RuntimeException{
-
+public interface TurnTimeoutHandler extends WatchdogHandler{
+void onTurnTimeout();
 }
