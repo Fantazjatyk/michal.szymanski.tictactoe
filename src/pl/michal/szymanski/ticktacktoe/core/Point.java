@@ -21,24 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.ticktacktoe.core.model;
+package pl.michal.szymanski.ticktacktoe.core;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public enum BoardFieldType {
+public class Point<T extends Number> {
 
-    XMark('X'), OMark('O');
+    private T x;
+    private T y;
 
-    Character character;
-
-    BoardFieldType(Character character) {
-        this.character = character;
+    public Point(T x, T y) {
+        this.x = x;
+        this.y = y;
     }
 
-    @Override
-    public String toString() {
-        return this.character + "";
+    public T getX() {
+        return x;
     }
+
+    public void setX(T x) {
+        this.x = x;
+    }
+
+    public T getY() {
+        return y;
+    }
+
+    public void setY(T y) {
+        this.y = y;
+    }
+
 }

@@ -6,7 +6,6 @@
 package pl.michal.szymanski.ticktacktoe.core;
 
 import java.util.Optional;
-import pl.michal.szymanski.ticktacktoe.core.model.BoardFieldType;
 import pl.michal.szymanski.ticktacktoe.transport.MultiplayerParticipant;
 
 /**

@@ -6,7 +6,7 @@
 package pl.michal.szymanski.ticktacktoe.transport;
 
 import pl.michal.szymanski.ticktacktoe.core.Play;
-import pl.michal.szymanski.ticktacktoe.core.model.Board;
+import pl.michal.szymanski.ticktacktoe.core.Board;
 
 /**
  *

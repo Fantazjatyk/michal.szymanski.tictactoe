@@ -21,36 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.ticktacktoe.core.model;
+package pl.michal.szymanski.ticktacktoe.core;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class Point<T extends Number> {
+public class Turn {
 
-    private T x;
-    private T y;
+    private Player quarterback;
+    private final Board boardState;
 
-    public Point(T x, T y) {
-        this.x = x;
-        this.y = y;
+    public Turn(Player player, Board board) {
+        this.quarterback = player;
+        this.boardState = new Board(board);
     }
 
-    public T getX() {
-        return x;
-    }
-
-    public void setX(T x) {
-        this.x = x;
-    }
-
-    public T getY() {
-        return y;
-    }
-
-    public void setY(T y) {
-        this.y = y;
+    public Player getQuarterback() {
+        return quarterback;
     }
 
 }

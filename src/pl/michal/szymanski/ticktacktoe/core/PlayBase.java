@@ -5,8 +5,6 @@
  */
 package pl.michal.szymanski.ticktacktoe.core;
 
-import pl.michal.szymanski.ticktacktoe.core.model.BoardFieldType;
-
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com

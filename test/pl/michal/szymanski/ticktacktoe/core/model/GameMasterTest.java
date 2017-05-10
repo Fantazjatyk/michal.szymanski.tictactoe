@@ -23,6 +23,11 @@
  */
 package pl.michal.szymanski.ticktacktoe.core.model;
 
+import pl.michal.szymanski.ticktacktoe.core.GameMaster;
+import pl.michal.szymanski.ticktacktoe.core.Point;
+import pl.michal.szymanski.ticktacktoe.core.Move;
+import pl.michal.szymanski.ticktacktoe.core.Player;
+import pl.michal.szymanski.ticktacktoe.core.Board;
 import java.util.List;
 import java.util.Optional;
 import org.junit.AfterClass;

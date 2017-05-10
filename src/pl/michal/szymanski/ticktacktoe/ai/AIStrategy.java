@@ -24,8 +24,8 @@
 package pl.michal.szymanski.ticktacktoe.ai;
 
 import java.util.List;
-import pl.michal.szymanski.ticktacktoe.core.model.BoardField;
-import pl.michal.szymanski.ticktacktoe.core.model.Move;
+import pl.michal.szymanski.ticktacktoe.core.BoardField;
+import pl.michal.szymanski.ticktacktoe.core.Move;
 
 /**
  *

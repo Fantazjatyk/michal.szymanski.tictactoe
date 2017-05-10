@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-import pl.michal.szymanski.ticktacktoe.core.model.BoardFieldType;
-import pl.michal.szymanski.ticktacktoe.core.model.Player;
 import pl.michal.szymanski.ticktacktoe.transport.Participant;
 
 /**

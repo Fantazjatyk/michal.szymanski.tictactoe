@@ -5,9 +5,9 @@
  */
 package pl.michal.szymanski.ticktacktoe.transport;
 
-import pl.michal.szymanski.ticktacktoe.core.model.Board;
-import pl.michal.szymanski.ticktacktoe.core.model.Move;
-import pl.michal.szymanski.ticktacktoe.core.model.Point;
+import pl.michal.szymanski.ticktacktoe.core.Board;
+import pl.michal.szymanski.ticktacktoe.core.Move;
+import pl.michal.szymanski.ticktacktoe.core.Point;
 import pl.michal.szymanski.ticktacktoe.exceptions.TurnTimeoutExceptionHandler;
 
 /**

@@ -7,12 +7,7 @@ package pl.michal.szymanski.ticktacktoe.core;
 
 import java.util.Optional;
 import pl.michal.szymanski.ticktacktoe.ai.Difficulty;
-import pl.michal.szymanski.ticktacktoe.core.model.Board;
-import pl.michal.szymanski.ticktacktoe.core.model.Move;
 import pl.michal.szymanski.ticktacktoe.ai.AIEndpoint;
-import pl.michal.szymanski.ticktacktoe.core.model.BoardFieldType;
-import pl.michal.szymanski.ticktacktoe.core.model.Player;
-import pl.michal.szymanski.ticktacktoe.core.model.Point;
 import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
 
 /**

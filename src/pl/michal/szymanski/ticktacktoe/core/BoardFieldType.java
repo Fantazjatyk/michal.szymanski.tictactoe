@@ -21,39 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.ticktacktoe.core.model;
-
-import java.util.Optional;
+package pl.michal.szymanski.ticktacktoe.core;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class BoardField {
+public enum BoardFieldType {
 
-    private int x;
-    private int y;
-    private Optional<Player> owner = Optional.empty();
+    XMark('X'), OMark('O');
 
-    public BoardField(int x, int y) {
-        this.x = x;
-        this.y = y;
+    Character character;
+
+    BoardFieldType(Character character) {
+        this.character = character;
     }
 
-    public int getX() {
-        return x;
+    @Override
+    public String toString() {
+        return this.character + "";
     }
-
-    public Optional<Player> getOwner() {
-        return owner;
-    }
-
-    public void setOwner(Player owner) {
-        this.owner = Optional.of(owner);
-    }
-
-    public int getY() {
-        return y;
-    }
-
 }
