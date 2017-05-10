@@ -27,34 +27,48 @@ import pl.michal.szymanski.ticktacktoe.transport.Participant;
 public class GameMaster {
 
     public static boolean isDone(Board board) {
-        return getWinner(board).isPresent();
+        return !getWinner(board).isEmpty();
     }
 
-    public static Optional<Player> getWinner(Board board) {
+    public static List<Player> getWinner(Board board) {
+        List<BoardField[]> possibleLines = lookForPossibleWinningSolutions(board);
+        Set<Player> players = findAllPlayersOnBoard(board);
+
+        if (players.isEmpty()) {
+            return new ArrayList();
+        }
+
+        List<Player> winners = lookForWinners(possibleLines, players);
+        if (possibleLines.stream().allMatch(line -> Stream.of(line).allMatch(field -> field.getOwner().isPresent()))) {
+            winners.addAll(players);
+        }
+        return winners;
+    }
+
+    private static List<BoardField[]> lookForPossibleWinningSolutions(Board board) {
         List<BoardField[]> possibleLines = new ArrayList();
         possibleLines.addAll(board.getDiagonals());
         possibleLines.addAll(board.getRows());
+        possibleLines.addAll(board.getColumns());
+        return possibleLines;
+    }
 
-        Set<Player> players = findAllPlayersOnBoard(board);
-        if (players.isEmpty()) {
-            return Optional.empty();
-        }
-        List<Player> winners = players.stream().filter(player
-                -> possibleLines
+    private static List<Player> lookForWinners(List<BoardField[]> lines, Set<Player> players) {
+        return players.stream().filter(player
+                -> lines
                         .stream()
                         .anyMatch(line -> Stream.of(line)
                         .allMatch(field -> field.getOwner().isPresent() && field.getOwner().get().equals(player)))
         ).collect(Collectors.toList());
-
-        return winners.size() == 1 ? Optional.of(winners.get(0)) : Optional.empty();
     }
 
     private static Set<Player> findAllPlayersOnBoard(Board board) {
         return board.getAllFields().stream().map(el -> el.getOwner().orElse(null)).filter(el -> el != null).collect(Collectors.toSet());
     }
 
-    public static boolean isValidMove(Move move) {
-        return true;
+    public static boolean isValidMove(Move move, Board board) {
+        Point<Integer> field = move.getPoint();
+        return !board.getBoard()[field.getY()][field.getX()].getOwner().isPresent();
     }
 
 }

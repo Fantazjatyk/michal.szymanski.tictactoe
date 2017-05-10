@@ -23,12 +23,14 @@
  */
 package pl.michal.szymanski.ticktacktoe.core.model;
 
+import java.util.List;
 import java.util.Optional;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import pl.michal.szymanski.ticktacktoe.core.Play;
+import pl.michal.szymanski.ticktacktoe.exceptions.TurnTimeoutException;
 import pl.michal.szymanski.ticktacktoe.transport.Participant;
 
 /**
@@ -64,6 +66,11 @@ public class GameMasterTest {
             @Override
             public void onGameEnd(Play play) {
             }
+
+            @Override
+            public void handle(TurnTimeoutException e) {
+            }
+
         }, "");
         player2 = new Player(new Participant() {
             @Override
@@ -78,6 +85,11 @@ public class GameMasterTest {
             @Override
             public void onGameEnd(Play play) {
             }
+
+            @Override
+            public void handle(TurnTimeoutException e) {
+            }
+
         }, "");
         player3 = new Player(new Participant() {
             @Override
@@ -92,6 +104,11 @@ public class GameMasterTest {
             @Override
             public void onGameEnd(Play play) {
             }
+
+            @Override
+            public void handle(TurnTimeoutException e) {
+            }
+
         }, "");
         board = new Board(3);
     }
@@ -101,6 +118,27 @@ public class GameMasterTest {
      */
     @Test
     public void testIsDone() {
+        board.doMove(new Move(player1, new Point(0, 0)));
+        board.doMove(new Move(player1, new Point(1, 1)));
+        board.doMove(new Move(player3, new Point(1, 0)));
+        board.doMove(new Move(player2, new Point(0, 2)));
+        board.doMove(new Move(player1, new Point(2, 2)));
+        board.doMove(new Move(player3, new Point(0, 1)));
+
+        assertTrue(GameMaster.isDone(board));
+    }
+
+    @Test
+    public void testIsDone_Remis() {
+        board.doMove(new Move(player1, new Point(0, 0)));
+        board.doMove(new Move(player1, new Point(0, 1)));
+        board.doMove(new Move(player1, new Point(0, 2)));
+
+        board.doMove(new Move(player3, new Point(1, 0)));
+        board.doMove(new Move(player3, new Point(1, 1)));
+        board.doMove(new Move(player3, new Point(1, 2)));
+
+        assertTrue(GameMaster.isDone(board));
     }
 
     /**
@@ -115,8 +153,9 @@ public class GameMasterTest {
         board.doMove(new Move(player1, new Point(2, 2)));
         board.doMove(new Move(player3, new Point(0, 1)));
 
-        Optional<Player> winner = GameMaster.getWinner(board);
-        assertEquals(player1, winner.get());
+        List<Player> winner = GameMaster.getWinner(board);
+        assertTrue(winner.size() == 1);
+        assertEquals(player1, winner.get(0));
 
     }
 
@@ -130,10 +169,8 @@ public class GameMasterTest {
         board.doMove(new Move(player3, new Point(1, 1)));
         board.doMove(new Move(player3, new Point(1, 2)));
 
-
-
-        Optional<Player> winner = GameMaster.getWinner(board);
-        assertFalse(winner.isPresent());
+        List<Player> winner = GameMaster.getWinner(board);
+        assertEquals(2, winner.size());
     }
 
     /**
@@ -141,5 +178,19 @@ public class GameMasterTest {
      */
     @Test
     public void testIsValidMove() {
+        board.doMove(new Move(player1, new Point(0, 0)));
+        board.doMove(new Move(player2, new Point(1, 1)));
+        board.doMove(new Move(player1, new Point(2, 0)));
+        Move move = new Move(player2, new Point(0, 0));
+        assertFalse(GameMaster.isValidMove(move, board));
+    }
+
+    @Test
+    public void testIsValidMove_Optimistic() {
+        board.doMove(new Move(player1, new Point(0, 0)));
+        board.doMove(new Move(player2, new Point(1, 1)));
+        board.doMove(new Move(player1, new Point(2, 0)));
+        Move move = new Move(player2, new Point(2, 2));
+        assertTrue(GameMaster.isValidMove(move, board));
     }
 }

@@ -15,6 +15,7 @@ public class Move {
 
     private WeakReference<Player> invoker;
     private Point<Integer> point;
+    private boolean wasValid = true;
 
     public Move(Player p, Point point) {
         this.invoker = new WeakReference(p);
@@ -27,6 +28,10 @@ public class Move {
 
     public Point<Integer> getPoint() {
         return point;
+    }
+
+    public void invalidate() {
+        this.wasValid = false;
     }
 
 }

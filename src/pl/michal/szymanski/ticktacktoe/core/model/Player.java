@@ -16,13 +16,17 @@ public class Player<T extends Participant> {
 
     private String id;
     private String username;
-
+    private BoardFieldType boardFieldType;
     private T connector;
 
     public Player(T e, String username) {
         this.connector = e;
         this.id = UUID.randomUUID().toString();
         this.username = username;
+    }
+
+    public void setBoardFieldType(BoardFieldType boardFieldType) {
+        this.boardFieldType = boardFieldType;
     }
 
     public T connector() {
@@ -35,6 +39,10 @@ public class Player<T extends Participant> {
 
     public String getUsername() {
         return username;
+    }
+
+    public BoardFieldType getBoardFieldType() {
+        return boardFieldType;
     }
 
     @Override

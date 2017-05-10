@@ -5,6 +5,8 @@
  */
 package pl.michal.szymanski.ticktacktoe.core;
 
+import pl.michal.szymanski.ticktacktoe.core.model.BoardFieldType;
+
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
@@ -18,4 +20,5 @@ public abstract class PlayBase<T> {
     protected abstract void onFinish();
 
     public abstract boolean join(T t, String username);
+
 }

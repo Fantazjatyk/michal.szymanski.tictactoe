@@ -21,6 +21,12 @@ public class Board {
     private int sizeY;
     private BoardField[][] board;
 
+    public Board(Board board) {
+        this.sizeX = board.sizeX;
+        this.sizeY = board.sizeY;
+        this.board = board.board;
+    }
+
     public Board(int size) {
         this.sizeX = size;
         this.sizeY = size;
@@ -125,7 +131,6 @@ public class Board {
 
     public void doMove(Move move) {
         Player invoker = move.getInvoker().get();
-        board[move.getPoint().getX()][move.getPoint().getY()].setOwner(invoker);
-
+        board[move.getPoint().getY()][move.getPoint().getX()].setOwner(invoker);
     }
 }

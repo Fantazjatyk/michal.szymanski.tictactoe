@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+import pl.michal.szymanski.ticktacktoe.core.model.BoardFieldType;
 import pl.michal.szymanski.ticktacktoe.core.model.Player;
 import pl.michal.szymanski.ticktacktoe.transport.Participant;
 
@@ -27,6 +28,24 @@ public class PlayersPair<T extends Participant> {
 
     protected Optional<Player<T>> secondPlayer() {
         return secondPlayer;
+    }
+
+    public Optional<Player<T>> getXMarkPlayer() {
+        return getMarkedPlayer(BoardFieldType.XMark);
+    }
+
+    public Optional<Player<T>> getOMarkPlayer() {
+        return getMarkedPlayer(BoardFieldType.OMark);
+    }
+
+    public Optional<Player<T>> getPlayer(String username) {
+        return firstPlayer.isPresent() && firstPlayer.get().getUsername().equals(username)
+                ? firstPlayer : (secondPlayer.isPresent() && secondPlayer.get().getUsername().equals(username) ? secondPlayer : Optional.empty());
+    }
+
+    public Optional<Player<T>> getMarkedPlayer(BoardFieldType type) {
+        return firstPlayer.isPresent() && firstPlayer.get().getBoardFieldType().equals(type) ? firstPlayer
+                : (secondPlayer.isPresent() && secondPlayer.get().getBoardFieldType().equals(type) ? secondPlayer : Optional.empty());
     }
 
     protected void firstPlayer(T firstPlayer, String username) {

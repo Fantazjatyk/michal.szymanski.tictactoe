@@ -10,6 +10,7 @@ import pl.michal.szymanski.ticktacktoe.ai.Difficulty;
 import pl.michal.szymanski.ticktacktoe.core.model.Board;
 import pl.michal.szymanski.ticktacktoe.core.model.Move;
 import pl.michal.szymanski.ticktacktoe.ai.AIEndpoint;
+import pl.michal.szymanski.ticktacktoe.core.model.BoardFieldType;
 import pl.michal.szymanski.ticktacktoe.core.model.Player;
 import pl.michal.szymanski.ticktacktoe.core.model.Point;
 import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
@@ -48,4 +49,5 @@ public class SingleplayerPlay extends Play<SingleplayerParticipant> {
         super.onStart();
         super.players().secondPlayer(new AIEndpoint(difficulty), "Komputer");
     }
+
 }

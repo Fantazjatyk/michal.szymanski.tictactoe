@@ -8,12 +8,15 @@ package pl.michal.szymanski.ticktacktoe.transport;
 import pl.michal.szymanski.ticktacktoe.core.model.Board;
 import pl.michal.szymanski.ticktacktoe.core.model.Move;
 import pl.michal.szymanski.ticktacktoe.core.model.Point;
+import pl.michal.szymanski.ticktacktoe.exceptions.TurnTimeoutExceptionHandler;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface Participant extends GameWatcher{
+public interface Participant extends GameWatcher, TurnTimeoutExceptionHandler{
 
     Point getMoveField();
+
+
 }
