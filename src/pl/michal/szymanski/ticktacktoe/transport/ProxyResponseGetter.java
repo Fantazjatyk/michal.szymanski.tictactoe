@@ -29,31 +29,15 @@ import java.util.Optional;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class ProxyResponse<T> {
+public class ProxyResponseGetter<T> {
 
-    private Optional<T> real;
-    private ProxyResponseSetter<T> setters;
-    private ProxyResponseGetter<T> getters;
+    private ProxyResponse<T> parent;
 
-    public ProxyResponse() {
-        setters = new ProxyResponseSetter(this);
-        getters = new ProxyResponseGetter(this);
+    public ProxyResponseGetter(ProxyResponse<T> parent) {
+        this.parent = parent;
     }
 
     public Optional<T> getReal() {
-        return real;
+        return parent.getReal();
     }
-
-    public void setReal(T real) {
-        this.real = Optional.of(real);
-    }
-
-    public ProxyResponseSetter<T> getSetters() {
-        return setters;
-    }
-
-    public ProxyResponseGetter<T> getGetters() {
-        return getters;
-    }
-
 }

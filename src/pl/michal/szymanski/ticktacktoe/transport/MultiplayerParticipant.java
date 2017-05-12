@@ -11,5 +11,5 @@ package pl.michal.szymanski.ticktacktoe.transport;
  */
 public interface MultiplayerParticipant extends Participant {
 
-    boolean isConnected();
+    void isConnected(ProxyResponseSetter<Boolean> response);
 }

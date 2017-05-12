@@ -8,7 +8,7 @@ package pl.michal.szymanski.ticktacktoe.transport;
 import pl.michal.szymanski.ticktacktoe.core.Board;
 import pl.michal.szymanski.ticktacktoe.core.Move;
 import pl.michal.szymanski.ticktacktoe.core.Point;
-import pl.michal.szymanski.ticktacktoe.transport.ProxyResponse.ProxyResponseSetter;
+
 
 /**
  *
@@ -16,6 +16,6 @@ import pl.michal.szymanski.ticktacktoe.transport.ProxyResponse.ProxyResponseSett
  */
 public interface Participant extends GameWatcher, TurnTimeoutHandler {
 
-    void getMoveField(ProxyResponse<Point>.ProxyResponseSetter<Point> proxy);
+    void getMoveField(ProxyResponseSetter<Point> proxy);
 
 }

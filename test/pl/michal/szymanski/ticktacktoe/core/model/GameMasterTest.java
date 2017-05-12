@@ -39,7 +39,8 @@ import pl.michal.szymanski.ticktacktoe.core.PlayInfo;
 import pl.michal.szymanski.ticktacktoe.core.PlaySettings;
 import pl.michal.szymanski.ticktacktoe.transport.Participant;
 import pl.michal.szymanski.ticktacktoe.transport.ProxyResponse;
-import pl.michal.szymanski.ticktacktoe.transport.ProxyResponse.ProxyResponseSetter;
+
+import pl.michal.szymanski.ticktacktoe.transport.ProxyResponseSetter;
 
 /**
  *
@@ -76,7 +77,7 @@ public class GameMasterTest {
             }
 
             @Override
-            public void getMoveField(ProxyResponseSetter proxy) {
+            public void getMoveField(ProxyResponseSetter<Point> proxy) {
             }
 
         }, "");
@@ -114,7 +115,7 @@ public class GameMasterTest {
             }
 
             @Override
-            public void getMoveField(ProxyResponseSetter proxy) {
+            public void getMoveField(ProxyResponseSetter<Point> proxy) {
             }
 
         }, "");
