@@ -38,6 +38,8 @@ import pl.michal.szymanski.ticktacktoe.core.PlayFlow;
 import pl.michal.szymanski.ticktacktoe.core.PlayInfo;
 import pl.michal.szymanski.ticktacktoe.core.PlaySettings;
 import pl.michal.szymanski.ticktacktoe.transport.Participant;
+import pl.michal.szymanski.ticktacktoe.transport.ProxyResponse;
+import pl.michal.szymanski.ticktacktoe.transport.ProxyResponse.ProxyResponseSetter;
 
 /**
  *
@@ -60,10 +62,6 @@ public class GameMasterTest {
     @Before
     public void setUp() {
         player1 = new Player(new Participant() {
-            @Override
-            public Point getMoveField() {
-                return null;
-            }
 
             @Override
             public void receiveBoard(Board board) {
@@ -75,14 +73,14 @@ public class GameMasterTest {
 
             @Override
             public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
+            }
+
+            @Override
+            public void getMoveField(ProxyResponseSetter proxy) {
             }
 
         }, "");
         player2 = new Player(new Participant() {
-            @Override
-            public Point getMoveField() {
-                return null;
-            }
 
             @Override
             public void receiveBoard(Board board) {
@@ -94,14 +92,14 @@ public class GameMasterTest {
 
             @Override
             public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
+            }
+
+            @Override
+            public void getMoveField(ProxyResponseSetter proxy) {
             }
 
         }, "");
         player3 = new Player(new Participant() {
-            @Override
-            public Point getMoveField() {
-                return null;
-            }
 
             @Override
             public void receiveBoard(Board board) {
@@ -113,6 +111,10 @@ public class GameMasterTest {
 
             @Override
             public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
+            }
+
+            @Override
+            public void getMoveField(ProxyResponseSetter proxy) {
             }
 
         }, "");

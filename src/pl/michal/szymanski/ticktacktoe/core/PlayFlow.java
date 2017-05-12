@@ -27,6 +27,7 @@ import pl.michal.szymanski.ticktacktoe.transport.MultiplayerParticipant;
 import pl.michal.szymanski.ticktacktoe.transport.TurnTimeoutHandler;
 import pl.michal.szymanski.ticktacktoe.control.TurnTimeoutNotify;
 import pl.michal.szymanski.ticktacktoe.transport.GameTimeoutHandler;
+import pl.michal.szymanski.ticktacktoe.transport.ProxyResponse;
 import pl.michal.szymanski.ticktacktoe.transport.WatchdogHandler;
 
 /**
@@ -86,12 +87,16 @@ public abstract class PlayFlow<T extends Participant> extends Play<T> implements
             public void run() {
                 Move move = null;
                 while (move == null && !this.isInterrupted()) {
-                    Point field = player.connector().getMoveField();
-                    move = new Move(player, field);
+                    ProxyResponse<Point> response = new ProxyResponse();
+                    player.connector().getMoveField(response.getSetters());
 
-                    if (move != null && GameMaster.isValidMove(move, board)) {
-                        board.doMove(move);
-                        moves.addLast(move);
+                    if (response.getGetters().getReal().isPresent()) {
+                        move = new Move(player, response.getGetters().getReal().get());
+
+                        if (GameMaster.isValidMove(move, board)) {
+                            board.doMove(move);
+                            moves.addLast(move);
+                        }
                     }
                 }
 

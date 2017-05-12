@@ -8,6 +8,7 @@ package pl.michal.szymanski.ticktacktoe.core;
 import java.util.Optional;
 import pl.michal.szymanski.ticktacktoe.ai.Difficulty;
 import pl.michal.szymanski.ticktacktoe.ai.AIEndpoint;
+import pl.michal.szymanski.ticktacktoe.transport.ProxyResponse;
 import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
 
 /**
@@ -35,7 +36,9 @@ public class SingleplayerPlay extends PlayFlow<SingleplayerParticipant> {
 
     public Move getAIMove() {
         Player ai = super.getInfo().getPlayers().secondPlayer().get();
-        Point field = ai.connector().getMoveField();
+        ProxyResponse<Point> response = new ProxyResponse();
+        ai.connector().getMoveField(response.getSetters());
+        Point field = response.getGetters().getReal().get();
         return new Move(ai, field);
     }
 

@@ -14,6 +14,8 @@ import pl.michal.szymanski.ticktacktoe.core.Move;
 import pl.michal.szymanski.ticktacktoe.core.PlayInfo;
 import pl.michal.szymanski.ticktacktoe.core.PlaySettings;
 import pl.michal.szymanski.ticktacktoe.core.Point;
+import pl.michal.szymanski.ticktacktoe.transport.ProxyResponse;
+import pl.michal.szymanski.ticktacktoe.transport.ProxyResponse.ProxyResponseSetter;
 import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
 import pl.michal.szymanski.ticktacktoe.transport.SingleplayerParticipant;
 
@@ -47,16 +49,15 @@ public class AIEndpoint implements SingleplayerParticipant {
     }
 
     @Override
-    public Point getMoveField() {
-        return null;
-    }
-
-    @Override
     public void onTurnTimeout() {
     }
 
     @Override
     public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
+    }
+
+    @Override
+    public void getMoveField(ProxyResponseSetter proxy) {
     }
 
 }
