@@ -24,13 +24,15 @@ public class SingleplayerPlay extends PlayFlow<SingleplayerParticipant> {
     }
 
     @Override
-    public boolean join(SingleplayerParticipant t, String username) {
+    public void join(SingleplayerParticipant t, String username) {
 
         if (!super.getInfo().getPlayers().firstPlayer().isPresent()) {
             super.getInfo().getPlayers().firstPlayer(t, username);
-            return true;
         }
-        return false;
+
+        if (super.getInfo().getPlayers().isPair()) {
+            super.begin();
+        }
 
     }
 

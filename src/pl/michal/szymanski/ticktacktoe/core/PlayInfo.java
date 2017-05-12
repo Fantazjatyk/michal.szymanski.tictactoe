@@ -24,6 +24,7 @@
 package pl.michal.szymanski.ticktacktoe.core;
 
 import java.util.Optional;
+import java.util.UUID;
 import pl.michal.szymanski.ticktacktoe.transport.Participant;
 
 /**
@@ -42,7 +43,7 @@ public class PlayInfo<T extends Participant> {
     }
 
     public PlayInfo() {
-
+        this.id = UUID.randomUUID().toString();
     }
 
     public Optional<Player> getWinner() {
@@ -60,6 +61,5 @@ public class PlayInfo<T extends Participant> {
     public String getId() {
         return id;
     }
-
 
 }

@@ -32,6 +32,10 @@ public class PlayersPair<T extends Participant> {
         return getMarkedPlayer(BoardFieldType.XMark);
     }
 
+    public boolean isPair() {
+        return this.firstPlayer.isPresent() && this.secondPlayer.isPresent();
+    }
+
     public Optional<Player<T>> getOMarkPlayer() {
         return getMarkedPlayer(BoardFieldType.OMark);
     }

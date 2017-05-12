@@ -15,15 +15,17 @@ import pl.michal.szymanski.ticktacktoe.transport.MultiplayerParticipant;
 public class MultiplayerPlay extends PlayFlow<MultiplayerParticipant> {
 
     @Override
-    public boolean join(MultiplayerParticipant t, String username) {
+    public void join(MultiplayerParticipant t, String username) {
         if (!super.getInfo().getPlayers().firstPlayer().isPresent()) {
             super.getInfo().getPlayers().firstPlayer(t, username);
-            return true;
         } else if (!super.getInfo().getPlayers().secondPlayer().isPresent()) {
             super.getInfo().getPlayers().secondPlayer(t, username);
-            return true;
         }
-        return false;
+
+        if (super.getInfo().getPlayers().isPair()) {
+            super.begin();
+        }
+
     }
 
 }

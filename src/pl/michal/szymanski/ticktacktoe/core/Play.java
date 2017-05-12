@@ -46,7 +46,7 @@ public abstract class Play<T extends Participant> {
 
     protected abstract void doTurn(Player<T> player);
 
-    public abstract boolean join(T t, String username);
+    public abstract void join(T t, String username);
 
     public PlaySettings.PlaySettingsSetters settings() {
         return this.limits.setters();
