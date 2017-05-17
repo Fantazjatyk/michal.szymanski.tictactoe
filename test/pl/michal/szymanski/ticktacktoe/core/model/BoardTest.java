@@ -23,8 +23,8 @@
  */
 package pl.michal.szymanski.ticktacktoe.core.model;
 
-import pl.michal.szymanski.ticktacktoe.core.BoardField;
-import pl.michal.szymanski.ticktacktoe.core.Board;
+import pl.michal.szymanski.tictactoe.core.BoardField;
+import pl.michal.szymanski.tictactoe.core.Board;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.AfterClass;
