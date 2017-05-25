@@ -17,15 +17,28 @@ public class MultiplayerPlay extends PlayFlow<MultiplayerParticipant> {
     @Override
     public void join(MultiplayerParticipant t, String username) {
         if (!super.getInfo().getPlayers().firstPlayer().isPresent()) {
-            super.getInfo().getPlayers().firstPlayer(t, username);
+            super.getInfo().getPlayers().firstPlayer(new Player(username, t));
         } else if (!super.getInfo().getPlayers().secondPlayer().isPresent()) {
-            super.getInfo().getPlayers().secondPlayer(t, username);
+            super.getInfo().getPlayers().secondPlayer(new Player(username, t));
         }
 
-        if (super.getInfo().getPlayers().isPair()  && super.getPlaySettings().getters().getBeginOnAllPlayersJoined()) {
+        if (super.getInfo().getPlayers().isPair() && super.getPlaySettings().getters().getBeginOnAllPlayersJoined()) {
             super.begin();
         }
 
+    }
+
+    @Override
+    public void join(String username) {
+        if (!super.getInfo().getPlayers().firstPlayer().isPresent()) {
+            super.getInfo().getPlayers().firstPlayer(new Player(username));
+        } else if (!super.getInfo().getPlayers().secondPlayer().isPresent()) {
+            super.getInfo().getPlayers().secondPlayer(new Player(username));
+        }
+
+        if (super.getInfo().getPlayers().isPair() && super.getPlaySettings().getters().getBeginOnAllPlayersJoined()) {
+            super.begin();
+        }
     }
 
 }

@@ -24,6 +24,7 @@
 package pl.michal.szymanski.tictactoe.core;
 
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 import pl.michal.szymanski.tictactoe.transport.Participant;
 
@@ -43,7 +44,7 @@ public class PlayInfo<T extends Participant> {
     }
 
     public PlayInfo() {
-        this.id = UUID.randomUUID().toString();
+        this.id = UUID.randomUUID().toString() + new Random().nextInt(1000);
     }
 
     public Optional<Player> getWinner() {

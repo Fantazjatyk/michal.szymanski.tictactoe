@@ -27,19 +27,19 @@ public class SingleplayerPlay extends PlayFlow<SingleplayerParticipant> {
     public void join(SingleplayerParticipant t, String username) {
 
         if (!super.getInfo().getPlayers().firstPlayer().isPresent()) {
-            super.getInfo().getPlayers().firstPlayer(t, username);
+            super.getInfo().getPlayers().firstPlayer(new Player(username, t));
         }
 
-        if (super.getInfo().getPlayers().isPair() && super.getPlaySettings().getters().getBeginOnAllPlayersJoined()) {
+        if (super.getInfo().getPlayers().isPair() && super.getPlaySettings().getters().getBeginOnAllPlayersJoined() && super.getInfo().getPlayers().areEachHaveConnector()) {
             super.begin();
         }
 
     }
 
     public Move getAIMove() {
-        Player ai = super.getInfo().getPlayers().secondPlayer().get();
+        Player<SingleplayerParticipant> ai = super.getInfo().getPlayers().secondPlayer().get();
         ProxyResponse<Point> response = new ProxyResponse();
-        ai.connector().getMoveField(response.getSetters());
+        ai.connector().get().getMoveField(response.getSetters());
         Point field = response.getGetters().getReal().get();
         return new Move(ai, field);
     }
@@ -47,7 +47,19 @@ public class SingleplayerPlay extends PlayFlow<SingleplayerParticipant> {
     @Override
     protected void onStart() {
         super.onStart();
-        super.getInfo().getPlayers().secondPlayer(new AIEndpoint(difficulty), "Komputer");
+        super.getInfo().getPlayers().secondPlayer(new Player("Computer", new AIEndpoint(difficulty)));
+    }
+
+    @Override
+    public void join(String username) {
+        if (!super.getInfo().getPlayers().firstPlayer().isPresent()) {
+            super.getInfo().getPlayers().firstPlayer(new Player(username));
+
+        }
+
+        if (super.getInfo().getPlayers().isPair() && super.getPlaySettings().getters().getBeginOnAllPlayersJoined() && super.getInfo().getPlayers().areEachHaveConnector()) {
+            super.begin();
+        }
     }
 
 }

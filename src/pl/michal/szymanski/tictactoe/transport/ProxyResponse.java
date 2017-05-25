@@ -31,7 +31,7 @@ import java.util.Optional;
  */
 public class ProxyResponse<T> {
 
-    private Optional<T> real;
+    private Optional<T> real = Optional.empty();
     private ProxyResponseSetter<T> setters;
     private ProxyResponseGetter<T> getters;
 

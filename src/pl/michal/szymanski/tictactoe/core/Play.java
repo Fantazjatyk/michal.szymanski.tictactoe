@@ -35,8 +35,8 @@ public abstract class Play<T extends Participant> {
     }
 
     protected void onStart() {
-        history.getWatchers().add((GameWatcher) info.getPlayers().firstPlayer().get().connector());
-        history.getWatchers().add((GameWatcher) info.getPlayers().secondPlayer().get().connector());
+        history.getWatchers().add((GameWatcher) info.getPlayers().firstPlayer().get().connector().get());
+        history.getWatchers().add((GameWatcher) info.getPlayers().secondPlayer().get().connector().get());
         assignBoardFieldsMarks();
     }
 
@@ -47,6 +47,8 @@ public abstract class Play<T extends Participant> {
     protected abstract void doTurn(Player<T> player);
 
     public abstract void join(T t, String username);
+
+    public abstract void join(String username);
 
     public PlaySettings.PlaySettingsSetters settings() {
         return this.settings.setters();

@@ -61,7 +61,7 @@ public class GameMasterTest {
 
     @Before
     public void setUp() {
-        player1 = new Player(new Participant() {
+        player1 = new Player("a", new Participant() {
 
             @Override
             public void receiveBoard(Board board) {
@@ -79,8 +79,8 @@ public class GameMasterTest {
             public void getMoveField(ProxyResponseSetter<Point> proxy) {
             }
 
-        }, "");
-        player2 = new Player(new Participant() {
+        });
+        player2 = new Player("b", new Participant() {
 
             @Override
             public void receiveBoard(Board board) {
@@ -98,8 +98,8 @@ public class GameMasterTest {
             public void getMoveField(ProxyResponseSetter proxy) {
             }
 
-        }, "");
-        player3 = new Player(new Participant() {
+        });
+        player3 = new Player("c", new Participant() {
 
             @Override
             public void receiveBoard(Board board) {
@@ -117,7 +117,7 @@ public class GameMasterTest {
             public void getMoveField(ProxyResponseSetter<Point> proxy) {
             }
 
-        }, "");
+        });
         board = new Board(3);
     }
 

@@ -36,6 +36,10 @@ public class PlayersPair<T extends Participant> {
         return this.firstPlayer.isPresent() && this.secondPlayer.isPresent();
     }
 
+    public boolean areEachHaveConnector() {
+        return this.firstPlayer.get().connector().isPresent() && this.secondPlayer.get().connector().isPresent();
+    }
+
     public Optional<Player<T>> getOMarkPlayer() {
         return getMarkedPlayer(BoardFieldType.OMark);
     }
@@ -50,11 +54,11 @@ public class PlayersPair<T extends Participant> {
                 : (secondPlayer.isPresent() && secondPlayer.get().getBoardFieldType().equals(type) ? secondPlayer : Optional.empty());
     }
 
-    protected void firstPlayer(T firstPlayer, String username) {
-        this.firstPlayer = Optional.ofNullable(new Player(firstPlayer, username));
+    protected void firstPlayer(Player player) {
+        this.firstPlayer = Optional.ofNullable(player);
     }
 
-    protected void secondPlayer(T secondPlayer, String username) {
-        this.secondPlayer = Optional.ofNullable(new Player(secondPlayer, username));
+    protected void secondPlayer(Player player) {
+        this.secondPlayer = Optional.ofNullable(player);
     }
 }

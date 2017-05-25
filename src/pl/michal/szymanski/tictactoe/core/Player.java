@@ -5,6 +5,7 @@
  */
 package pl.michal.szymanski.tictactoe.core;
 
+import java.util.Optional;
 import java.util.UUID;
 import pl.michal.szymanski.tictactoe.transport.Participant;
 
@@ -14,27 +15,40 @@ import pl.michal.szymanski.tictactoe.transport.Participant;
  */
 public class Player<T extends Participant> {
 
-    private String id;
     private String username;
     private BoardFieldType boardFieldType;
-    private T connector;
+    private Optional<T> connector;
 
-    public Player(T e, String username) {
-        this.connector = e;
-        this.id = UUID.randomUUID().toString();
+    public Player(String username) {
         this.username = username;
+    }
+
+    public Player(String username, T connector) {
+        this.username = username;
+        this.connector = Optional.ofNullable(connector);
+    }
+
+    public Player(String username, BoardFieldType boardFieldType) {
+        this.username = username;
+        this.boardFieldType = boardFieldType;
+    }
+
+    public Player(String username, BoardFieldType boardFieldType, T connector) {
+        this.username = username;
+        this.boardFieldType = boardFieldType;
+        this.connector = Optional.ofNullable(connector);
     }
 
     public void setBoardFieldType(BoardFieldType boardFieldType) {
         this.boardFieldType = boardFieldType;
     }
 
-    public T connector() {
-        return this.connector;
+    public void setConnector(T connector) {
+        this.connector = Optional.ofNullable(connector);
     }
 
-    public String getId() {
-        return id;
+    public Optional<T> connector() {
+        return this.connector;
     }
 
     public String getUsername() {
@@ -47,7 +61,7 @@ public class Player<T extends Participant> {
 
     @Override
     public boolean equals(Object obj) {
-        boolean test = obj instanceof Player && ((Player) obj).getId().equals(this.getId());
+        boolean test = obj != null && obj instanceof Player && ((Player) obj).getUsername().equals(this.getUsername());
         return test;
     }
 
