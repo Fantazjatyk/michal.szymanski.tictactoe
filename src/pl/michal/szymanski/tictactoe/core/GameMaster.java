@@ -47,9 +47,9 @@ public class GameMaster {
 
     private static List<BoardField[]> lookForPossibleWinningSolutions(Board board) {
         List<BoardField[]> possibleLines = new ArrayList();
-        possibleLines.addAll(board.getDiagonals());
-        possibleLines.addAll(board.getRows());
-        possibleLines.addAll(board.getColumns());
+        possibleLines.addAll(board.getSelector().getDiagonals());
+        possibleLines.addAll(board.getSelector().getRows());
+        possibleLines.addAll(board.getSelector().getColumns());
         return possibleLines;
     }
 
@@ -63,7 +63,7 @@ public class GameMaster {
     }
 
     private static Set<Player> findAllPlayersOnBoard(Board board) {
-        return board.getAllFields().stream().map(el -> el.getOwner().orElse(null)).filter(el -> el != null).collect(Collectors.toSet());
+        return board.getSelector().getAllFields().stream().map(el -> el.getOwner().orElse(null)).filter(el -> el != null).collect(Collectors.toSet());
     }
 
     public static boolean isValidMove(Move move, Board board) {

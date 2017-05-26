@@ -53,4 +53,12 @@ public class Point<T extends Number> {
         this.y = y;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj instanceof Point && ((Point)(obj)).getX().equals(this.getX()) && ((Point)(obj)).getY().equals(this.getY());
+    }
+
+
+
+
 }

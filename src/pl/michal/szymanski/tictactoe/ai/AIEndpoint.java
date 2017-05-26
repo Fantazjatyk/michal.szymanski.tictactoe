@@ -35,9 +35,9 @@ public class AIEndpoint implements SingleplayerParticipant {
 
     @Override
     public void receiveBoard(Board board) {
-        this.uncheckedSolutions.addAll(board.getDiagonals());
-        this.uncheckedSolutions.addAll(board.getColumns());
-        this.uncheckedSolutions.addAll(board.getRows());
+        this.uncheckedSolutions.addAll(board.getSelector().getDiagonals());
+        this.uncheckedSolutions.addAll(board.getSelector().getColumns());
+        this.uncheckedSolutions.addAll(board.getSelector().getRows());
     }
 
     private int numberOfOnlyMyFields() {

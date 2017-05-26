@@ -21,57 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.ticktacktoe.core.model;
-
-import pl.michal.szymanski.tictactoe.core.BoardField;
-import pl.michal.szymanski.tictactoe.core.Board;
-import java.util.Arrays;
-import java.util.List;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+package pl.michal.szymanski.tictactoe.core;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class BoardTest {
+public abstract class RawBoardGenerator {
 
-    Board board;
+    public static BoardField[][] createBoard(int sizeX, int sizeY) {
+        BoardField[][] board = new BoardField[sizeX][sizeY];
 
-    public BoardTest() {
+        for (int i = 0; i < sizeY; i++) {
+            board[i] = fillRow(i, sizeY);
+        }
+        return board;
     }
 
-    @AfterClass
-    public static void tearDownClass() {
+    private static BoardField[] fillRow(int rowId, int max) {
+        BoardField[] row = new BoardField[max];
+
+        for (int i = 0; i < row.length; i++) {
+            row[i] = new BoardField(i, rowId);
+        }
+        return row;
     }
-
-    @Before
-    public void setUp() {
-        board = new Board(3);
-    }
-
-    /**
-     * Test of isValid method, of class Board.
-     */
-    public void testCreateBoard() {
-        assertEquals(9, board.getSizeX() * board.getSizeY());
-    }
-
-    @Test
-    public void testIsValid() {
-    }
-
-    /**
-     * Test of doMove method, of class Board.
-     */
-    @Test
-    public void testDoMove() {
-    }
-
-    /**
-     * Test of getSizeX method, of class Board.
-     */
-
 }
