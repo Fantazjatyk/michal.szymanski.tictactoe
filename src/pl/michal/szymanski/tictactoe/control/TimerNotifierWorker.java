@@ -25,6 +25,8 @@ package pl.michal.szymanski.tictactoe.control;
 
 import com.google.common.base.Stopwatch;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -47,14 +49,13 @@ public class TimerNotifierWorker extends Thread {
 
     @Override
     public void run() {
-        Stopwatch watch = Stopwatch.createStarted();
-
-        while (!this.isInterrupted() && watch.elapsed(TimeUnit.MILLISECONDS) <= timeout) {
-        }
-        if (watch.elapsed(TimeUnit.MILLISECONDS) > timeout) {
+        try {
+            Thread.sleep(timeout);
+        } catch (InterruptedException ex) {
+            Logger.getLogger(TimerNotifierWorker.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
             this.notfier.notifyObservers();
         }
-        watch.stop();
     }
 
 }

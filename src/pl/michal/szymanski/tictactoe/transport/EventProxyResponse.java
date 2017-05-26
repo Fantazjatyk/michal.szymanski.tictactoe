@@ -20,7 +20,9 @@ public class EventProxyResponse<T> extends ProxyResponse<T> {
     @Override
     public void setReal(T real) {
         super.setReal(real); //To change body of generated methods, choose Tools | Templates.
+        synchronized(lock){
         lock.notify();
+        }
     }
 
     public void setLock(Lock lock) {
