@@ -31,8 +31,8 @@ import java.util.Optional;
  */
 public class EventProxyResponse<T> extends ProxyResponse<T> {
 
-    private Optional<Runnable> beforeCallback;
-    private Optional<Runnable> afterCallback;
+    private Optional<Runnable> beforeCallback = Optional.empty();
+    private Optional<Runnable> afterCallback = Optional.empty();
 
     public void setBeforeCallback(Runnable beforeCallback) {
         this.beforeCallback = Optional.of(beforeCallback);
