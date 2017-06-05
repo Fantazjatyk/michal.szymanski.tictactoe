@@ -37,9 +37,9 @@ import pl.michal.szymanski.tictactoe.transport.PlayerDisconnectedHandler;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class MultiplayerExecutor extends PlayExecutor<MultiplayerParticipant> implements PlayerDisconnectedHandler {
+public class MultiplayerPlayExecutor extends PlayExecutor<MultiplayerParticipant> implements PlayerDisconnectedHandler {
 
-    public MultiplayerExecutor(Play play) {
+    public MultiplayerPlayExecutor(Play play) {
         super(play);
     }
 
@@ -56,7 +56,7 @@ public class MultiplayerExecutor extends PlayExecutor<MultiplayerParticipant> im
             try {
                 lock.wait(super.getPlay().getSettings().getters().getTurnLimit());
             } catch (InterruptedException ex) {
-                Logger.getLogger(MultiplayerExecutor.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MultiplayerPlayExecutor.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
 

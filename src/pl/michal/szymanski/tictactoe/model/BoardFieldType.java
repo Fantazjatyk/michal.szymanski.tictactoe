@@ -22,9 +22,6 @@
  * THE SOFTWARE.
  */
 package pl.michal.szymanski.tictactoe.model;
-
-
-
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com

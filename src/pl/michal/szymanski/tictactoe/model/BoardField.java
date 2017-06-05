@@ -24,7 +24,6 @@
 package pl.michal.szymanski.tictactoe.model;
 
 import java.util.Optional;
-
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
