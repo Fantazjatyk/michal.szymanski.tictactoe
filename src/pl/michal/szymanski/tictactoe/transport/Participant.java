@@ -5,10 +5,7 @@
  */
 package pl.michal.szymanski.tictactoe.transport;
 
-import pl.michal.szymanski.tictactoe.core.Board;
-import pl.michal.szymanski.tictactoe.core.Move;
-import pl.michal.szymanski.tictactoe.core.Point;
-
+import pl.michal.szymanski.tictactoe.model.Point;
 
 /**
  *
@@ -16,6 +13,8 @@ import pl.michal.szymanski.tictactoe.core.Point;
  */
 public interface Participant extends GameWatcher, TurnTimeoutHandler {
 
-    void getMoveField(ProxyResponseSetter<Point> proxy);
+    void getMoveField(ProxyResponse<Point> proxy);
+
+    String getDisplayName();
 
 }

@@ -3,7 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.michal.szymanski.tictactoe.core;
+package pl.michal.szymanski.tictactoe.model;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,7 +31,7 @@ public class Board {
     public Board(int size) {
         this.sizeX = size;
         this.sizeY = size;
-        this.board = RawBoardGenerator.createBoard(sizeX, sizeY);
+        this.board = BoardGenerator.createBoard(sizeX, sizeY);
     }
 
     public BoardSelector getSelector() {
@@ -47,6 +48,10 @@ public class Board {
 
     public int getSizeY() {
         return sizeY;
+    }
+
+    public void clear(){
+        this.board = BoardGenerator.createBoard(sizeX, sizeY);
     }
 
     public void doMove(Move move) {

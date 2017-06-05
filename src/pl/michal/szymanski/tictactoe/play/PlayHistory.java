@@ -21,17 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.ai;
+package pl.michal.szymanski.tictactoe.play;
 
-import java.util.List;
-import pl.michal.szymanski.tictactoe.model.BoardField;
+import java.util.concurrent.LinkedBlockingDeque;
 import pl.michal.szymanski.tictactoe.model.Move;
+import pl.michal.szymanski.tictactoe.model.Turn;
+
+
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface AIStrategy {
+public class PlayHistory {
 
-    Move doMove(List<BoardField[]> uncheckedSolutions, Difficulty difficulty);
+    private LinkedBlockingDeque<Move> moves = new LinkedBlockingDeque(9);
+    private LinkedBlockingDeque<Turn> turns = new LinkedBlockingDeque();
+
+    public LinkedBlockingDeque<Move> getMoves() {
+        return moves;
+    }
+
+    public void setMoves(LinkedBlockingDeque<Move> moves) {
+        this.moves = moves;
+    }
+
+    public LinkedBlockingDeque<Turn> getTurns() {
+        return turns;
+    }
+
+    public void setTurns(LinkedBlockingDeque<Turn> turns) {
+        this.turns = turns;
+    }
+
 }

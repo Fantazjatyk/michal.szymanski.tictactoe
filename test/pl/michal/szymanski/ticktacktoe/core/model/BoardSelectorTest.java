@@ -23,18 +23,19 @@
  */
 package pl.michal.szymanski.ticktacktoe.core.model;
 
-import pl.michal.szymanski.tictactoe.core.BoardField;
-import pl.michal.szymanski.tictactoe.core.Board;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import pl.michal.szymanski.tictactoe.core.BoardFieldType;
-import pl.michal.szymanski.tictactoe.core.Move;
-import pl.michal.szymanski.tictactoe.core.Player;
-import pl.michal.szymanski.tictactoe.core.Point;
+import pl.michal.szymanski.tictactoe.model.Board;
+import pl.michal.szymanski.tictactoe.model.BoardField;
+import pl.michal.szymanski.tictactoe.model.BoardFieldType;
+import pl.michal.szymanski.tictactoe.model.Move;
+import pl.michal.szymanski.tictactoe.model.Player;
+import pl.michal.szymanski.tictactoe.model.Point;
 
 /**
  *
@@ -78,6 +79,9 @@ public class BoardSelectorTest {
 
         assertEquals(1, row[1].getX());
         assertEquals(1, row[1].getY());
+
+        assertEquals(2, row[2].getX());
+        assertEquals(1, row[2].getY());
     }
 
     /**
@@ -96,8 +100,63 @@ public class BoardSelectorTest {
 
     @Test
     public void testGetSimplified() {
-        Player a = new Player("A");
-        Player b = new Player("B");
+        Player a = new Player();
+        Player b = new Player();
+        a.setBoardFieldType(BoardFieldType.XMark);
+        b.setBoardFieldType(BoardFieldType.OMark);
+
+        board.doMove(new Move(a, new Point(0, 0)));
+        board.doMove(new Move(a, new Point(1, 0)));
+        board.doMove(new Move(a, new Point(2, 0)));
+
+        board.doMove(new Move(b, new Point(2, 2)));
+        board.doMove(new Move(b, new Point(1, 1)));
+        board.doMove(new Move(b, new Point(0, 2)));
+        board.doMove(new Move(b, new Point(0, 1)));
+
+        String[][] result = board.getSelector().getSimplified();
+        assertEquals(board.getSizeY(), result.length);
+        assertEquals("X", result[0][0]);
+        assertEquals("X", result[0][1]);
+        assertEquals("X", result[0][2]);
+
+        assertEquals("O", result[2][2]);
+        assertEquals("O", result[1][1]);
+        assertEquals("O", result[2][0]);
+        assertEquals("O", result[1][0]);
+
+        assertEquals("?", result[1][2]);
+        assertEquals("?", result[2][1]);
+    }
+
+    @Test
+    public void testGetSimplified_StepByStep() {
+        Player a = new Player();
+        Player b = new Player();
+        a.setBoardFieldType(BoardFieldType.XMark);
+        b.setBoardFieldType(BoardFieldType.OMark);
+        assertTrue(testStepDoMove(new Point(0, 0), b));
+        assertTrue(testStepDoMove(new Point(1, 0), b));
+        assertTrue(testStepDoMove(new Point(2, 0), b));
+        assertTrue(testStepDoMove(new Point(0, 1), b));
+        assertTrue(testStepDoMove(new Point(1, 1), b));
+        assertTrue(testStepDoMove(new Point(2, 1), b));
+        assertTrue(testStepDoMove(new Point(0, 2), b));
+        assertTrue(testStepDoMove(new Point(1, 2), b));
+        assertTrue(testStepDoMove(new Point(2, 2), b));
+    }
+
+    public boolean testStepDoMove(Point<Integer> point, Player p) {
+        board.clear();
+        board.doMove(new Move(p, point));
+        String[][] result = board.getSelector().getSimplified();
+        return p.getBoardFieldType().toString().equals(result[point.getY()][point.getX()]);
+    }
+
+    @Test
+    public void getAllFields_isReallyAll() {
+        Player a = new Player();
+        Player b = new Player();
         a.setBoardFieldType(BoardFieldType.XMark);
         b.setBoardFieldType(BoardFieldType.OMark);
 
@@ -108,37 +167,62 @@ public class BoardSelectorTest {
         board.doMove(new Move(b, new Point(2, 2)));
         board.doMove(new Move(b, new Point(1, 1)));
 
-        String[][] result = board.getSelector().getSimplified();
-        assertEquals(board.getSizeY(), result.length);
-        assertEquals("X", result[0][0]);
-        assertEquals("X", result[1][0]);
-        assertEquals("X", result[2][0]);
+        board.doMove(new Move(b, new Point(0, 1)));
+        board.doMove(new Move(b, new Point(2, 1)));
 
-        assertEquals("O", result[2][2]);
-        assertEquals("O", result[1][1]);
-
-        assertEquals("?", result[0][1]);
-        assertEquals("?", result[0][2]);
-        assertEquals("?", result[1][2]);
-        assertEquals("?", result[2][1]);
+        List fields = board.getSelector().getAllFields().stream().filter(el -> el.getOwner().isPresent()).collect(Collectors.toList());
+        assertEquals(7, fields.size());
     }
 
     @Test
-    public void getAllPlayersFields() {
-        Player a = new Player("A");
-        Player b = new Player("B");
+    public void getAllFields_areThereAnyMistakes() {
+        Player a = new Player();
+        Player b = new Player();
+        a.setBoardFieldType(BoardFieldType.XMark);
+        b.setBoardFieldType(BoardFieldType.OMark);
 
         board.doMove(new Move(a, new Point(0, 0)));
         board.doMove(new Move(a, new Point(1, 0)));
         board.doMove(new Move(a, new Point(2, 0)));
 
         board.doMove(new Move(b, new Point(2, 2)));
+        board.doMove(new Move(b, new Point(0, 2)));
         board.doMove(new Move(b, new Point(1, 1)));
 
+        board.doMove(new Move(b, new Point(0, 1)));
+        board.doMove(new Move(b, new Point(2, 1)));
+
+        List<BoardField> fields = board.getSelector().getAllFields().stream().filter(el -> el.getOwner().isPresent() && el.getOwner().get().equals(b)).collect(Collectors.toList());
+        assertEquals(5, fields.size());
+
+        assertFalse(fields.stream().anyMatch(el -> el.getX() == 0 && el.getY() == 0));
+        assertFalse(fields.stream().anyMatch(el -> el.getX() == 1 && el.getY() == 0));
+        assertFalse(fields.stream().anyMatch(el -> el.getX() == 2 && el.getY() == 0));
+
+        assertTrue(fields.stream().anyMatch(el -> el.getX() == 0 && el.getY() == 2));
+        assertTrue(fields.stream().anyMatch(el -> el.getX() == 2 && el.getY() == 2));
+        assertTrue(fields.stream().anyMatch(el -> el.getX() == 1 && el.getY() == 1));
+        assertTrue(fields.stream().anyMatch(el -> el.getX() == 0 && el.getY() == 1));
+        assertTrue(fields.stream().anyMatch(el -> el.getX() == 2 && el.getY() == 1));
+    }
+
+    @Test
+    public void getAllPlayersFields() {
+        Player a = new Player();
+        Player b = new Player();
+
+        board.doMove(new Move(a, new Point(0, 0)));
+        board.doMove(new Move(a, new Point(1, 0)));
+
+        board.doMove(new Move(b, new Point(2, 2)));
+        board.doMove(new Move(b, new Point(1, 1)));
+        board.doMove(new Move(b, new Point(2, 0)));
+
         List<BoardField> result = board.getSelector().getPlayerFields(b);
-        assertEquals(2, result.size());
-        assertEquals(new Point(2,2), new Point(result.get(1).getX(), result.get(1).getY()));
-        assertEquals(new Point(1,1), new Point(result.get(0).getX(), result.get(0).getY()));
+        assertEquals(3, result.size());
+        assertEquals(new Point(2, 2), new Point(result.get(2).getX(), result.get(2).getY()));
+        assertEquals(new Point(1, 1), new Point(result.get(1).getX(), result.get(1).getY()));
+        assertEquals(new Point(2, 0), new Point(result.get(0).getX(), result.get(0).getY()));
     }
 
     /**

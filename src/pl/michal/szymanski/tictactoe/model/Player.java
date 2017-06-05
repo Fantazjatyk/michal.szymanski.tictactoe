@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.michal.szymanski.tictactoe.core;
+package pl.michal.szymanski.tictactoe.model;
 
+
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 import pl.michal.szymanski.tictactoe.transport.Participant;
@@ -15,28 +17,37 @@ import pl.michal.szymanski.tictactoe.transport.Participant;
  */
 public class Player<T extends Participant> {
 
-    private String username;
+    private String id;
     private BoardFieldType boardFieldType;
     private Optional<T> connector;
 
-    public Player(String username) {
-        this.username = username;
+    public Player() {
+        this.id = UUID.randomUUID().toString();
     }
 
-    public Player(String username, T connector) {
-        this.username = username;
-        this.connector = Optional.ofNullable(connector);
+    public Player(Optional<T> connector) {
+        this.connector = connector;
     }
 
-    public Player(String username, BoardFieldType boardFieldType) {
-        this.username = username;
+    public Player(BoardFieldType boardFieldType) {
         this.boardFieldType = boardFieldType;
     }
 
-    public Player(String username, BoardFieldType boardFieldType, T connector) {
-        this.username = username;
+    public Player(BoardFieldType boardFieldType, Optional<T> connector) {
         this.boardFieldType = boardFieldType;
-        this.connector = Optional.ofNullable(connector);
+        this.connector = connector;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public Optional<T> getConnector() {
+        return connector;
     }
 
     public void setBoardFieldType(BoardFieldType boardFieldType) {
@@ -51,18 +62,21 @@ public class Player<T extends Participant> {
         return this.connector;
     }
 
-    public String getUsername() {
-        return username;
-    }
-
     public BoardFieldType getBoardFieldType() {
         return boardFieldType;
     }
 
     @Override
     public boolean equals(Object obj) {
-        boolean test = obj != null && obj instanceof Player && ((Player) obj).getUsername().equals(this.getUsername());
+        boolean test = obj != null && obj instanceof Player && ((Player) obj).id.equals(this.id);
         return test;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 43 * hash + Objects.hashCode(this.id);
+        return hash;
     }
 
 }

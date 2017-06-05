@@ -23,14 +23,18 @@
  */
 package pl.michal.szymanski.ticktacktoe.core.model;
 
-import pl.michal.szymanski.tictactoe.core.BoardField;
-import pl.michal.szymanski.tictactoe.core.Board;
+
 import java.util.Arrays;
 import java.util.List;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
+import pl.michal.szymanski.tictactoe.model.Board;
+import pl.michal.szymanski.tictactoe.model.BoardFieldType;
+import pl.michal.szymanski.tictactoe.model.Move;
+import pl.michal.szymanski.tictactoe.model.Player;
+import pl.michal.szymanski.tictactoe.model.Point;
 
 /**
  *
@@ -68,10 +72,41 @@ public class BoardTest {
      */
     @Test
     public void testDoMove() {
+        Player a = new Player();
+        Player b = new Player();
+        a.setBoardFieldType(BoardFieldType.XMark);
+        b.setBoardFieldType(BoardFieldType.OMark);
+
+        board.doMove(new Move(a, new Point(0, 0)));
+        assertTrue(board.getBoard()[0][0].getOwner().isPresent());
+
+        board.clear();
+
+        board.doMove(new Move(a, new Point(1, 1)));
+        assertTrue(board.getBoard()[1][1].getOwner().isPresent());
+
+        board.clear();
+
+        board.doMove(new Move(a, new Point(2, 2)));
+        assertTrue(board.getBoard()[2][2].getOwner().isPresent());
+
+        board.clear();
+
+        board.doMove(new Move(a, new Point(0, 2)));
+        assertTrue(board.getBoard()[2][0].getOwner().isPresent());
+
+        board.clear();
+        board.doMove(new Move(a, new Point(2, 0)));
+        assertTrue(board.getBoard()[0][2].getOwner().isPresent());
+
+        board.clear();
+
+        board.doMove(new Move(a, new Point(0, 1)));
+        assertTrue(board.getBoard()[1][0].getOwner().isPresent());
+
     }
 
     /**
      * Test of getSizeX method, of class Board.
      */
-
 }

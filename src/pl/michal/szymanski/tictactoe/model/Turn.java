@@ -21,24 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.transport;
+package pl.michal.szymanski.tictactoe.model;
 
-import java.util.Optional;
+
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class ProxyResponseSetter<T> {
+public class Turn {
 
-    private ProxyResponse<T> parent;
+    private Player quarterback;
+    private final Board boardState;
 
-    public ProxyResponseSetter(ProxyResponse<T> parent) {
-        this.parent = parent;
+    public Turn(Player player, Board board) {
+        this.quarterback = player;
+        this.boardState = new Board(board);
     }
 
-    public void setReal(T real) {
-       parent.setReal(real);
+    public Player getQuarterback() {
+        return quarterback;
     }
 
 }

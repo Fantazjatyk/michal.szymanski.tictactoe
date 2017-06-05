@@ -23,23 +23,18 @@
  */
 package pl.michal.szymanski.ticktacktoe.core.model;
 
-import pl.michal.szymanski.tictactoe.core.GameMaster;
-import pl.michal.szymanski.tictactoe.core.Point;
-import pl.michal.szymanski.tictactoe.core.Move;
-import pl.michal.szymanski.tictactoe.core.Player;
-import pl.michal.szymanski.tictactoe.core.Board;
 import java.util.List;
 import java.util.Optional;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import pl.michal.szymanski.tictactoe.core.PlayFlow;
-import pl.michal.szymanski.tictactoe.core.PlayInfo;
-import pl.michal.szymanski.tictactoe.core.PlaySettings;
-import pl.michal.szymanski.tictactoe.transport.Participant;
-import pl.michal.szymanski.tictactoe.transport.ProxyResponse;
-import pl.michal.szymanski.tictactoe.transport.ProxyResponseSetter;
+import pl.michal.szymanski.tictactoe.model.Board;
+import pl.michal.szymanski.tictactoe.model.BoardField;
+import pl.michal.szymanski.tictactoe.model.Move;
+import pl.michal.szymanski.tictactoe.model.Player;
+import pl.michal.szymanski.tictactoe.model.Point;
+import pl.michal.szymanski.tictactoe.play.GameMaster;
 
 /**
  *
@@ -61,63 +56,9 @@ public class GameMasterTest {
 
     @Before
     public void setUp() {
-        player1 = new Player("a", new Participant() {
-
-            @Override
-            public void receiveBoard(Board board) {
-            }
-
-            @Override
-            public void onTurnTimeout() {
-            }
-
-            @Override
-            public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
-            }
-
-            @Override
-            public void getMoveField(ProxyResponseSetter<Point> proxy) {
-            }
-
-        });
-        player2 = new Player("b", new Participant() {
-
-            @Override
-            public void receiveBoard(Board board) {
-            }
-
-            @Override
-            public void onTurnTimeout() {
-            }
-
-            @Override
-            public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
-            }
-
-            @Override
-            public void getMoveField(ProxyResponseSetter proxy) {
-            }
-
-        });
-        player3 = new Player("c", new Participant() {
-
-            @Override
-            public void receiveBoard(Board board) {
-            }
-
-            @Override
-            public void onTurnTimeout() {
-            }
-
-            @Override
-            public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
-            }
-
-            @Override
-            public void getMoveField(ProxyResponseSetter<Point> proxy) {
-            }
-
-        });
+        player1 = new Player();
+        player2 = new Player();
+        player3 = new Player();
         board = new Board(3);
     }
 
@@ -165,6 +106,34 @@ public class GameMasterTest {
         assertTrue(winner.size() == 1);
         assertEquals(player1, winner.get(0));
 
+    }
+
+    @Test
+    public void testGetWinCombination() {
+        board.doMove(new Move(player1, new Point(0, 0)));
+        board.doMove(new Move(player1, new Point(1, 1)));
+        board.doMove(new Move(player1, new Point(2, 2)));
+        board.doMove(new Move(player2, new Point(0, 2)));
+
+        board.doMove(new Move(player3, new Point(0, 1)));
+        board.doMove(new Move(player3, new Point(1, 0)));
+
+        List<BoardField[]> combination = GameMaster.getWinCombinations(board.getSelector().getAllPossibleWinningLines());
+        assertEquals(1, combination.size());
+    }
+
+    @Test
+    public void testAreLineOwnedOnlyByOnePlayer() {
+        board.doMove(new Move(player1, new Point(0, 0)));
+        board.doMove(new Move(player1, new Point(0, 1)));
+        board.doMove(new Move(player1, new Point(0, 2)));
+
+        board.doMove(new Move(player3, new Point(1, 0)));
+        board.doMove(new Move(player3, new Point(1, 1)));
+        board.doMove(new Move(player3, new Point(1, 2)));
+
+        boolean result = GameMaster.areLineOwnedOnlyByOnePlayer(board.getSelector().getColumn(0));
+        assertTrue(result);
     }
 
     @Test

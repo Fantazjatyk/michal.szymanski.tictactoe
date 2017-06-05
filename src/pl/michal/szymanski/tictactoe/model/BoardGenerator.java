@@ -21,46 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.core;
+package pl.michal.szymanski.tictactoe.model;
 
-import java.util.Optional;
-import java.util.Random;
-import java.util.UUID;
-import pl.michal.szymanski.tictactoe.transport.Participant;
+
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class PlayInfo<T extends Participant> {
+public abstract class BoardGenerator {
 
-    private String id;
-    private Optional<Player> winner = Optional.empty();
-    private PlayersPair<T> players = new PlayersPair();
-    private Board board = new Board(3);
+    public static BoardField[][] createBoard(int sizeX, int sizeY) {
+        BoardField[][] board = new BoardField[sizeX][sizeY];
 
-    protected Board getBoard() {
-        return this.board;
+        for (int i = 0; i < sizeY; i++) {
+            board[i] = fillRow(i, sizeY);
+        }
+        return board;
     }
 
-    public PlayInfo() {
-        this.id = UUID.randomUUID().toString() + new Random().nextInt(1000);
-    }
+    private static BoardField[] fillRow(int rowId, int max) {
+        BoardField[] row = new BoardField[max];
 
-    public Optional<Player> getWinner() {
-        return winner;
+        for (int i = 0; i < row.length; i++) {
+            row[i] = new BoardField(i, rowId);
+        }
+        return row;
     }
-
-    public PlayersPair<T> getPlayers() {
-        return players;
-    }
-
-    public void setWinner(Optional<Player> winner) {
-        this.winner = winner;
-    }
-
-    public String getId() {
-        return id;
-    }
-
 }

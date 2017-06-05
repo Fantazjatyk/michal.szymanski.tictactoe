@@ -21,43 +21,64 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.core;
+package pl.michal.szymanski.tictactoe.play;
 
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.LinkedBlockingDeque;
+import pl.michal.szymanski.tictactoe.model.Board;
+import pl.michal.szymanski.tictactoe.model.Player;
 import pl.michal.szymanski.tictactoe.transport.GameWatcher;
+import pl.michal.szymanski.tictactoe.transport.Participant;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class PlayHistory {
+public class PlayInfo<T extends Participant> {
 
-    private LinkedBlockingDeque<Move> moves = new LinkedBlockingDeque(9);
+    private String id;
+    private int totalTimeInMilis = 0;
+    private Optional<Player<T>> winner = Optional.empty();
+    private PlayersPair<T> players = new PlayersPair();
+    private Board board = new Board(3);
     private LinkedBlockingDeque<GameWatcher> watchers = new LinkedBlockingDeque(100);
-    private LinkedBlockingDeque<Turn> turns = new LinkedBlockingDeque();
 
-    public LinkedBlockingDeque<Move> getMoves() {
-        return moves;
+    public Board getBoard() {
+        return this.board;
     }
 
-    public void setMoves(LinkedBlockingDeque<Move> moves) {
-        this.moves = moves;
+    public PlayInfo() {
+        this.id = UUID.randomUUID().toString() + new Random().nextInt(1000);
     }
 
     public LinkedBlockingDeque<GameWatcher> getWatchers() {
         return watchers;
     }
 
-    public void setWatchers(LinkedBlockingDeque<GameWatcher> watchers) {
-        this.watchers = watchers;
+    public Optional<Player<T>> getWinner() {
+        return winner;
     }
 
-    public LinkedBlockingDeque<Turn> getTurns() {
-        return turns;
+    public PlayersPair<T> getPlayers() {
+        return players;
     }
 
-    public void setTurns(LinkedBlockingDeque<Turn> turns) {
-        this.turns = turns;
+    public void setWinner(Optional<Player<T>> winner) {
+        this.winner = winner;
+    }
+
+    void setTotalTime(int totalTime) {
+        this.totalTimeInMilis = totalTime;
+    }
+
+    public int getTotalTimeInMilis() {
+        return totalTimeInMilis;
+    }
+
+    public String getId() {
+        return id;
     }
 
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.michal.szymanski.tictactoe.core;
+package pl.michal.szymanski.tictactoe.play;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +18,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import pl.michal.szymanski.tictactoe.transport.Participant;
+import pl.michal.szymanski.tictactoe.model.Board;
+import pl.michal.szymanski.tictactoe.model.BoardField;
+import pl.michal.szymanski.tictactoe.model.Move;
+import pl.michal.szymanski.tictactoe.model.Player;
+import pl.michal.szymanski.tictactoe.model.Point;
+
 
 /**
  *
@@ -31,7 +36,7 @@ public class GameMaster {
     }
 
     public static List<Player> getWinner(Board board) {
-        List<BoardField[]> possibleLines = lookForPossibleWinningSolutions(board);
+        List<BoardField[]> possibleLines = board.getSelector().getAllPossibleWinningLines();
         Set<Player> players = findAllPlayersOnBoard(board);
 
         if (players.isEmpty()) {
@@ -39,18 +44,10 @@ public class GameMaster {
         }
 
         List<Player> winners = lookForWinners(possibleLines, players);
-        if (possibleLines.stream().allMatch(line -> Stream.of(line).allMatch(field -> field.getOwner().isPresent()))) {
+        if (winners.size() == 0 && possibleLines.stream().allMatch(line -> Stream.of(line).allMatch(field -> field.getOwner().isPresent()))) {
             winners.addAll(players);
         }
         return winners;
-    }
-
-    private static List<BoardField[]> lookForPossibleWinningSolutions(Board board) {
-        List<BoardField[]> possibleLines = new ArrayList();
-        possibleLines.addAll(board.getSelector().getDiagonals());
-        possibleLines.addAll(board.getSelector().getRows());
-        possibleLines.addAll(board.getSelector().getColumns());
-        return possibleLines;
     }
 
     private static List<Player> lookForWinners(List<BoardField[]> lines, Set<Player> players) {
@@ -60,6 +57,31 @@ public class GameMaster {
                         .anyMatch(line -> Stream.of(line)
                         .allMatch(field -> field.getOwner().isPresent() && field.getOwner().get().equals(player)))
         ).collect(Collectors.toList());
+    }
+
+    public static List<BoardField[]> getWinCombinations(List<BoardField[]> lines) {
+        return lines.stream()
+                .filter(el -> areLineOwnedOnlyByOnePlayer(el)).collect(Collectors.toList());
+    }
+
+    public static boolean areLineOwnedOnlyByOnePlayer(BoardField[] line) {
+
+        Player p = null;
+        int matches = 0;
+        for (BoardField f : line) {
+            if (f.getOwner().isPresent()) {
+                if (p == null) {
+                    p = f.getOwner().get();
+                    matches++;
+                } else if (!(f.getOwner().get().equals(p))) {
+                    return false;
+                } else {
+                    matches++;
+                }
+            }
+        }
+        return matches == line.length;
+
     }
 
     private static Set<Player> findAllPlayersOnBoard(Board board) {

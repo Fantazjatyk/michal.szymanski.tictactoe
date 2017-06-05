@@ -23,7 +23,6 @@
  */
 package pl.michal.szymanski.ticktacktoe.core;
 
-import pl.michal.szymanski.tictactoe.control.TimerNotifier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.junit.After;
@@ -32,8 +31,9 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.mockito.Mockito;
-import pl.michal.szymanski.tictactoe.transport.TurnTimeoutHandler;
+import pl.michal.szymanski.tictactoe.control.TimerNotifier;
 import pl.michal.szymanski.tictactoe.control.TurnTimeoutNotify;
+import pl.michal.szymanski.tictactoe.transport.TurnTimeoutHandler;
 
 /**
  *

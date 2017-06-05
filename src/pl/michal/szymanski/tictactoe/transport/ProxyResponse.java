@@ -23,6 +23,7 @@
  */
 package pl.michal.szymanski.tictactoe.transport;
 
+
 import java.util.Optional;
 
 /**
@@ -31,29 +32,13 @@ import java.util.Optional;
  */
 public class ProxyResponse<T> {
 
-    private Optional<T> real = Optional.empty();
-    private ProxyResponseSetter<T> setters;
-    private ProxyResponseGetter<T> getters;
+    protected Optional<T> real = Optional.empty();
 
-    public ProxyResponse() {
-        setters = new ProxyResponseSetter(this);
-        getters = new ProxyResponseGetter(this);
+    public void setReal(T real) {
+        this.real = Optional.ofNullable(real);
     }
 
     public Optional<T> getReal() {
-        return real;
+        return this.real;
     }
-
-    public void setReal(T real) {
-        this.real = Optional.of(real);
-    }
-
-    public ProxyResponseSetter<T> getSetters() {
-        return setters;
-    }
-
-    public ProxyResponseGetter<T> getGetters() {
-        return getters;
-    }
-
 }

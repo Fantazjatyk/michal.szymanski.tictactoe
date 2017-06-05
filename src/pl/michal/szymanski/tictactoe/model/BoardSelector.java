@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.core;
+package pl.michal.szymanski.tictactoe.model;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -54,10 +55,18 @@ public class BoardSelector {
             BoardField[] row = this.board.get().getSelector().getRow(y);
             for (int x = 0; x < row.length; x++) {
                 BoardField field = row[x];
-                result[x][y] = field.getOwner().isPresent() ? field.getOwner().get().getBoardFieldType().toString() : "?";
+                result[y][x] = field.getOwner().isPresent() ? field.getOwner().get().getBoardFieldType().toString() : "?";
             }
         }
         return result;
+    }
+
+    public List<BoardField[]> getAllPossibleWinningLines() {
+        List<BoardField[]> possibleLines = new ArrayList();
+        possibleLines.addAll(getDiagonals());
+        possibleLines.addAll(getRows());
+        possibleLines.addAll(getColumns());
+        return possibleLines;
     }
 
     private BoardField[] getDiagonal(Point<Integer> p1, Point<Integer> p2) {

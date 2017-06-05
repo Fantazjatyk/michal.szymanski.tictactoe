@@ -23,6 +23,7 @@
  */
 package pl.michal.szymanski.tictactoe.control;
 
+import pl.michal.szymanski.tictactoe.control.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
 import pl.michal.szymanski.tictactoe.transport.WatchdogHandler;

@@ -5,10 +5,10 @@
  */
 package pl.michal.szymanski.tictactoe.transport;
 
-import pl.michal.szymanski.tictactoe.core.PlayFlow;
-import pl.michal.szymanski.tictactoe.core.Board;
-import pl.michal.szymanski.tictactoe.core.PlayInfo;
-import pl.michal.szymanski.tictactoe.core.PlaySettings;
+import pl.michal.szymanski.tictactoe.model.Board;
+import pl.michal.szymanski.tictactoe.play.PlayInfo;
+import pl.michal.szymanski.tictactoe.play.PlaySettings;
+
 
 /**
  *

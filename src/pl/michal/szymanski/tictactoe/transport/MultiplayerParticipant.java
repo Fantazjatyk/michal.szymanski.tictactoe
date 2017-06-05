@@ -5,11 +5,13 @@
  */
 package pl.michal.szymanski.tictactoe.transport;
 
+
+
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
 public interface MultiplayerParticipant extends Participant {
 
-    void isConnected(ProxyResponseSetter<Boolean> response);
+    void isConnected(ProxyResponse<Boolean> response);
 }

@@ -21,17 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.ai;
+package pl.michal.szymanski.tictactoe.play;
 
-import java.util.List;
-import pl.michal.szymanski.tictactoe.model.BoardField;
-import pl.michal.szymanski.tictactoe.model.Move;
+import pl.michal.szymanski.tictactoe.ai.AIEndpoint;
+import pl.michal.szymanski.tictactoe.ai.Difficulty;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface AIStrategy {
+public class SingleplayerPlay extends Play {
 
-    Move doMove(List<BoardField[]> uncheckedSolutions, Difficulty difficulty);
+    @Override
+    protected void onStart() {
+        super.onStart(); //To change body of generated methods, choose Tools | Templates.
+        super.join(new AIEndpoint(Difficulty.EASY));
+    }
+
 }

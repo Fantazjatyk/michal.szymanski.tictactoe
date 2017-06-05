@@ -8,15 +8,11 @@ package pl.michal.szymanski.tictactoe.ai;
 import java.util.ArrayList;
 import java.util.List;
 import pl.michal.szymanski.tictactoe.ai.Difficulty;
-import pl.michal.szymanski.tictactoe.core.PlayFlow;
-import pl.michal.szymanski.tictactoe.core.Board;
-import pl.michal.szymanski.tictactoe.core.Move;
-import pl.michal.szymanski.tictactoe.core.PlayInfo;
-import pl.michal.szymanski.tictactoe.core.PlaySettings;
-import pl.michal.szymanski.tictactoe.core.Point;
+import pl.michal.szymanski.tictactoe.model.Board;
+import pl.michal.szymanski.tictactoe.model.Point;
+import pl.michal.szymanski.tictactoe.play.PlayInfo;
+import pl.michal.szymanski.tictactoe.play.PlaySettings;
 import pl.michal.szymanski.tictactoe.transport.ProxyResponse;
-import pl.michal.szymanski.tictactoe.transport.ProxyResponseSetter;
-import pl.michal.szymanski.tictactoe.transport.SingleplayerParticipant;
 import pl.michal.szymanski.tictactoe.transport.SingleplayerParticipant;
 
 /**
@@ -57,7 +53,12 @@ public class AIEndpoint implements SingleplayerParticipant {
     }
 
     @Override
-    public void getMoveField(ProxyResponseSetter<Point> proxy) {
+    public void getMoveField(ProxyResponse<Point> proxy) {
+    }
+
+    @Override
+    public String getDisplayName() {
+        return "AI";
     }
 
 }

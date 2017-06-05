@@ -23,21 +23,13 @@
  */
 package pl.michal.szymanski.tictactoe.transport;
 
-import java.util.Optional;
+import pl.michal.szymanski.tictactoe.model.Player;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class ProxyResponseGetter<T> {
+public interface PlayerDisconnectedHandler<T extends Participant> {
 
-    private ProxyResponse<T> parent;
-
-    public ProxyResponseGetter(ProxyResponse<T> parent) {
-        this.parent = parent;
-    }
-
-    public Optional<T> getReal() {
-        return parent.getReal();
-    }
+    void handleDisconnected(Player<T> p);
 }

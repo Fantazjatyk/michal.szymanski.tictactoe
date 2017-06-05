@@ -21,29 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.core;
+package pl.michal.szymanski.tictactoe.model;
+
+
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public abstract class RawBoardGenerator {
+public enum BoardFieldType {
 
-    public static BoardField[][] createBoard(int sizeX, int sizeY) {
-        BoardField[][] board = new BoardField[sizeX][sizeY];
+    XMark('X'), OMark('O');
 
-        for (int i = 0; i < sizeY; i++) {
-            board[i] = fillRow(i, sizeY);
-        }
-        return board;
+    Character character;
+
+    BoardFieldType(Character character) {
+        this.character = character;
     }
 
-    private static BoardField[] fillRow(int rowId, int max) {
-        BoardField[] row = new BoardField[max];
-
-        for (int i = 0; i < row.length; i++) {
-            row[i] = new BoardField(i, rowId);
-        }
-        return row;
+    @Override
+    public String toString() {
+        return this.character + "";
     }
 }

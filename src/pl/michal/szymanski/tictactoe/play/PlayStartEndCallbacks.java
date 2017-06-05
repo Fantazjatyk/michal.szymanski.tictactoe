@@ -21,39 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.core;
-
-import java.util.Optional;
+package pl.michal.szymanski.tictactoe.play;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class BoardField {
+public class PlayStartEndCallbacks {
 
-    private int x;
-    private int y;
-    private Optional<Player> owner = Optional.empty();
+    private Runnable onStart;
+    private Runnable onEnd;
+    private Setter setter = new Setter();
 
-    public BoardField(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public Runnable getOnStart() {
+        return onStart;
     }
 
-    public int getX() {
-        return x;
+    public Runnable getOnEnd() {
+        return onEnd;
     }
 
-    public Optional<Player> getOwner() {
-        return owner;
+    public void onStart() {
+        if (onStart != null) {
+            onStart.run();
+        }
     }
 
-    public void setOwner(Player owner) {
-        this.owner = Optional.of(owner);
+    public void onEnd() {
+        if (onEnd != null) {
+            onEnd.run();
+        }
     }
 
-    public int getY() {
-        return y;
+    public Setter set() {
+        return this.setter;
     }
 
+    public class Setter {
+
+        public void setOnStart(Runnable onStart) {
+            PlayStartEndCallbacks.this.onStart = onStart;
+        }
+
+        public void setOnEnd(Runnable onEnd) {
+            PlayStartEndCallbacks.this.onEnd = onEnd;
+        }
+    }
 }

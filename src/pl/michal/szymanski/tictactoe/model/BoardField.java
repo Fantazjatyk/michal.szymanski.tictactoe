@@ -21,17 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.ai;
+package pl.michal.szymanski.tictactoe.model;
 
-import java.util.List;
-import pl.michal.szymanski.tictactoe.model.BoardField;
-import pl.michal.szymanski.tictactoe.model.Move;
+import java.util.Optional;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface AIStrategy {
+public class BoardField {
 
-    Move doMove(List<BoardField[]> uncheckedSolutions, Difficulty difficulty);
+    private int x;
+    private int y;
+    private Optional<Player> owner = Optional.empty();
+
+    public BoardField(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public Optional<Player> getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Player owner) {
+        this.owner = Optional.of(owner);
+    }
+
+    public int getY() {
+        return y;
+    }
+
 }

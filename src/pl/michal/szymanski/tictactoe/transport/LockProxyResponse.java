@@ -21,24 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.core;
+package pl.michal.szymanski.tictactoe.transport;
+
+
+import java.util.concurrent.locks.Lock;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class Turn {
+public class LockProxyResponse<T> extends ProxyResponse<T> {
 
-    private Player quarterback;
-    private final Board boardState;
+    private Lock lock;
 
-    public Turn(Player player, Board board) {
-        this.quarterback = player;
-        this.boardState = new Board(board);
+    public void setLock(Lock lock) {
+        this.lock = lock;
     }
 
-    public Player getQuarterback() {
-        return quarterback;
-    }
+    @Override
+    public void setReal(T real) {
+        super.setReal(real); //To change body of generated methods, choose Tools | Templates.
+        synchronized (lock) {
+            lock.notifyAll();
+        }
 
+    }
 }

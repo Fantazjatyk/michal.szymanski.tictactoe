@@ -21,24 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.core;
+package pl.michal.szymanski.tictactoe.exceptions;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public enum BoardFieldType {
+public class PlayersNotPresentException extends RuntimeException {
 
-    XMark('X'), OMark('O');
-
-    Character character;
-
-    BoardFieldType(Character character) {
-        this.character = character;
-    }
-
-    @Override
-    public String toString() {
-        return this.character + "";
-    }
 }

@@ -21,17 +21,46 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.ai;
+package pl.michal.szymanski.tictactoe.model;
 
-import java.util.List;
-import pl.michal.szymanski.tictactoe.model.BoardField;
-import pl.michal.szymanski.tictactoe.model.Move;
+
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface AIStrategy {
+public class Point<T extends Number> {
 
-    Move doMove(List<BoardField[]> uncheckedSolutions, Difficulty difficulty);
+    private T x;
+    private T y;
+
+    public Point(T x, T y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public T getX() {
+        return x;
+    }
+
+    public void setX(T x) {
+        this.x = x;
+    }
+
+    public T getY() {
+        return y;
+    }
+
+    public void setY(T y) {
+        this.y = y;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj instanceof Point && ((Point)(obj)).getX().equals(this.getX()) && ((Point)(obj)).getY().equals(this.getY());
+    }
+
+
+
+
 }
