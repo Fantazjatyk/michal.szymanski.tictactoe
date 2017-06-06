@@ -21,53 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.control;
+package pl.michal.szymanski.tictactoe.play;
 
-import pl.michal.szymanski.tictactoe.control.*;
-import com.google.common.base.Stopwatch;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class TimerNotifierWorker extends Thread {
+public class MultiplayerPlayExecutorTest {
 
-    private long timeout;
-    private Runnable onEnd;
-    private boolean isDone = false;
-
-    public long getTimeout() {
-        return timeout;
+    public MultiplayerPlayExecutorTest() {
     }
 
-    public TimerNotifierWorker(long timeout, TimerNotifier notifier) {
-        this.timeout = timeout;
-        this.setDaemon(true);
+    @AfterClass
+    public static void tearDownClass() {
     }
 
-    public boolean isEnded() {
-        return this.isDone;
+    @Before
+    public void setUp() {
     }
 
-    public void setOnEnd(Runnable r) {
-        this.onEnd = r;
-    }
-
-    @Override
-    public void run() {
-        try {
-            Thread.sleep(timeout);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(TimerNotifierWorker.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (onEnd != null) {
-                onEnd.run();
-                this.isDone = true;
-            }
-        }
+    /**
+     * Test of handleDisconnected method, of class MultiplayerPlayExecutor.
+     */
+    @Test
+    public void testHandleDisconnected() {
     }
 
 }

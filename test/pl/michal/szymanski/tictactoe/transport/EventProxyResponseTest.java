@@ -21,53 +21,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.control;
+package pl.michal.szymanski.tictactoe.transport;
 
-import pl.michal.szymanski.tictactoe.control.*;
-import com.google.common.base.Stopwatch;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class TimerNotifierWorker extends Thread {
+public class EventProxyResponseTest {
 
-    private long timeout;
-    private Runnable onEnd;
-    private boolean isDone = false;
+    EventProxyResponse r;
 
-    public long getTimeout() {
-        return timeout;
+    public EventProxyResponseTest() {
     }
 
-    public TimerNotifierWorker(long timeout, TimerNotifier notifier) {
-        this.timeout = timeout;
-        this.setDaemon(true);
+    @AfterClass
+    public static void tearDownClass() {
     }
 
-    public boolean isEnded() {
-        return this.isDone;
+    @Before
+    public void setUp() {
+        r = new EventProxyResponse();
     }
 
-    public void setOnEnd(Runnable r) {
-        this.onEnd = r;
+    /**
+     * Test of setBeforeCallback method, of class EventProxyResponse.
+     */
+    @Test
+    public void testAfterCallback() {
+        List l = new ArrayList();
+        r.setAfterCallback(() -> l.add(new Object()));
+        r.setReal(true);
+        assertEquals(1, l.size());
     }
 
-    @Override
-    public void run() {
-        try {
-            Thread.sleep(timeout);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(TimerNotifierWorker.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (onEnd != null) {
-                onEnd.run();
-                this.isDone = true;
-            }
-        }
+    @Test
+    public void testBeforeCallback() {
+        List l = new ArrayList();
+        r.setBeforeCallback(() -> l.add(new Object()));
+        r.setReal(true);
+        assertEquals(1, l.size());
     }
 
+    @Test
+    public void testIfRealIsPresent() {
+
+        r.setReal(true);
+        assertTrue(r.getReal().isPresent());
+
+    }
 }

@@ -23,25 +23,89 @@
  */
 package pl.michal.szymanski.tictactoe.play;
 
-import pl.michal.szymanski.tictactoe.ai.AIEndpoint;
-import pl.michal.szymanski.tictactoe.ai.Difficulty;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class SingleplayerPlay extends Play {
+public class PlayTest {
 
-    private Object ai;
-
-    @Override
-    protected void onStart() {
-        super.onStart(); //To change body of generated methods, choose Tools | Templates.
-        super.join(new AIEndpoint(Difficulty.EASY));
+    public PlayTest() {
     }
 
-    public void setAI(Object obj){
-        this.ai = obj;
+    @AfterClass
+    public static void tearDownClass() {
+    }
+
+    @Before
+    public void setUp() {
+    }
+
+    /**
+     * Test of getInfo method, of class Play.
+     */
+    @Test
+    public void testGetInfo() {
+    }
+
+    /**
+     * Test of getHistory method, of class Play.
+     */
+    @Test
+    public void testGetHistory() {
+    }
+
+    /**
+     * Test of settings method, of class Play.
+     */
+    @Test
+    public void testSettings() {
+    }
+
+    /**
+     * Test of getSettings method, of class Play.
+     */
+    @Test
+    public void testGetSettings() {
+    }
+
+    /**
+     * Test of join method, of class Play.
+     */
+    @Test
+    public void testJoin_GenericType() {
+    }
+
+    /**
+     * Test of join method, of class Play.
+     */
+    @Test
+    public void testJoin_GenericType_String() {
+    }
+
+    /**
+     * Test of notifyWatchers method, of class Play.
+     */
+    @Test
+    public void testNotifyWatchers() {
+    }
+
+    /**
+     * Test of registerWatcher method, of class Play.
+     */
+    @Test
+    public void testRegisterWatcher() {
+    }
+
+    /**
+     * Test of onFinish method, of class Play.
+     */
+    @Test
+    public void testOnFinish() {
     }
 
 }

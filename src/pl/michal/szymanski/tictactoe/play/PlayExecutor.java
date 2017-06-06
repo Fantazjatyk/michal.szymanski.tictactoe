@@ -57,6 +57,7 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
     private Stopwatch watch;
     private boolean isTerminated = false;
     private boolean isTimedOut = false;
+    private boolean isEnded = false;
     private PlayStartEndCallbacks startEnd = new PlayStartEndCallbacks();
 
     public PlayExecutor(Play<T> play) {
@@ -71,6 +72,10 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
         return play;
     }
 
+    public boolean isRunning() {
+        return !isTerminated || !isTimedOut || !isEnded;
+    }
+
     public final void execute() {
         if (!play.getInfo().getPlayers().isPair()) {
             throw new PlayersNotPresentException();
@@ -81,8 +86,8 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
         this.gameTimeoutNotifier = TimerNotifier.createStarted(play.getSettings().getters().getTimeout(), new GameTimeoutNotify());
         this.gameTimeoutNotifier.addObserver(this);
         gameLoop();
-        if(!this.isTerminated){
-        findAndSetWinner();
+        if (!this.isTerminated) {
+            findAndSetWinner();
         }
         end();
     }
@@ -110,6 +115,7 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
         play.getInfo().setTotalTime((int) watch.elapsed(TimeUnit.MILLISECONDS));
         watch.stop();
         startEnd.onEnd();
+        isEnded = true;
     }
 
     private void getMove(Player<T> player) {

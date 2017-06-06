@@ -44,7 +44,7 @@ public class TimerNotifier<Type extends WatchdogHandler> {
     private TimerNotify<Type> strategy;
     private TimerNotifierWorker worker;
 
-    public TimerNotifier(TimerNotify strategy) {
+    public TimerNotifier(TimerNotify<Type> strategy) {
         this.strategy = strategy;
     }
 
@@ -72,8 +72,12 @@ public class TimerNotifier<Type extends WatchdogHandler> {
         }
     }
 
+    public boolean isRunning(){
+        return !this.worker.isInterrupted() && !this.worker.isEnded();
+    }
     public void start(long timeout) {
         worker = new TimerNotifierWorker(timeout, this);
+        worker.setOnEnd(()->this.strategy.notifyObservers(observers));
         worker.start();
     }
 

@@ -21,53 +21,59 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.control;
+package pl.michal.szymanski.tictactoe.play;
 
-import pl.michal.szymanski.tictactoe.control.*;
-import com.google.common.base.Stopwatch;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.EmptyStackException;
+import java.util.Stack;
+import pl.michal.szymanski.tictactoe.model.Board;
+import pl.michal.szymanski.tictactoe.model.Point;
+import pl.michal.szymanski.tictactoe.transport.MultiplayerParticipant;
+import pl.michal.szymanski.tictactoe.transport.ProxyResponse;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class TimerNotifierWorker extends Thread {
+public class TestParticipant implements MultiplayerParticipant {
 
-    private long timeout;
-    private Runnable onEnd;
-    private boolean isDone = false;
+    private Stack<Point<Integer>> moves = new Stack();
 
-    public long getTimeout() {
-        return timeout;
+    public void setProgrammedMoves(Stack<Point<Integer>> programmedMoves) {
+        this.moves = programmedMoves;
     }
 
-    public TimerNotifierWorker(long timeout, TimerNotifier notifier) {
-        this.timeout = timeout;
-        this.setDaemon(true);
-    }
-
-    public boolean isEnded() {
-        return this.isDone;
-    }
-
-    public void setOnEnd(Runnable r) {
-        this.onEnd = r;
+    public Stack<Point<Integer>> getMoves() {
+        return moves;
     }
 
     @Override
-    public void run() {
+    public void getMoveField(ProxyResponse<Point> proxy) {
         try {
-            Thread.sleep(timeout);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(TimerNotifierWorker.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            if (onEnd != null) {
-                onEnd.run();
-                this.isDone = true;
-            }
+            proxy.setReal(moves.pop());
+        } catch (EmptyStackException e) {
+
         }
+    }
+
+    @Override
+    public void isConnected(ProxyResponse<Boolean> response) {
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.getClass().getName();
+    }
+
+    @Override
+    public void receiveBoard(Board board) {
+    }
+
+    @Override
+    public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
+    }
+
+    @Override
+    public void onTurnTimeout() {
     }
 
 }
