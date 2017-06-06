@@ -23,48 +23,48 @@
  */
 package pl.michal.szymanski.tictactoe.play;
 
+import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
 public class PlayStartEndCallbacks {
 
-    private Runnable onStart;
-    private Runnable onEnd;
-    private Setter setter = new Setter();
-
-    public Runnable getOnStart() {
-        return onStart;
-    }
-
-    public Runnable getOnEnd() {
-        return onEnd;
-    }
+    private Queue<Runnable> onStart = new LinkedBlockingDeque();
+    private Queue<Runnable> onEnd = new LinkedBlockingDeque();
+    private ReducedVisiblity setter = new ReducedVisiblity();
 
     public void onStart() {
-        if (onStart != null) {
-            onStart.run();
-        }
+            onStart.stream().forEach(el -> el.run());
     }
 
     public void onEnd() {
-        if (onEnd != null) {
-            onEnd.run();
-        }
+            onEnd.stream().forEach(el -> el.run());
     }
 
-    public Setter set() {
+    public ReducedVisiblity get() {
         return this.setter;
     }
 
-    public class Setter {
+    public class ReducedVisiblity {
 
-        public void setOnStart(Runnable onStart) {
-            PlayStartEndCallbacks.this.onStart = onStart;
+        public void addOnStartEvent(Runnable onStart) {
+            PlayStartEndCallbacks.this.onStart.add(onStart);
         }
 
-        public void setOnEnd(Runnable onEnd) {
-            PlayStartEndCallbacks.this.onEnd = onEnd;
+        public void addOnEndEvent(Runnable onEnd) {
+            PlayStartEndCallbacks.this.onEnd.add(onEnd);
+        }
+
+        public Queue<Runnable> getOnStart() {
+            return onStart;
+        }
+
+        public Queue<Runnable> getOnEnd() {
+            return onEnd;
         }
     }
 }

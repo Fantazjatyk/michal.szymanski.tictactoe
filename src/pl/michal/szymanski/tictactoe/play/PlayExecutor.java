@@ -55,6 +55,7 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
     private Play<T> play;
     private TimerNotifier gameTimeoutNotifier;
     private Stopwatch watch;
+    private boolean isTerminated = false;
     private boolean isTimedOut = false;
     private PlayStartEndCallbacks startEnd = new PlayStartEndCallbacks();
 
@@ -62,8 +63,8 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
         this.play = play;
     }
 
-    public PlayStartEndCallbacks.Setter setCallbacks() {
-        return this.startEnd.set();
+    public PlayStartEndCallbacks.ReducedVisiblity setCallbacks() {
+        return this.startEnd.get();
     }
 
     public Play<T> getPlay() {
@@ -80,12 +81,14 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
         this.gameTimeoutNotifier = TimerNotifier.createStarted(play.getSettings().getters().getTimeout(), new GameTimeoutNotify());
         this.gameTimeoutNotifier.addObserver(this);
         gameLoop();
+        if(!this.isTerminated){
         findAndSetWinner();
+        }
         end();
     }
 
     private final void gameLoop() {
-        while (!isDone()) {
+        while (!isDone() && !isTerminated) {
             Player player = play.getHistory().getTurns().isEmpty() ? play.getInfo().getPlayers().getRandomPlayer() : getNextPlayer();
             doTurn(player);
             sendBoard();
@@ -98,11 +101,15 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
 
     }
 
+    public void stop() {
+        this.isTerminated = true;
+    }
+
     public void end() {
         play.onFinish();
-        startEnd.onEnd();
         play.getInfo().setTotalTime((int) watch.elapsed(TimeUnit.MILLISECONDS));
         watch.stop();
+        startEnd.onEnd();
     }
 
     private void getMove(Player<T> player) {
@@ -127,8 +134,7 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
                 play.getInfo().getBoard().doMove(move);
                 play.getHistory().getMoves().addLast(move);
             }
-        }
-        else{
+        } else {
             player.getConnector().get().onTurnTimeout();
         }
 

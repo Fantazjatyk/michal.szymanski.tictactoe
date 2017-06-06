@@ -56,7 +56,7 @@ public class MultiplayerPlayExecutor extends PlayExecutor<MultiplayerParticipant
             try {
                 lock.wait(super.getPlay().getSettings().getters().getTurnLimit());
             } catch (InterruptedException ex) {
-                Logger.getLogger(MultiplayerPlayExecutor.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MultiplayerPlayExecutor.class.getName()).log(Level.SEVERE, ex.getMessage());
             }
         }
 
@@ -67,15 +67,14 @@ public class MultiplayerPlayExecutor extends PlayExecutor<MultiplayerParticipant
             handleDisconnected(player);
         }
 
-        //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
     public void handleDisconnected(Player p) {
-
+        Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "one or two players disconnected. Terminating play...");
         Optional<Player<MultiplayerParticipant>> winner = super.getPlay().getInfo().getPlayers().filter((el)->el.getId() != p.getId());
         super.getPlay().getInfo().setWinner((winner));
-        super.end();
+        super.stop();
     }
 
 }
