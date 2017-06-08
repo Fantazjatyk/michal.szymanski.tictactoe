@@ -25,18 +25,40 @@ package pl.michal.szymanski.tictactoe.play;
 
 import java.util.EmptyStackException;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pl.michal.szymanski.tictactoe.model.Board;
 import pl.michal.szymanski.tictactoe.model.Point;
-import pl.michal.szymanski.tictactoe.transport.MultiplayerParticipant;
+import pl.michal.szymanski.tictactoe.transport.Participant;
 import pl.michal.szymanski.tictactoe.transport.ProxyResponse;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class TestParticipant implements MultiplayerParticipant {
+public class TestParticipant implements Participant {
 
     private Stack<Point<Integer>> moves = new Stack();
+    private String name;
+    private boolean respondOnGetField = true;
+    private boolean respondOnConnected = true;
+    private long wait = 0;
+
+    public void dontRespondOnGetField() {
+        this.respondOnGetField = false;
+    }
+
+    public void dontRespondOnConnected() {
+        this.respondOnConnected = false;
+    }
+
+    public void setWaitTime(long milis) {
+        wait = milis;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public void setProgrammedMoves(Stack<Point<Integer>> programmedMoves) {
         this.moves = programmedMoves;
@@ -48,20 +70,33 @@ public class TestParticipant implements MultiplayerParticipant {
 
     @Override
     public void getMoveField(ProxyResponse<Point> proxy) {
-        try {
-            proxy.setReal(moves.pop());
-        } catch (EmptyStackException e) {
 
+        if (wait != 0) {
+            try {
+                Thread.sleep(wait);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(TestParticipant.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (respondOnGetField) {
+            try {
+                proxy.setReal(moves.pop());
+            } catch (EmptyStackException e) {
+
+            }
         }
     }
 
     @Override
     public void isConnected(ProxyResponse<Boolean> response) {
+        if (this.respondOnConnected) {
+            response.setReal(Boolean.TRUE);
+        }
     }
 
     @Override
     public String getDisplayName() {
-        return this.getClass().getName();
+        return this.name;
     }
 
     @Override

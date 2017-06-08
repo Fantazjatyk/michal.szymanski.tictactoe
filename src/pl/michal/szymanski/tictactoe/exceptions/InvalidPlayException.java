@@ -21,17 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.ai;
-
-import java.util.List;
-import pl.michal.szymanski.tictactoe.model.BoardField;
-import pl.michal.szymanski.tictactoe.model.Move;
+package pl.michal.szymanski.tictactoe.exceptions;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface AIStrategy {
+public class InvalidPlayException extends RuntimeException{
 
-    Move doMove(List<BoardField[]> uncheckedSolutions, Difficulty difficulty);
 }

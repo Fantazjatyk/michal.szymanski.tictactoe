@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.exceptions;
+package pl.michal.szymanski.tictactoe.ai;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class PlayersNotPresentException extends RuntimeException {
-
+public enum AILevel {
+Easy, Medium, Hard
 }

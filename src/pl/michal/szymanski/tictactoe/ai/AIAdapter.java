@@ -21,24 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.newcore.play;
+package pl.michal.szymanski.tictactoe.ai;
 
-import pl.michal.szymanski.tictactoe.play.PlayExecutor;
-import pl.michal.szymanski.tictactoe.play.PlaySettings;
-import pl.michal.szymanski.tictactoe.play.PlayInfo;
-import pl.michal.szymanski.tictactoe.play.Play;
-import java.util.EmptyStackException;
-import java.util.Stack;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.mockito.Mockito;
+import java.util.UUID;
+import pl.michal.szymanski.ai.tictactoe.ContextAwareAI;
 import pl.michal.szymanski.tictactoe.model.Board;
-import pl.michal.szymanski.tictactoe.model.Player;
 import pl.michal.szymanski.tictactoe.model.Point;
+import pl.michal.szymanski.tictactoe.play.PlayInfo;
+import pl.michal.szymanski.tictactoe.play.PlaySettings;
 import pl.michal.szymanski.tictactoe.transport.Participant;
 import pl.michal.szymanski.tictactoe.transport.ProxyResponse;
 
@@ -46,7 +36,52 @@ import pl.michal.szymanski.tictactoe.transport.ProxyResponse;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class PlayExecutorTest {
+public class AIAdapter implements Participant {
 
+    private ContextAwareAI ai;
+    private final String name = "AI";
+    private final String id = UUID.randomUUID().toString();
+
+    public AIAdapter(ContextAwareAI ai) {
+        this.ai = ai;
+    }
+
+    public String getId() {
+        return this.id;
+    }
+
+    @Override
+    public void getMoveField(ProxyResponse<Point> proxy) {
+        java.awt.Point p2d = ai.generateMove();
+        Point p = new Point(p2d.getX(), p2d.getY());
+        proxy.setReal(p);
+    }
+
+    @Override
+    public String getDisplayName() {
+        return name;
+    }
+
+    @Override
+    public void isConnected(ProxyResponse<Boolean> response) {
+        response.setReal(Boolean.TRUE);
+    }
+
+    @Override
+    public void receiveBoard(Board board) {
+        ai.getContext().pushNextBoardState(AITransportConverter.convertBoardToThreeValuedMatrix(board, id));
+    }
+
+    @Override
+    public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
+    }
+
+    public ContextAwareAI getAI() {
+        return this.ai;
+    }
+
+    @Override
+    public void onTurnTimeout() {
+    }
 
 }

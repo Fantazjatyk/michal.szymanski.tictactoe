@@ -29,12 +29,12 @@ public class PlaySettings {
             this.parent = parent;
         }
 
-        public PlaySettingsSetters timeout(long timeout, TimeUnit unit) {
+        public PlaySettingsSetters gameTimeLimit(long timeout, TimeUnit unit) {
             parent.timeout = unit.toMillis(timeout);
             return this;
         }
 
-        public PlaySettingsSetters moveLimit(long timeout, TimeUnit unit) {
+        public PlaySettingsSetters moveTimeLimit(long timeout, TimeUnit unit) {
             parent.turnLimit = unit.toMillis(timeout);
             return this;
         }

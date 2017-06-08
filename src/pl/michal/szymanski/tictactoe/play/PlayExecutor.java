@@ -35,7 +35,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import pl.michal.szymanski.tictactoe.control.GameTimeoutNotify;
 import pl.michal.szymanski.tictactoe.control.TimerNotifier;
-import pl.michal.szymanski.tictactoe.exceptions.PlayersNotPresentException;
+import pl.michal.szymanski.tictactoe.exceptions.NotAllPlayersPresentException;
 import pl.michal.szymanski.tictactoe.model.Move;
 import pl.michal.szymanski.tictactoe.model.Player;
 import pl.michal.szymanski.tictactoe.model.Point;
@@ -50,7 +50,7 @@ import pl.michal.szymanski.tictactoe.transport.PlayerDisconnectedHandler;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
+public class PlayExecutor<T extends Participant> implements GameTimeoutHandler, PlayerDisconnectedHandler {
 
     private Play<T> play;
     private TimerNotifier gameTimeoutNotifier;
@@ -58,7 +58,9 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
     private boolean isTerminated = false;
     private boolean isTimedOut = false;
     private boolean isEnded = false;
+    private ExecutorStatus status = ExecutorStatus.Started;
     private PlayStartEndCallbacks startEnd = new PlayStartEndCallbacks();
+    private Logger logger = Logger.getLogger(this.getClass().getName());
 
     public PlayExecutor(Play<T> play) {
         this.play = play;
@@ -78,8 +80,10 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
 
     public final void execute() {
         if (!play.getInfo().getPlayers().isPair()) {
-            throw new PlayersNotPresentException();
+            throw new NotAllPlayersPresentException();
         }
+        logger.log(Level.SEVERE, "GAME START");
+        this.status = ExecutorStatus.Running;
         watch = Stopwatch.createStarted();
         play.onStart();
         startEnd.onStart();
@@ -100,6 +104,41 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
         }
     }
 
+    protected void doTurn(Player<T> player) {
+        LockProxyResponse rs = new LockProxyResponse();
+
+        ReentrantLock lock = new ReentrantLock();
+        rs.setLock(lock);
+
+        player.getConnector().get().isConnected(rs);
+
+        if (!rs.getReal().isPresent()) {
+            synchronized (lock) {
+                try {
+                    lock.wait(play.getSettings().getters().getTurnLimit());
+                } catch (InterruptedException ex) {
+                    logger.log(Level.SEVERE, ex.getMessage());
+                }
+            }
+        }
+
+        if (rs.getReal().isPresent()) {
+            play.getHistory().getTurns().addLast(new Turn(player, play.getInfo().getBoard()));
+            getMove(player);
+        } else {
+            handleDisconnected(player);
+        }
+
+    }
+
+    public void handleDisconnected(Player p) {
+        Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "one or two players disconnected. Terminating play...");
+        Optional<Player<T>> winner = play.getInfo().getPlayers().filter((el) -> el.getId() != p.getId());
+        play.getInfo().setWinner((winner));
+        this.status = ExecutorStatus.Walkover;
+        stop();
+    }
+
     private void findAndSetWinner() {
         List<Player> winners = GameMaster.getWinner(play.getInfo().getBoard());
         play.getInfo().setWinner(winners.size() == 1 ? Optional.of(winners.get(0)) : Optional.empty());
@@ -107,15 +146,35 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
     }
 
     public void stop() {
+        logger.log(Level.SEVERE, "GAME TERMINATED");
         this.isTerminated = true;
     }
 
+    public ExecutorStatus getStatus() {
+        return this.status;
+    }
+
     public void end() {
+
         play.onFinish();
         play.getInfo().setTotalTime((int) watch.elapsed(TimeUnit.MILLISECONDS));
         watch.stop();
         startEnd.onEnd();
         isEnded = true;
+        status = evaluateStatus();
+        logger.log(Level.SEVERE, "GAME OVER");
+    }
+
+    public ExecutorStatus evaluateStatus() {
+        ExecutorStatus status = null;
+        if (this.status == ExecutorStatus.Walkover) {
+            return ExecutorStatus.Walkover;
+        } else if (this.play.getInfo().getWinner().isPresent()) {
+            status = ExecutorStatus.Winner;
+        } else {
+            status = ExecutorStatus.Remis;
+        }
+        return status;
     }
 
     private void getMove(Player<T> player) {
@@ -127,11 +186,13 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
 
         player.connector().get().getMoveField(response);
 
-        synchronized (lock) {
-            try {
-                lock.wait(play.getSettings().getters().getTurnLimit());
-            } catch (InterruptedException ex) {
-                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, null, ex);
+        if (!response.getReal().isPresent()) {
+            synchronized (lock) {
+                try {
+                    lock.wait(play.getSettings().getters().getTurnLimit());
+                } catch (InterruptedException ex) {
+
+                }
             }
         }
         if (response.getReal().isPresent()) {
@@ -156,18 +217,15 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler {
         play.getInfo().getWatchers().stream().forEach((el) -> el.receiveBoard(play.getInfo().getBoard()));
     }
 
-    protected void doTurn(Player<T> player) {
-        play.getHistory().getTurns().addLast(new Turn(player, play.getInfo().getBoard()));
-        getMove(player);
-    }
-
     public final boolean isDone() {
         return GameMaster.isDone(play.getInfo().getBoard()) || this.isTimedOut;
     }
 
     @Override
     public void onGameTimeout() {
+        logger.log(Level.SEVERE, "GAME TIMEOUT");
         this.isTimedOut = true;
+        this.isTerminated = true;
     }
 
 }

@@ -21,47 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.play;
-
-import pl.michal.szymanski.ai.tictactoe.ContextAwareAI;
-import pl.michal.szymanski.ai.tictactoe.behavior.EasyAIBehavior;
-import pl.michal.szymanski.ai.tictactoe.behavior.HardAIBehavior;
-import pl.michal.szymanski.ai.tictactoe.behavior.MediumAIBehavior;
-import pl.michal.szymanski.tictactoe.ai.AIAdapter;
-import pl.michal.szymanski.tictactoe.ai.AILevel;
-import pl.michal.szymanski.tictactoe.model.Player;
+package pl.michal.szymanski.tictactoe.exceptions;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class SingleplayerPlay extends Play {
-
-    private AIAdapter aiAdapter;
-
-    public SingleplayerPlay() {
-        this.aiAdapter = new AIAdapter(new ContextAwareAI());
-        super.join(aiAdapter, aiAdapter.getId());
-    }
-
-    public void setAILevel(AILevel level) {
-
-        switch (level) {
-            case Easy:
-                aiAdapter.getAI().setBehavior(new EasyAIBehavior());
-                break;
-            case Medium:
-                aiAdapter.getAI().setBehavior(new MediumAIBehavior());
-                break;
-            case Hard:
-                aiAdapter.getAI().setBehavior(new HardAIBehavior());
-                break;
-
-        }
-    }
-
-    public Player getAiPlayer() {
-        return (Player) super.getInfo().getPlayers().getPlayer(aiAdapter.getDisplayName()).get();
-    }
+public class NotAllPlayersPresentException extends RuntimeException {
 
 }

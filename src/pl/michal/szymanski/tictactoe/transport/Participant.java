@@ -17,4 +17,5 @@ public interface Participant extends GameWatcher, TurnTimeoutHandler {
 
     String getDisplayName();
 
+    void isConnected(ProxyResponse<Boolean> response);
 }

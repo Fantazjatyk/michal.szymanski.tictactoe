@@ -23,33 +23,10 @@
  */
 package pl.michal.szymanski.tictactoe.play;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
-
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class MultiplayerPlayExecutorTest {
-
-    public MultiplayerPlayExecutorTest() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    /**
-     * Test of handleDisconnected method, of class MultiplayerPlayExecutor.
-     */
-    @Test
-    public void testHandleDisconnected() {
-    }
-
+public enum ExecutorStatus {
+    Started, Running, Winner, Remis, Walkover
 }

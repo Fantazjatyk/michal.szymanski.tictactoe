@@ -16,7 +16,6 @@ import pl.michal.szymanski.tictactoe.play.PlayInfo;
 import pl.michal.szymanski.tictactoe.play.PlaySettings;
 import pl.michal.szymanski.tictactoe.transport.GameWatcher;
 import pl.michal.szymanski.tictactoe.transport.Participant;
-import pl.michal.szymanski.tictactoe.transport.MultiplayerParticipant;
 
 /**
  *
