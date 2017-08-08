@@ -21,8 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.model;
+package pl.michal.szymanski.tictactoe.model.v2;
 
+import pl.michal.szymanski.tictactoe.model.*;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +56,7 @@ public class BoardSelector {
             BoardField[] row = this.board.get().getSelector().getRow(y);
             for (int x = 0; x < row.length; x++) {
                 BoardField field = row[x];
-                result[y][x] = field.getOwner().isPresent() ? field.getOwner().get().getBoardFieldType().toString() : "?";
+                result[y][x] = field.getOwner().isPresent() ? field.getOwner().get().getType().toString() : "?";
             }
         }
         return result;

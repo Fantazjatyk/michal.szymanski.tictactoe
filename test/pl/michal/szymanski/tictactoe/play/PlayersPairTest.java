@@ -21,14 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.play;
+package pl.michal.szymanski.tictactoe.play.v2;
 
+import pl.michal.szymanski.tictactoe.play.*;
 import java.util.Optional;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import pl.michal.szymanski.tictactoe.model.Player;
+import pl.michal.szymanski.tictactoe.model.v2.Player;
 
 /**
  *
@@ -50,8 +51,8 @@ public class PlayersPairTest {
     @Before
     public void setUp() {
         pair = new PlayersPair();
-        p1 = new Player();
-        p2 = new Player();
+        p1 = new NewTestParticipant();
+        p2 = new NewTestParticipant();
         pair.firstPlayer(p1);
         pair.secondPlayer(p2);
     }
@@ -64,8 +65,8 @@ public class PlayersPairTest {
         pair = new PlayersPair();
         pair.firstPlayer(p1);
 
-        assertTrue(pair.firstPlayer().isPresent());
-        assertFalse(pair.secondPlayer().isPresent());
+        assertTrue(pair.getFirstPlayer().isPresent());
+        assertFalse(pair.getSecondPlayer().isPresent());
         assertFalse(pair.isPair());
     }
 
@@ -74,7 +75,7 @@ public class PlayersPairTest {
      */
     @Test
     public void testTwoPlayers() {
-        assertTrue(pair.firstPlayer().isPresent() && pair.secondPlayer().isPresent());
+        assertTrue(pair.getFirstPlayer().isPresent() && pair.getSecondPlayer().isPresent());
         assertTrue(pair.isPair());
     }
 
@@ -126,8 +127,7 @@ public class PlayersPairTest {
 
     @Test
     public void testFiler() {
-        this.p1 = new Player();
-        p1.setId("abcd");
+        this.p1 = new NewTestParticipant("abcd");
 
         this.pair = new PlayersPair();
         pair.firstPlayer(p1);

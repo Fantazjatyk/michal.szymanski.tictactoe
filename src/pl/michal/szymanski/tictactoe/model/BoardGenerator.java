@@ -21,7 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.model;
+package pl.michal.szymanski.tictactoe.model.v2;
+
+import pl.michal.szymanski.tictactoe.model.*;
 
 
 

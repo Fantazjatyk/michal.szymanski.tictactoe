@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.michal.szymanski.tictactoe.model;
+package pl.michal.szymanski.tictactoe.model.v2;
 
-
+import pl.michal.szymanski.tictactoe.model.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -50,12 +50,13 @@ public class Board {
         return sizeY;
     }
 
-    public void clear(){
+    public void clear() {
         this.board = BoardGenerator.createBoard(sizeX, sizeY);
     }
 
     public void doMove(Move move) {
         Player invoker = move.getInvoker().get();
-        board[move.getPoint().getY()][move.getPoint().getX()].setOwner(invoker);
+        BoardField bf = board[move.getPoint().getY()][move.getPoint().getX()];
+        bf.setOwner(invoker);
     }
 }

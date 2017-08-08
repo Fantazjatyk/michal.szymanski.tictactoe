@@ -3,68 +3,79 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.michal.szymanski.tictactoe.play;
+package pl.michal.szymanski.tictactoe.play.v2;
 
+import pl.michal.szymanski.tictactoe.play.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import pl.michal.szymanski.tictactoe.model.BoardFieldType;
-import pl.michal.szymanski.tictactoe.model.Player;
-import pl.michal.szymanski.tictactoe.transport.Participant;
+import pl.michal.szymanski.tictactoe.model.v2.BoardFieldType;
+
+import pl.michal.szymanski.tictactoe.model.v2.Player;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class PlayersPair<T extends Participant> {
+public class PlayersPair {
 
-    private Optional<Player<T>> firstPlayer = Optional.empty();
-    private Optional<Player<T>> secondPlayer = Optional.empty();
+    private Optional<Player> firstPlayer = Optional.empty();
+    private Optional<Player> secondPlayer = Optional.empty();
 
-    public Optional<Player<T>> firstPlayer() {
+    public Optional<Player> getFirstPlayer() {
         return firstPlayer;
     }
 
-    public Optional<Player<T>> secondPlayer() {
+    public Optional<Player> getSecondPlayer() {
         return secondPlayer;
-    }
-
-    public Optional<Player<T>> getXMarkPlayer() {
-        return getMarkedPlayer(BoardFieldType.XMark);
     }
 
     public boolean isPair() {
         return this.firstPlayer.isPresent() && this.secondPlayer.isPresent();
     }
 
-    public boolean areEachHaveConnector() {
-        return this.firstPlayer.get().connector().isPresent() && this.secondPlayer.get().connector().isPresent();
+    public Optional<Player> getPlayer(String username) {
+        return firstPlayer.isPresent() && firstPlayer.get().getUsername().equals(username)
+                ? firstPlayer : (secondPlayer.isPresent() && secondPlayer.get().getUsername().equals(username) ? secondPlayer : Optional.empty());
     }
 
-    public Optional<Player<T>> getOMarkPlayer() {
+    public Optional<Player> getOMarkPlayer() {
         return getMarkedPlayer(BoardFieldType.OMark);
     }
 
-    public Optional<Player<T>> getPlayer(String username) {
-        return firstPlayer.isPresent() && firstPlayer.get().connector().get().getUsername().equals(username)
-                ? firstPlayer : (secondPlayer.isPresent() && secondPlayer.get().connector().get().getUsername().equals(username) ? secondPlayer : Optional.empty());
+    public Optional<Player> getMarkedPlayer(BoardFieldType type) {
+        return firstPlayer.isPresent() && firstPlayer.get().getType().equals(type) ? firstPlayer
+                : (secondPlayer.isPresent() && secondPlayer.get().getType().equals(type) ? secondPlayer : Optional.empty());
     }
 
-    public Optional<Player<T>> getMarkedPlayer(BoardFieldType type) {
-        return firstPlayer.isPresent() && firstPlayer.get().getBoardFieldType().equals(type) ? firstPlayer
-                : (secondPlayer.isPresent() && secondPlayer.get().getBoardFieldType().equals(type) ? secondPlayer : Optional.empty());
+    public Optional<Player> getXMarkPlayer() {
+        return getMarkedPlayer(BoardFieldType.XMark);
     }
 
-    public Player<T> getRandomPlayer() {
+    public Player getRandomPlayer() {
         boolean isThatFirst = new Random().nextBoolean();
-        return isThatFirst ? firstPlayer().get() : secondPlayer().get();
+        return isThatFirst ? getFirstPlayer().get() : getSecondPlayer().get();
     }
 
-    public Optional<Player<T>> filter(Predicate<Player> pr) {
-        Optional<Player<T>> result = Optional.empty();
+    public void assignBoardFieldsMarks() {
+
+        boolean random = new Random().nextBoolean();
+
+        if (random) {
+            getFirstPlayer().get().setType(BoardFieldType.XMark);
+            getSecondPlayer().get().setType(BoardFieldType.OMark);
+        } else {
+            getFirstPlayer().get().setType(BoardFieldType.OMark);
+            getSecondPlayer().get().setType(BoardFieldType.XMark);
+        }
+
+    }
+
+    public Optional<Player> filter(Predicate<Player> pr) {
+        Optional<Player> result = Optional.empty();
 
         if (pr.test(this.firstPlayer.get())) {
             result = this.firstPlayer;
@@ -82,17 +93,4 @@ public class PlayersPair<T extends Participant> {
         this.secondPlayer = Optional.ofNullable(player);
     }
 
-    public void assignBoardFieldsMarks() {
-
-        boolean random = new Random().nextBoolean();
-
-        if (random) {
-            firstPlayer().get().setBoardFieldType(BoardFieldType.XMark);
-            secondPlayer().get().setBoardFieldType(BoardFieldType.OMark);
-        } else {
-            firstPlayer().get().setBoardFieldType(BoardFieldType.OMark);
-            secondPlayer().get().setBoardFieldType(BoardFieldType.XMark);
-        }
-
-    }
 }

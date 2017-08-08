@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.play;
+package pl.michal.szymanski.tictactoe.play.v2;
 
+import pl.michal.szymanski.tictactoe.play.*;
 import java.util.concurrent.LinkedBlockingDeque;
-import pl.michal.szymanski.tictactoe.model.Move;
-import pl.michal.szymanski.tictactoe.model.Turn;
+import pl.michal.szymanski.tictactoe.model.v2.Move;
 
-
+import pl.michal.szymanski.tictactoe.model.v2.Turn;
 
 /**
  *

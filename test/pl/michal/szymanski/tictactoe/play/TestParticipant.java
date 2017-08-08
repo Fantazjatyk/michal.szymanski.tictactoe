@@ -21,28 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.play;
+package pl.michal.szymanski.tictactoe.play.v2;
 
+import pl.michal.szymanski.tictactoe.play.*;
 import java.util.EmptyStackException;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import pl.michal.szymanski.tictactoe.model.Board;
-import pl.michal.szymanski.tictactoe.model.IntPoint;
-import pl.michal.szymanski.tictactoe.transport.Participant;
-import pl.michal.szymanski.tictactoe.transport.ProxyResponse;
+import pl.michal.szymanski.tictactoe.model.v2.Board;
+
+import pl.michal.szymanski.tictactoe.model.v2.GameResult;
+import pl.michal.szymanski.tictactoe.model.v2.IntPoint;
+import pl.michal.szymanski.tictactoe.model.v2.Player;
+import pl.michal.szymanski.tictactoe.transport.v2.ProxyResponse;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class TestParticipant implements Participant {
+public class NewTestParticipant extends Player {
 
     private Stack<IntPoint> moves = new Stack();
     private String name;
     private boolean respondOnGetField = true;
     private boolean respondOnConnected = true;
     private long wait = 0;
+
+    public NewTestParticipant(String id) {
+        super(id);
+    }
+
+    public NewTestParticipant() {
+    }
 
     public void dontRespondOnGetField() {
         this.respondOnGetField = false;
@@ -69,13 +79,13 @@ public class TestParticipant implements Participant {
     }
 
     @Override
-    public void getMoveField(ProxyResponse<IntPoint> proxy) throws Exception{
+    public void getMoveField(ProxyResponse<IntPoint> proxy) throws Exception {
 
         if (wait != 0) {
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException ex) {
-                Logger.getLogger(TestParticipant.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(NewTestParticipant.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         if (respondOnGetField) {
@@ -88,7 +98,7 @@ public class TestParticipant implements Participant {
     }
 
     @Override
-    public void isConnected(ProxyResponse<Boolean> response) throws Exception{
+    public void isConnected(ProxyResponse<Boolean> response) throws Exception {
         if (this.respondOnConnected) {
             response.setReal(Boolean.TRUE);
         }
@@ -104,11 +114,15 @@ public class TestParticipant implements Participant {
     }
 
     @Override
-    public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
+    public void onTurnTimeout() {
     }
 
     @Override
-    public void onTurnTimeout() {
+    public void receiveGameResult(GameResult r) {
+    }
+
+    @Override
+    public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
     }
 
 }

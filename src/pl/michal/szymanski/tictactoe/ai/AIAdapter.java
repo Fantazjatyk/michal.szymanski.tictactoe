@@ -21,24 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.ai;
+package pl.michal.szymanski.tictactoe.ai.v2;
 
+import pl.michal.szymanski.tictactoe.ai.*;
 import java.util.UUID;
 import pl.michal.szymanski.ai.tictactoe.ContextAwareAI;
 import pl.michal.szymanski.ai.tictactoe.model.BoardReader;
-import pl.michal.szymanski.tictactoe.model.Board;
-import pl.michal.szymanski.tictactoe.model.BoardField;
-import pl.michal.szymanski.tictactoe.model.IntPoint;
-import pl.michal.szymanski.tictactoe.play.PlayInfo;
-import pl.michal.szymanski.tictactoe.play.PlaySettings;
-import pl.michal.szymanski.tictactoe.transport.Participant;
-import pl.michal.szymanski.tictactoe.transport.ProxyResponse;
+import pl.michal.szymanski.tictactoe.model.v2.Board;
+import pl.michal.szymanski.tictactoe.model.v2.BoardField;
+import pl.michal.szymanski.tictactoe.model.v2.GameResult;
+import pl.michal.szymanski.tictactoe.model.v2.IntPoint;
+import pl.michal.szymanski.tictactoe.model.v2.Player;
+import pl.michal.szymanski.tictactoe.play.v2.PlayInfo;
+import pl.michal.szymanski.tictactoe.play.v2.PlaySettings;
+
+import pl.michal.szymanski.tictactoe.transport.v2.Participant;
+import pl.michal.szymanski.tictactoe.transport.v2.ProxyResponse;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class AIAdapter implements Participant {
+public class AIAdapter extends Player {
 
     private ContextAwareAI ai;
     private final String name = "AI";
@@ -69,6 +73,10 @@ public class AIAdapter implements Participant {
         response.setReal(Boolean.TRUE);
     }
 
+    public ContextAwareAI getAI() {
+        return this.ai;
+    }
+
     @Override
     public void receiveBoard(Board board) {
         BoardReader<BoardField> r = new BoardReader();
@@ -80,15 +88,15 @@ public class AIAdapter implements Participant {
     }
 
     @Override
-    public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
-    }
-
-    public ContextAwareAI getAI() {
-        return this.ai;
+    public void receiveGameResult(GameResult r) {
     }
 
     @Override
     public void onTurnTimeout() {
+    }
+
+    @Override
+    public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
     }
 
 }

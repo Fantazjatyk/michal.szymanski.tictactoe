@@ -3,9 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.michal.szymanski.tictactoe.play;
+package pl.michal.szymanski.tictactoe.play.v2;
 
 
+import pl.michal.szymanski.tictactoe.play.*;
 import java.util.concurrent.TimeUnit;
 
 /**

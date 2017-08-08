@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.michal.szymanski.tictactoe.transport;
+package pl.michal.szymanski.tictactoe.transport.v2;
 
+import pl.michal.szymanski.tictactoe.transport.*;
 import pl.michal.szymanski.tictactoe.model.Board;
 import pl.michal.szymanski.tictactoe.play.PlayInfo;
 import pl.michal.szymanski.tictactoe.play.PlaySettings;
