@@ -21,15 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.play;
+package pl.michal.szymanski.tictactoe.play.v2;
 
+import pl.michal.szymanski.tictactoe.play.*;
 import pl.michal.szymanski.ai.tictactoe.ContextAwareAI;
 import pl.michal.szymanski.ai.tictactoe.behavior.EasyAIBehavior;
 import pl.michal.szymanski.ai.tictactoe.behavior.HardAIBehavior;
 import pl.michal.szymanski.ai.tictactoe.behavior.MediumAIBehavior;
-import pl.michal.szymanski.tictactoe.ai.AIAdapter;
+
 import pl.michal.szymanski.tictactoe.ai.AILevel;
-import pl.michal.szymanski.tictactoe.model.Player;
+import pl.michal.szymanski.tictactoe.ai.v2.AIAdapter;
+import pl.michal.szymanski.tictactoe.model.v2.Player;
 
 /**
  *
@@ -41,7 +43,7 @@ public class SingleplayerPlay extends Play {
 
     public SingleplayerPlay() {
         this.aiAdapter = new AIAdapter(new ContextAwareAI());
-        super.join(aiAdapter, aiAdapter.getId());
+        super.join(aiAdapter);
     }
 
     public void setAILevel(AILevel level) {

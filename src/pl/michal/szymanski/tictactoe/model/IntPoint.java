@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.transport;
+package pl.michal.szymanski.tictactoe.model;
 
 
 
@@ -29,6 +29,38 @@ package pl.michal.szymanski.tictactoe.transport;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface TurnTimeoutHandler extends WatchdogHandler{
-void onTurnTimeout() throws Exception;
+public class IntPoint {
+
+    private int x;
+    private int y;
+
+    public IntPoint(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj instanceof IntPoint && ((IntPoint)(obj)).getX() == this.getX() && ((IntPoint)(obj)).getY() == this.getY();
+    }
+
+
+
+
 }

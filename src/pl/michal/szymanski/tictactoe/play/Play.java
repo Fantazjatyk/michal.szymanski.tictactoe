@@ -35,7 +35,7 @@ public class Play<T extends Participant> {
         return history;
     }
 
-    protected void onStart() {
+    void onStart() {
         info.getWatchers().add((GameWatcher) info.getPlayers().firstPlayer().get().connector().get());
         info.getWatchers().add((GameWatcher) info.getPlayers().secondPlayer().get().connector().get());
         info.getPlayers().assignBoardFieldsMarks();

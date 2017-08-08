@@ -3,9 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.michal.szymanski.tictactoe.model;
+package pl.michal.szymanski.tictactoe.model.v2;
 
-
+import pl.michal.szymanski.tictactoe.model.*;
 import java.lang.ref.WeakReference;
 
 /**

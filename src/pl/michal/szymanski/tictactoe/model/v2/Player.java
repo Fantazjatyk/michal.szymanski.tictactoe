@@ -21,47 +21,68 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.play;
+package pl.michal.szymanski.tictactoe.model.v2;
 
-import pl.michal.szymanski.ai.tictactoe.ContextAwareAI;
-import pl.michal.szymanski.ai.tictactoe.behavior.EasyAIBehavior;
-import pl.michal.szymanski.ai.tictactoe.behavior.HardAIBehavior;
-import pl.michal.szymanski.ai.tictactoe.behavior.MediumAIBehavior;
-import pl.michal.szymanski.tictactoe.ai.AIAdapter;
-import pl.michal.szymanski.tictactoe.ai.AILevel;
-import pl.michal.szymanski.tictactoe.model.Player;
+import java.util.Objects;
+import java.util.UUID;
+import pl.michal.szymanski.tictactoe.transport.v2.ProxyResponse;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class SingleplayerPlay extends Play {
+public abstract class Player extends Guest {
 
-    private AIAdapter aiAdapter;
+    private String id;
+    private String username;
+    private BoardFieldType type;
 
-    public SingleplayerPlay() {
-        this.aiAdapter = new AIAdapter(new ContextAwareAI());
-        super.join(aiAdapter, aiAdapter.getId());
+    public String getId() {
+        return id;
     }
 
-    public void setAILevel(AILevel level) {
-
-        switch (level) {
-            case Easy:
-                aiAdapter.getAI().setBehavior(new EasyAIBehavior());
-                break;
-            case Medium:
-                aiAdapter.getAI().setBehavior(new MediumAIBehavior());
-                break;
-            case Hard:
-                aiAdapter.getAI().setBehavior(new HardAIBehavior());
-                break;
-
-        }
+    public BoardFieldType getType() {
+        return type;
     }
 
-    public Player getAiPlayer() {
-        return (Player) super.getInfo().getPlayers().getPlayer(aiAdapter.getUsername()).get();
+    public void setType(BoardFieldType type) {
+        this.type = type;
     }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public Player(String id) {
+        this.id = id;
+    }
+
+    public Player() {
+        this.id = UUID.randomUUID().toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj.getClass().equals(this.getClass()) && ((Player) obj).getId().equals(this.getId());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 37 * hash + Objects.hashCode(this.id);
+        return hash;
+    }
+
+    public abstract void getMoveField(ProxyResponse<IntPoint> proxy) throws Exception;
+
+    public abstract void isConnected(ProxyResponse<Boolean> response) throws Exception;
+
+    public abstract void onTurnTimeout();
+
+
 
 }

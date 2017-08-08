@@ -21,14 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.transport;
+package pl.michal.szymanski.tictactoe.transport.v2;
 
 
+import pl.michal.szymanski.tictactoe.transport.*;
+import java.util.concurrent.locks.Lock;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface TurnTimeoutHandler extends WatchdogHandler{
-void onTurnTimeout() throws Exception;
+public class LockProxyResponse<T> extends ProxyResponse<T> {
+
+    private Lock lock;
+
+    public void setLock(Lock lock) {
+        this.lock = lock;
+    }
+
+    @Override
+    public void setReal(T real) {
+        super.setReal(real); //To change body of generated methods, choose Tools | Templates.
+        synchronized (lock) {
+            lock.notifyAll();
+        }
+
+    }
 }

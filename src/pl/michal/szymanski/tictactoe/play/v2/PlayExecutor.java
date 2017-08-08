@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.play;
+package pl.michal.szymanski.tictactoe.play.v2;
 
+import pl.michal.szymanski.tictactoe.play.*;
 import com.google.common.base.Stopwatch;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Optional;
-import pl.michal.szymanski.tictactoe.play.Play;
+
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
@@ -37,23 +38,24 @@ import java.util.logging.Logger;
 import pl.michal.szymanski.tictactoe.control.GameTimeoutNotify;
 import pl.michal.szymanski.tictactoe.control.TimerNotifier;
 import pl.michal.szymanski.tictactoe.exceptions.NotAllPlayersPresentException;
-import pl.michal.szymanski.tictactoe.model.Move;
-import pl.michal.szymanski.tictactoe.model.Player;
-import pl.michal.szymanski.tictactoe.model.IntPoint;
-import pl.michal.szymanski.tictactoe.model.Turn;
-import pl.michal.szymanski.tictactoe.play.GameMaster;
-import pl.michal.szymanski.tictactoe.transport.LockProxyResponse;
+import pl.michal.szymanski.tictactoe.model.v2.IntPoint;
+import pl.michal.szymanski.tictactoe.model.v2.Move;
+
+import pl.michal.szymanski.tictactoe.model.v2.Player;
+import pl.michal.szymanski.tictactoe.model.v2.Turn;
 import pl.michal.szymanski.tictactoe.transport.GameTimeoutHandler;
-import pl.michal.szymanski.tictactoe.transport.Participant;
-import pl.michal.szymanski.tictactoe.transport.PlayerDisconnectedHandler;
+
+import pl.michal.szymanski.tictactoe.transport.v2.LockProxyResponse;
+import pl.michal.szymanski.tictactoe.transport.v2.PlayerDisconnectedHandler;
+import pl.michal.szymanski.tictactoe.transport.v2.ProxyResponse;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class PlayExecutor<T extends Participant> implements GameTimeoutHandler, PlayerDisconnectedHandler {
+public class PlayExecutor implements GameTimeoutHandler, PlayerDisconnectedHandler {
 
-    private Play<T> play;
+    private Play play;
     private TimerNotifier gameTimeoutNotifier;
     private Stopwatch watch;
     private boolean isTerminated = false;
@@ -63,7 +65,7 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler, 
     private PlayStartEndCallbacks startEnd = new PlayStartEndCallbacks();
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public PlayExecutor(Play<T> play) {
+    public PlayExecutor(Play play) {
         this.play = play;
     }
 
@@ -71,7 +73,7 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler, 
         return this.startEnd.get();
     }
 
-    public Play<T> getPlay() {
+    public Play getPlay() {
         return play;
     }
 
@@ -107,14 +109,14 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler, 
         }
     }
 
-    protected void doTurn(Player<T> player) {
-        LockProxyResponse rs = new LockProxyResponse();
+    protected void doTurn(Player player) {
+        LockProxyResponse<Boolean> rs = new LockProxyResponse();
 
         ReentrantLock lock = new ReentrantLock();
         rs.setLock(lock);
 
         try {
-            player.getConnector().get().isConnected(rs);
+            player.isConnected((ProxyResponse<Boolean>) rs);
         } catch (Exception ex) {
             this.logger.log(Level.SEVERE, ex.getMessage());
         }
@@ -140,7 +142,7 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler, 
 
     public void handleDisconnected(Player p) {
         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "one or two players disconnected. Terminating play...");
-        Optional<Player<T>> winner = play.getInfo().getPlayers().filter((el) -> el.getId() != p.getId());
+        Optional<Player> winner = play.getInfo().getPlayers().filter((el) -> el.getId() != p.getId());
         play.getInfo().setWinner((winner));
         this.status = ExecutorStatus.Walkover;
         stop();
@@ -184,7 +186,7 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler, 
         return status;
     }
 
-    private void getMove(Player<T> player) {
+    private void getMove(Player player) {
         Move move = null;
 
         LockProxyResponse<IntPoint> response = new LockProxyResponse();
@@ -192,7 +194,7 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler, 
         response.setLock(lock);
 
         try {
-            player.connector().get().getMoveField(response);
+            player.getMoveField(response);
         } catch (Exception ex) {
             this.logger.log(Level.SEVERE, ex.getMessage());
         }
@@ -214,7 +216,7 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler, 
             }
         } else {
             try {
-                player.getConnector().get().onTurnTimeout();
+                player.onTurnTimeout();
             } catch (Exception ex) {
                 this.logger.log(Level.SEVERE, ex.getMessage());
             }
@@ -222,14 +224,15 @@ public class PlayExecutor<T extends Participant> implements GameTimeoutHandler, 
 
     }
 
-    protected Player<T> getNextPlayer() {
+    protected Player getNextPlayer() {
         Turn lastTurn = play.getHistory().getTurns().getLast();
-        return lastTurn.getQuarterback().equals(play.getInfo().getPlayers().firstPlayer().get())
-                ? play.getInfo().getPlayers().secondPlayer().get() : play.getInfo().getPlayers().firstPlayer().get();
+        return lastTurn.getQuarterback().equals(play.getInfo().getPlayers().getFirstPlayer().get())
+                ? play.getInfo().getPlayers().getSecondPlayer().get() : play.getInfo().getPlayers().getFirstPlayer().get();
     }
 
     protected void sendBoard() {
-        play.getInfo().getWatchers().stream().forEach((el) -> el.receiveBoard(play.getInfo().getBoard()));
+        this.play.getInfo().getPlayers().getFirstPlayer().get().receiveBoard(this.play.getInfo().getBoard());
+        this.play.getInfo().getPlayers().getSecondPlayer().get().receiveBoard(this.play.getInfo().getBoard());
     }
 
     public final boolean isDone() {

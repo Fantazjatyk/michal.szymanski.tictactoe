@@ -21,46 +21,33 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.model;
+package pl.michal.szymanski.tictactoe.transport.v2;
 
-
+import pl.michal.szymanski.tictactoe.transport.*;
+import java.util.Optional;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class Point<T extends Number> {
+public class EventProxyResponse<T> extends ProxyResponse<T> {
 
-    private T x;
-    private T y;
+    private Optional<Runnable> beforeCallback = Optional.empty();
+    private Optional<Runnable> afterCallback = Optional.empty();
 
-    public Point(T x, T y) {
-        this.x = x;
-        this.y = y;
+    public void setBeforeCallback(Runnable beforeCallback) {
+        this.beforeCallback = Optional.of(beforeCallback);
     }
 
-    public T getX() {
-        return x;
-    }
-
-    public void setX(T x) {
-        this.x = x;
-    }
-
-    public T getY() {
-        return y;
-    }
-
-    public void setY(T y) {
-        this.y = y;
+    public void setAfterCallback(Runnable afterCallback) {
+        this.afterCallback = Optional.of(afterCallback);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj != null && obj instanceof Point && ((Point)(obj)).getX().equals(this.getX()) && ((Point)(obj)).getY().equals(this.getY());
+    public void setReal(T real) {
+        this.beforeCallback.ifPresent(el -> el.run());
+        super.setReal(real); //To change body of generated methods, choose Tools | Templates.
+        this.afterCallback.ifPresent(el -> el.run());
     }
-
-
-
 
 }

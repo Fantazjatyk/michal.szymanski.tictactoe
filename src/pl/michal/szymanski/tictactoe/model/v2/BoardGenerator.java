@@ -21,7 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.transport;
+package pl.michal.szymanski.tictactoe.model.v2;
+
+import pl.michal.szymanski.tictactoe.model.*;
 
 
 
@@ -29,6 +31,23 @@ package pl.michal.szymanski.tictactoe.transport;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface TurnTimeoutHandler extends WatchdogHandler{
-void onTurnTimeout() throws Exception;
+public abstract class BoardGenerator {
+
+    public static BoardField[][] createBoard(int sizeX, int sizeY) {
+        BoardField[][] board = new BoardField[sizeX][sizeY];
+
+        for (int i = 0; i < sizeY; i++) {
+            board[i] = fillRow(i, sizeY);
+        }
+        return board;
+    }
+
+    private static BoardField[] fillRow(int rowId, int max) {
+        BoardField[] row = new BoardField[max];
+
+        for (int i = 0; i < row.length; i++) {
+            row[i] = new BoardField(i, rowId);
+        }
+        return row;
+    }
 }

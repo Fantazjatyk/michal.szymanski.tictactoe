@@ -21,14 +21,60 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.transport;
+package pl.michal.szymanski.tictactoe.play.v2;
 
+import pl.michal.szymanski.tictactoe.play.*;
+import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
+import java.util.concurrent.LinkedBlockingDeque;
+import pl.michal.szymanski.tictactoe.model.v2.Board;
 
+import pl.michal.szymanski.tictactoe.model.v2.Guest;
+import pl.michal.szymanski.tictactoe.model.v2.Player;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface TurnTimeoutHandler extends WatchdogHandler{
-void onTurnTimeout() throws Exception;
+public class PlayInfo {
+
+    private String id;
+    private int totalTimeInMilis = 0;
+    private Optional<Player> winner = Optional.empty();
+    private PlayersPair players = new PlayersPair();
+    private Board board = new Board(3);
+
+    public Board getBoard() {
+        return this.board;
+    }
+
+    public PlayInfo() {
+        this.id = UUID.randomUUID().toString() + new Random().nextInt(1000);
+    }
+
+    public Optional<Player> getWinner() {
+        return winner;
+    }
+
+    public PlayersPair getPlayers() {
+        return players;
+    }
+
+    public void setWinner(Optional<Player> winner) {
+        this.winner = winner;
+    }
+
+    void setTotalTime(int totalTime) {
+        this.totalTimeInMilis = totalTime;
+    }
+
+    public int getTotalTimeInMilis() {
+        return totalTimeInMilis;
+    }
+
+    public String getId() {
+        return id;
+    }
+
 }

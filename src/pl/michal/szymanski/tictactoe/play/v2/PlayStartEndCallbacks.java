@@ -21,14 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.transport;
+package pl.michal.szymanski.tictactoe.play.v2;
 
-
+import pl.michal.szymanski.tictactoe.play.*;
+import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface TurnTimeoutHandler extends WatchdogHandler{
-void onTurnTimeout() throws Exception;
+public class PlayStartEndCallbacks {
+
+    private Queue<Runnable> onStart = new LinkedBlockingDeque();
+    private Queue<Runnable> onEnd = new LinkedBlockingDeque();
+    private ReducedVisiblity setter = new ReducedVisiblity();
+
+    public void onStart() {
+            onStart.stream().forEach(el -> el.run());
+    }
+
+    public void onEnd() {
+            onEnd.stream().forEach(el -> el.run());
+    }
+
+    public ReducedVisiblity get() {
+        return this.setter;
+    }
+
+    public class ReducedVisiblity {
+
+        public void addOnStartEvent(Runnable onStart) {
+            PlayStartEndCallbacks.this.onStart.add(onStart);
+        }
+
+        public void addOnEndEvent(Runnable onEnd) {
+            PlayStartEndCallbacks.this.onEnd.add(onEnd);
+        }
+
+        public Queue<Runnable> getOnStart() {
+            return onStart;
+        }
+
+        public Queue<Runnable> getOnEnd() {
+            return onEnd;
+        }
+    }
 }

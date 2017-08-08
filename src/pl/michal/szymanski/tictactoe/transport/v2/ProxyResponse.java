@@ -21,14 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.transport;
+package pl.michal.szymanski.tictactoe.transport.v2;
 
 
+import pl.michal.szymanski.tictactoe.transport.*;
+import java.util.Optional;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface TurnTimeoutHandler extends WatchdogHandler{
-void onTurnTimeout() throws Exception;
+public class ProxyResponse<T> {
+
+    protected Optional<T> real = Optional.empty();
+
+    public void setReal(T real) {
+        this.real = Optional.ofNullable(real);
+    }
+
+    public Optional<T> getReal() {
+        return this.real;
+    }
 }

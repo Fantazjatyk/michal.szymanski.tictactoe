@@ -21,14 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.transport;
+package pl.michal.szymanski.tictactoe.model.v2;
 
-
+import pl.michal.szymanski.tictactoe.model.*;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface TurnTimeoutHandler extends WatchdogHandler{
-void onTurnTimeout() throws Exception;
+public enum BoardFieldType {
+
+    XMark('X'), OMark('O');
+
+    Character character;
+
+    BoardFieldType(Character character) {
+        this.character = character;
+    }
+
+    @Override
+    public String toString() {
+        return this.character + "";
+    }
 }

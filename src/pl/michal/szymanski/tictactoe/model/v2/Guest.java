@@ -21,7 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.transport;
+package pl.michal.szymanski.tictactoe.model.v2;
+
+import pl.michal.szymanski.tictactoe.play.v2.PlayInfo;
+import pl.michal.szymanski.tictactoe.play.v2.PlaySettings;
 
 
 
@@ -29,6 +32,11 @@ package pl.michal.szymanski.tictactoe.transport;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface TurnTimeoutHandler extends WatchdogHandler{
-void onTurnTimeout() throws Exception;
+public abstract class Guest {
+
+    public abstract void receiveBoard(Board b);
+
+    public abstract void receiveGameResult(GameResult r);
+
+    public abstract void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings);
 }

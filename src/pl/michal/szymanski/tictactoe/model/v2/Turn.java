@@ -21,7 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.transport;
+package pl.michal.szymanski.tictactoe.model.v2;
+
+import pl.michal.szymanski.tictactoe.model.*;
 
 
 
@@ -29,6 +31,18 @@ package pl.michal.szymanski.tictactoe.transport;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface TurnTimeoutHandler extends WatchdogHandler{
-void onTurnTimeout() throws Exception;
+public class Turn {
+
+    private Player quarterback;
+    private final Board boardState;
+
+    public Turn(Player player, Board board) {
+        this.quarterback = player;
+        this.boardState = new Board(board);
+    }
+
+    public Player getQuarterback() {
+        return quarterback;
+    }
+
 }

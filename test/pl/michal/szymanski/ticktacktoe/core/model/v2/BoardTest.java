@@ -21,8 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.ticktacktoe.core.model;
-
+package pl.michal.szymanski.ticktacktoe.core.model.v2;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,11 +29,12 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import pl.michal.szymanski.tictactoe.model.Board;
-import pl.michal.szymanski.tictactoe.model.BoardFieldType;
-import pl.michal.szymanski.tictactoe.model.Move;
-import pl.michal.szymanski.tictactoe.model.Player;
-import pl.michal.szymanski.tictactoe.model.Point;
+import pl.michal.szymanski.tictactoe.model.v2.Board;
+import pl.michal.szymanski.tictactoe.model.v2.BoardFieldType;
+import pl.michal.szymanski.tictactoe.model.v2.IntPoint;
+import pl.michal.szymanski.tictactoe.model.v2.Move;
+import pl.michal.szymanski.tictactoe.model.v2.Player;
+import pl.michal.szymanski.tictactoe.play.v2.NewTestParticipant;
 
 /**
  *
@@ -72,36 +72,36 @@ public class BoardTest {
      */
     @Test
     public void testDoMove() {
-        Player a = new Player();
-        Player b = new Player();
-        a.setBoardFieldType(BoardFieldType.XMark);
-        b.setBoardFieldType(BoardFieldType.OMark);
+        Player a = new NewTestParticipant();
+        Player b = new NewTestParticipant();
+        a.setType(BoardFieldType.XMark);
+        b.setType(BoardFieldType.OMark);
 
-        board.doMove(new Move(a, new Point(0, 0)));
+        board.doMove(new Move(a, new IntPoint(0, 0)));
         assertTrue(board.getBoard()[0][0].getOwner().isPresent());
 
         board.clear();
 
-        board.doMove(new Move(a, new Point(1, 1)));
+        board.doMove(new Move(a, new IntPoint(1, 1)));
         assertTrue(board.getBoard()[1][1].getOwner().isPresent());
 
         board.clear();
 
-        board.doMove(new Move(a, new Point(2, 2)));
+        board.doMove(new Move(a, new IntPoint(2, 2)));
         assertTrue(board.getBoard()[2][2].getOwner().isPresent());
 
         board.clear();
 
-        board.doMove(new Move(a, new Point(0, 2)));
+        board.doMove(new Move(a, new IntPoint(0, 2)));
         assertTrue(board.getBoard()[2][0].getOwner().isPresent());
 
         board.clear();
-        board.doMove(new Move(a, new Point(2, 0)));
+        board.doMove(new Move(a, new IntPoint(2, 0)));
         assertTrue(board.getBoard()[0][2].getOwner().isPresent());
 
         board.clear();
 
-        board.doMove(new Move(a, new Point(0, 1)));
+        board.doMove(new Move(a, new IntPoint(0, 1)));
         assertTrue(board.getBoard()[1][0].getOwner().isPresent());
 
     }

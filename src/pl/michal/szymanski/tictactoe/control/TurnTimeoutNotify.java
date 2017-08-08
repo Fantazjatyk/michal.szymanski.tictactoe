@@ -26,6 +26,8 @@ package pl.michal.szymanski.tictactoe.control;
 import pl.michal.szymanski.tictactoe.control.*;
 import java.lang.ref.WeakReference;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import pl.michal.szymanski.tictactoe.transport.TurnTimeoutHandler;
 
 /**
@@ -36,7 +38,13 @@ public class TurnTimeoutNotify implements TimerNotify<TurnTimeoutHandler> {
 
     @Override
     public void notifyObservers(List<WeakReference<TurnTimeoutHandler>> observers) {
-        observers.forEach(el -> el.get().onTurnTimeout());
+        observers.forEach(el -> {
+            try {
+                el.get().onTurnTimeout();
+            } catch (Exception ex) {
+                Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, ex.getMessage());
+            }
+        });
     }
 
 }

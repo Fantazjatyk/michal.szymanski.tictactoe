@@ -49,8 +49,8 @@ public class PlayersPair<T extends Participant> {
     }
 
     public Optional<Player<T>> getPlayer(String username) {
-        return firstPlayer.isPresent() && firstPlayer.get().connector().get().getDisplayName().equals(username)
-                ? firstPlayer : (secondPlayer.isPresent() && secondPlayer.get().connector().get().getDisplayName().equals(username) ? secondPlayer : Optional.empty());
+        return firstPlayer.isPresent() && firstPlayer.get().connector().get().getUsername().equals(username)
+                ? firstPlayer : (secondPlayer.isPresent() && secondPlayer.get().connector().get().getUsername().equals(username) ? secondPlayer : Optional.empty());
     }
 
     public Optional<Player<T>> getMarkedPlayer(BoardFieldType type) {

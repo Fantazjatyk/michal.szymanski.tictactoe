@@ -21,14 +21,49 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.transport;
+package pl.michal.szymanski.tictactoe.model.v2;
 
-
+import pl.michal.szymanski.tictactoe.model.*;
+import java.util.Optional;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface TurnTimeoutHandler extends WatchdogHandler{
-void onTurnTimeout() throws Exception;
+public class BoardField {
+
+    private int x;
+    private int y;
+    private Optional<Player> owner = Optional.empty();
+    private BoardFieldType type;
+
+    public BoardField(int x, int y) {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public Optional<Player> getOwner() {
+        return owner;
+    }
+
+    public pl.michal.szymanski.tictactoe.model.v2.BoardFieldType getType() {
+        return type;
+    }
+
+    public void setOwner(Player owner) {
+        this.owner = Optional.of(owner);
+    }
+
+    public void setType(pl.michal.szymanski.tictactoe.model.v2.BoardFieldType type) {
+        this.type = type;
+    }
+
+    public int getY() {
+        return y;
+    }
+
 }
