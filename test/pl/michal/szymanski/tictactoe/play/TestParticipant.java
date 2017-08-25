@@ -21,37 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.play.v2;
+package pl.michal.szymanski.tictactoe.play;
 
+import pl.michal.szymanski.tictactoe.play.PlaySettings;
+import pl.michal.szymanski.tictactoe.play.PlayInfo;
 import pl.michal.szymanski.tictactoe.play.*;
 import java.util.EmptyStackException;
 import java.util.Stack;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import pl.michal.szymanski.tictactoe.model.v2.Board;
-
-import pl.michal.szymanski.tictactoe.model.v2.GameResult;
-import pl.michal.szymanski.tictactoe.model.v2.IntPoint;
-import pl.michal.szymanski.tictactoe.model.v2.Player;
-import pl.michal.szymanski.tictactoe.transport.v2.ProxyResponse;
+import pl.michal.szymanski.tictactoe.model.Board;
+import pl.michal.szymanski.tictactoe.model.GameResult;
+import pl.michal.szymanski.tictactoe.model.IntPoint;
+import pl.michal.szymanski.tictactoe.model.Player;
+import pl.michal.szymanski.tictactoe.transport.ProxyResponse;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class NewTestParticipant extends Player {
+public class TestParticipant extends Player {
 
     private Stack<IntPoint> moves = new Stack();
-    private String name;
     private boolean respondOnGetField = true;
     private boolean respondOnConnected = true;
     private long wait = 0;
 
-    public NewTestParticipant(String id) {
+    public TestParticipant(String id) {
         super(id);
     }
 
-    public NewTestParticipant() {
+    public TestParticipant() {
     }
 
     public void dontRespondOnGetField() {
@@ -64,10 +64,6 @@ public class NewTestParticipant extends Player {
 
     public void setWaitTime(long milis) {
         wait = milis;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public void setProgrammedMoves(Stack<IntPoint> programmedMoves) {
@@ -85,7 +81,7 @@ public class NewTestParticipant extends Player {
             try {
                 Thread.sleep(wait);
             } catch (InterruptedException ex) {
-                Logger.getLogger(NewTestParticipant.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(TestParticipant.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         if (respondOnGetField) {
@@ -102,11 +98,6 @@ public class NewTestParticipant extends Player {
         if (this.respondOnConnected) {
             response.setReal(Boolean.TRUE);
         }
-    }
-
-    @Override
-    public String getUsername() {
-        return this.name;
     }
 
     @Override

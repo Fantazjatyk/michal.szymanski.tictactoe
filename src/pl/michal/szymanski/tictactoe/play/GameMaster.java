@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.michal.szymanski.tictactoe.play.v2;
+package pl.michal.szymanski.tictactoe.play;
 
 import pl.michal.szymanski.tictactoe.play.*;
 import java.util.ArrayList;
@@ -19,17 +19,21 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import pl.michal.szymanski.tictactoe.model.v2.Board;
-import pl.michal.szymanski.tictactoe.model.v2.BoardField;
-import pl.michal.szymanski.tictactoe.model.v2.IntPoint;
-import pl.michal.szymanski.tictactoe.model.v2.Move;
-import pl.michal.szymanski.tictactoe.model.v2.Player;
+import pl.michal.szymanski.tictactoe.model.Board;
+import pl.michal.szymanski.tictactoe.model.BoardField;
+import pl.michal.szymanski.tictactoe.model.IntPoint;
+import pl.michal.szymanski.tictactoe.model.Move;
+import pl.michal.szymanski.tictactoe.model.Player;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class GameMaster {
+public abstract class GameMaster {
+
+    private GameMaster() {
+
+    }
 
     public static boolean isDone(Board board) {
         return !getWinner(board).isEmpty();
@@ -44,7 +48,7 @@ public class GameMaster {
         }
 
         List<Player> winners = lookForWinners(possibleLines, players);
-        if (winners.size() == 0 && possibleLines.stream().allMatch(line -> Stream.of(line).allMatch(field -> field.getOwner().isPresent()))) {
+        if (winners.isEmpty() && possibleLines.stream().allMatch(line -> Stream.of(line).allMatch(field -> field.getOwner().isPresent()))) {
             winners.addAll(players);
         }
         return winners;

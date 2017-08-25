@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.model.v2;
+package pl.michal.szymanski.tictactoe.model;
 
 import java.util.Objects;
 import java.util.UUID;
-import pl.michal.szymanski.tictactoe.transport.v2.ProxyResponse;
+import pl.michal.szymanski.tictactoe.transport.ProxyResponse;
 
 /**
  *
@@ -37,23 +37,23 @@ public abstract class Player extends Guest {
     private String username;
     private BoardFieldType type;
 
-    public String getId() {
+    public final String getId() {
         return id;
     }
 
-    public BoardFieldType getType() {
+    public final BoardFieldType getType() {
         return type;
     }
 
-    public void setType(BoardFieldType type) {
+    public final void setType(BoardFieldType type) {
         this.type = type;
     }
 
-    public String getUsername() {
+    public final String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
+    public final void setUsername(String username) {
         this.username = username;
     }
 
@@ -67,7 +67,7 @@ public abstract class Player extends Guest {
 
     @Override
     public boolean equals(Object obj) {
-        return obj.getClass().equals(this.getClass()) && ((Player) obj).getId().equals(this.getId());
+        return obj != null && obj.getClass().equals(this.getClass()) && ((Player) obj).getId().equals(this.getId());
     }
 
     @Override

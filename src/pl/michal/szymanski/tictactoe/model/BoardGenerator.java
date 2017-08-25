@@ -21,17 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.model.v2;
+package pl.michal.szymanski.tictactoe.model;
 
 import pl.michal.szymanski.tictactoe.model.*;
-
-
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
 public abstract class BoardGenerator {
+
+    private BoardGenerator() {
+
+    }
 
     public static BoardField[][] createBoard(int sizeX, int sizeY) {
         BoardField[][] board = new BoardField[sizeX][sizeY];

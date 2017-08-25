@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.model.v2;
+package pl.michal.szymanski.tictactoe.model;
 
-import pl.michal.szymanski.tictactoe.play.v2.PlayInfo;
-import pl.michal.szymanski.tictactoe.play.v2.PlaySettings;
+import pl.michal.szymanski.tictactoe.play.PlayInfo;
+import pl.michal.szymanski.tictactoe.play.PlaySettings;
 
 
 

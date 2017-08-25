@@ -21,8 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.play.v2;
+package pl.michal.szymanski.tictactoe.play;
 
+import pl.michal.szymanski.tictactoe.play.PlayExecutor;
+import pl.michal.szymanski.tictactoe.play.Play;
+import pl.michal.szymanski.tictactoe.play.ExecutorStatus;
 import pl.michal.szymanski.tictactoe.play.*;
 import java.util.ArrayList;
 import java.util.EmptyStackException;
@@ -37,8 +40,8 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.mockito.Mockito;
-import pl.michal.szymanski.tictactoe.model.v2.IntPoint;
-import pl.michal.szymanski.tictactoe.model.v2.Player;
+import pl.michal.szymanski.tictactoe.model.IntPoint;
+import pl.michal.szymanski.tictactoe.model.Player;
 
 /**
  *
@@ -46,8 +49,8 @@ import pl.michal.szymanski.tictactoe.model.v2.Player;
  */
 public class PlayExecutorTest {
 
-    NewTestParticipant p1;
-    NewTestParticipant p2;
+    TestParticipant p1;
+    TestParticipant p2;
     Play play;
     PlayExecutor exe;
 
@@ -57,11 +60,11 @@ public class PlayExecutorTest {
 
     @Before
     public void setUp() {
-        p1 = new NewTestParticipant();
-        p2 = new NewTestParticipant();
+        p1 = new TestParticipant();
+        p2 = new TestParticipant();
 
-        p1.setName("A");
-        p2.setName("B");
+        p1.setUsername("A");
+        p2.setUsername("B");
 
         Stack<IntPoint> a1Moves = new Stack();
         a1Moves.push(new IntPoint(0, 0));
@@ -107,10 +110,10 @@ public class PlayExecutorTest {
     public void testIfAllParticipantsReceivedEXACTLYGetFieldRequests() throws Exception, Exception {
         play.settings().moveTimeLimit(100, TimeUnit.MILLISECONDS).gameTimeLimit(200, TimeUnit.MILLISECONDS);
 
-        p1 = Mockito.spy(NewTestParticipant.class);
-        p1.setName("A");
-        p2 = Mockito.spy(NewTestParticipant.class);
-        p2.setName("B");
+        p1 = Mockito.spy(TestParticipant.class);
+        p1.setUsername("A");
+        p2 = Mockito.spy(TestParticipant.class);
+        p2.setUsername("B");
         p1.dontRespondOnGetField();
         p2.dontRespondOnGetField();
         play.join(p1);
@@ -119,6 +122,7 @@ public class PlayExecutorTest {
 
         Mockito.verify(p1, Mockito.times(1)).getMoveField(Mockito.any());
         Mockito.verify(p2, Mockito.times(1)).getMoveField(Mockito.any());
+        
 
     }
 
@@ -210,10 +214,10 @@ public class PlayExecutorTest {
     public void testAllParticipantsWereNotifiedAboutGameEnd() {
         play.settings().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(1, TimeUnit.SECONDS);
 
-        p1 = Mockito.spy(NewTestParticipant.class);
-        p1.setName("A");
-        p2 = Mockito.spy(NewTestParticipant.class);
-        p2.setName("B");
+        p1 = Mockito.spy(TestParticipant.class);
+        p1.setUsername("A");
+        p2 = Mockito.spy(TestParticipant.class);
+        p2.setUsername("B");
         play.join(p1);
         play.join(p2);
         new PlayExecutor(play).execute();
@@ -287,8 +291,8 @@ public class PlayExecutorTest {
     public void testTurnTimeoutEventDelivered() {
         this.p1.dontRespondOnGetField();
 
-        NewTestParticipant passive1 = Mockito.spy(NewTestParticipant.class);
-        NewTestParticipant passive2 = Mockito.spy(NewTestParticipant.class);
+        TestParticipant passive1 = Mockito.spy(TestParticipant.class);
+        TestParticipant passive2 = Mockito.spy(TestParticipant.class);
 
         passive2.setProgrammedMoves(p1.getMoves());
         passive1.dontRespondOnGetField();
@@ -306,8 +310,8 @@ public class PlayExecutorTest {
      */
     @Test(timeout = 500)
     public void testGameEndDuePlayerDisconnected_WinsPresentPlayer() throws Exception {
-        NewTestParticipant passive1 = Mockito.spy(NewTestParticipant.class);
-        NewTestParticipant passive2 = Mockito.spy(NewTestParticipant.class);
+        TestParticipant passive1 = Mockito.spy(TestParticipant.class);
+        TestParticipant passive2 = Mockito.spy(TestParticipant.class);
         passive2.setProgrammedMoves(p1.getMoves());
         passive2.getMoves().remove(0); // prevents situation when passive2 wins - and therefore - games ends naturally.
 
@@ -333,8 +337,8 @@ public class PlayExecutorTest {
 
     @Test(timeout = 500)
     public void testGameEndDueTwoPlayersDisconnected_WinsSecondTurnPlayer() throws Exception, Exception {
-        NewTestParticipant passive1 = Mockito.spy(NewTestParticipant.class);
-        NewTestParticipant passive2 = Mockito.spy(NewTestParticipant.class);
+        TestParticipant passive1 = Mockito.spy(TestParticipant.class);
+        TestParticipant passive2 = Mockito.spy(TestParticipant.class);
 
         passive1.dontRespondOnGetField();
         passive2.dontRespondOnConnected();

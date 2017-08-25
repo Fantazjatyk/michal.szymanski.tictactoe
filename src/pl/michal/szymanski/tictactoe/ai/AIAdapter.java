@@ -21,22 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.ai.v2;
+package pl.michal.szymanski.tictactoe.ai;
 
 import pl.michal.szymanski.tictactoe.ai.*;
 import java.util.UUID;
 import pl.michal.szymanski.ai.tictactoe.ContextAwareAI;
 import pl.michal.szymanski.ai.tictactoe.model.BoardReader;
-import pl.michal.szymanski.tictactoe.model.v2.Board;
-import pl.michal.szymanski.tictactoe.model.v2.BoardField;
-import pl.michal.szymanski.tictactoe.model.v2.GameResult;
-import pl.michal.szymanski.tictactoe.model.v2.IntPoint;
-import pl.michal.szymanski.tictactoe.model.v2.Player;
-import pl.michal.szymanski.tictactoe.play.v2.PlayInfo;
-import pl.michal.szymanski.tictactoe.play.v2.PlaySettings;
-
-import pl.michal.szymanski.tictactoe.transport.v2.Participant;
-import pl.michal.szymanski.tictactoe.transport.v2.ProxyResponse;
+import pl.michal.szymanski.tictactoe.model.Board;
+import pl.michal.szymanski.tictactoe.model.BoardField;
+import pl.michal.szymanski.tictactoe.model.GameResult;
+import pl.michal.szymanski.tictactoe.model.IntPoint;
+import pl.michal.szymanski.tictactoe.model.Player;
+import pl.michal.szymanski.tictactoe.play.PlayInfo;
+import pl.michal.szymanski.tictactoe.play.PlaySettings;
+import pl.michal.szymanski.tictactoe.transport.ProxyResponse;
 
 /**
  *
@@ -45,15 +43,9 @@ import pl.michal.szymanski.tictactoe.transport.v2.ProxyResponse;
 public class AIAdapter extends Player {
 
     private ContextAwareAI ai;
-    private final String name = "AI";
-    private final String id = UUID.randomUUID().toString();
 
     public AIAdapter(ContextAwareAI ai) {
         this.ai = ai;
-    }
-
-    public String getId() {
-        return this.id;
     }
 
     @Override
@@ -61,11 +53,6 @@ public class AIAdapter extends Player {
         java.awt.Point p2d = ai.generateMove();
         IntPoint p = new IntPoint((int) p2d.getX(), (int) p2d.getY());
         proxy.setReal(p);
-    }
-
-    @Override
-    public String getUsername() {
-        return name;
     }
 
     @Override
@@ -80,9 +67,9 @@ public class AIAdapter extends Player {
     @Override
     public void receiveBoard(Board board) {
         BoardReader<BoardField> r = new BoardReader();
-        r.configure((a) -> (a.getOwner().isPresent() && !a.getOwner().get().getId().equals(this.id)),
+        r.configure((a) -> (a.getOwner().isPresent() && !a.getOwner().get().getId().equals(this.getId())),
                 (a) -> !(a.getOwner().isPresent()),
-                (a) -> (a.getOwner().isPresent() && a.getOwner().get().getId().equals(this.id))
+                (a) -> (a.getOwner().isPresent() && a.getOwner().get().getId().equals(this.getId()))
         );
         ai.pushNextBoardState(r.read(board.getBoard()));
     }

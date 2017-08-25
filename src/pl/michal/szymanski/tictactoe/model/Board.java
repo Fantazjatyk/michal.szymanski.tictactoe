@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.michal.szymanski.tictactoe.model.v2;
+package pl.michal.szymanski.tictactoe.model;
 
 import pl.michal.szymanski.tictactoe.model.*;
 import java.util.ArrayList;
@@ -20,18 +20,18 @@ public class Board {
 
     private int sizeX;
     private int sizeY;
-    private BoardField[][] board;
+    private BoardField[][] matrix;
 
     public Board(Board board) {
         this.sizeX = board.sizeX;
         this.sizeY = board.sizeY;
-        this.board = board.board;
+        this.matrix = board.matrix;
     }
 
     public Board(int size) {
         this.sizeX = size;
         this.sizeY = size;
-        this.board = BoardGenerator.createBoard(sizeX, sizeY);
+        this.matrix = BoardGenerator.createBoard(sizeX, sizeY);
     }
 
     public BoardSelector getSelector() {
@@ -39,7 +39,7 @@ public class Board {
     }
 
     public BoardField[][] getBoard() {
-        return board;
+        return matrix;
     }
 
     public int getSizeX() {
@@ -51,12 +51,12 @@ public class Board {
     }
 
     public void clear() {
-        this.board = BoardGenerator.createBoard(sizeX, sizeY);
+        this.matrix = BoardGenerator.createBoard(sizeX, sizeY);
     }
 
     public void doMove(Move move) {
         Player invoker = move.getInvoker().get();
-        BoardField bf = board[move.getPoint().getY()][move.getPoint().getX()];
+        BoardField bf = matrix[move.getPoint().getY()][move.getPoint().getX()];
         bf.setOwner(invoker);
     }
 }

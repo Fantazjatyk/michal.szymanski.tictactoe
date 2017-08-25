@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package pl.michal.szymanski.tictactoe.play.v2;
+package pl.michal.szymanski.tictactoe.play;
 
 import pl.michal.szymanski.tictactoe.play.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.LinkedBlockingDeque;
-import pl.michal.szymanski.tictactoe.model.v2.Player;
+import pl.michal.szymanski.tictactoe.model.Player;
 
 /**
  *

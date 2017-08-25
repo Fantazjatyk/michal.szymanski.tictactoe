@@ -21,11 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.model.v2;
+package pl.michal.szymanski.tictactoe.model;
 
 import pl.michal.szymanski.tictactoe.model.*;
-
-
 
 /**
  *
@@ -59,10 +57,15 @@ public class IntPoint {
 
     @Override
     public boolean equals(Object obj) {
-        return obj != null && obj instanceof IntPoint && ((IntPoint)(obj)).getX() == this.getX() && ((IntPoint)(obj)).getY() == this.getY();
+        return obj != null && obj instanceof IntPoint && ((IntPoint) (obj)).getX() == this.getX() && ((IntPoint) (obj)).getY() == this.getY();
     }
 
-
-
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 59 * hash + this.x;
+        hash = 59 * hash + this.y;
+        return hash;
+    }
 
 }

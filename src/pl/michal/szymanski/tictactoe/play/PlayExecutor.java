@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.play.v2;
+package pl.michal.szymanski.tictactoe.play;
 
 import pl.michal.szymanski.tictactoe.play.*;
 import com.google.common.base.Stopwatch;
@@ -36,18 +36,18 @@ import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import pl.michal.szymanski.tictactoe.control.GameTimeoutNotify;
+
 import pl.michal.szymanski.tictactoe.control.TimerNotifier;
 import pl.michal.szymanski.tictactoe.exceptions.NotAllPlayersPresentException;
-import pl.michal.szymanski.tictactoe.model.v2.IntPoint;
-import pl.michal.szymanski.tictactoe.model.v2.Move;
-
-import pl.michal.szymanski.tictactoe.model.v2.Player;
-import pl.michal.szymanski.tictactoe.model.v2.Turn;
+import pl.michal.szymanski.tictactoe.model.IntPoint;
+import pl.michal.szymanski.tictactoe.model.Move;
+import pl.michal.szymanski.tictactoe.model.Player;
+import pl.michal.szymanski.tictactoe.model.Turn;
 import pl.michal.szymanski.tictactoe.transport.GameTimeoutHandler;
 
-import pl.michal.szymanski.tictactoe.transport.v2.LockProxyResponse;
-import pl.michal.szymanski.tictactoe.transport.v2.PlayerDisconnectedHandler;
-import pl.michal.szymanski.tictactoe.transport.v2.ProxyResponse;
+import pl.michal.szymanski.tictactoe.transport.LockProxyResponse;
+import pl.michal.szymanski.tictactoe.transport.PlayerDisconnectedHandler;
+import pl.michal.szymanski.tictactoe.transport.ProxyResponse;
 
 /**
  *
@@ -142,6 +142,13 @@ public class PlayExecutor implements GameTimeoutHandler, PlayerDisconnectedHandl
 
     public void handleDisconnected(Player p) {
         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "one or two players disconnected. Terminating play...");
+        Optional<Player> winner = play.getInfo().getPlayers().filter((el) -> el.getId() != p.getId());
+        play.getInfo().setWinner((winner));
+        this.status = ExecutorStatus.Walkover;
+        stop();
+    }
+
+    public void resign(Player p) {
         Optional<Player> winner = play.getInfo().getPlayers().filter((el) -> el.getId() != p.getId());
         play.getInfo().setWinner((winner));
         this.status = ExecutorStatus.Walkover;

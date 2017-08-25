@@ -21,17 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.play.v2;
+package pl.michal.szymanski.tictactoe.play;
 
 import pl.michal.szymanski.tictactoe.play.*;
 import pl.michal.szymanski.ai.tictactoe.ContextAwareAI;
 import pl.michal.szymanski.ai.tictactoe.behavior.EasyAIBehavior;
-import pl.michal.szymanski.ai.tictactoe.behavior.HardAIBehavior;
 import pl.michal.szymanski.ai.tictactoe.behavior.MediumAIBehavior;
 
 import pl.michal.szymanski.tictactoe.ai.AILevel;
-import pl.michal.szymanski.tictactoe.ai.v2.AIAdapter;
-import pl.michal.szymanski.tictactoe.model.v2.Player;
+import pl.michal.szymanski.tictactoe.ai.AIAdapter;
+import pl.michal.szymanski.tictactoe.model.Player;
 
 /**
  *
@@ -51,13 +50,14 @@ public class SingleplayerPlay extends Play {
         switch (level) {
             case Easy:
                 aiAdapter.getAI().setBehavior(new EasyAIBehavior());
+                this.aiAdapter.setUsername("Easy AI");
                 break;
             case Medium:
                 aiAdapter.getAI().setBehavior(new MediumAIBehavior());
+                this.aiAdapter.setUsername("Medium AI");
                 break;
-            case Hard:
-                aiAdapter.getAI().setBehavior(new HardAIBehavior());
-                break;
+            default:
+                throw new UnsupportedOperationException();
 
         }
     }

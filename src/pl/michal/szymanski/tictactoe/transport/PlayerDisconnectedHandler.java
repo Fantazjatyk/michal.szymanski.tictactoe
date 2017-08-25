@@ -21,16 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.transport.v2;
+package pl.michal.szymanski.tictactoe.transport;
 
-import pl.michal.szymanski.tictactoe.model.v2.Player;
-import pl.michal.szymanski.tictactoe.transport.*;
+import pl.michal.szymanski.tictactoe.model.Player;
+
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface PlayerDisconnectedHandler<T extends Participant> {
+public interface PlayerDisconnectedHandler{
 
     void handleDisconnected(Player p);
 }

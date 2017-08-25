@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.model.v2;
+package pl.michal.szymanski.tictactoe.model;
 
 import pl.michal.szymanski.tictactoe.model.*;
 import java.util.Optional;
@@ -50,7 +50,7 @@ public class BoardField {
         return owner;
     }
 
-    public pl.michal.szymanski.tictactoe.model.v2.BoardFieldType getType() {
+    public pl.michal.szymanski.tictactoe.model.BoardFieldType getType() {
         return type;
     }
 
@@ -58,7 +58,7 @@ public class BoardField {
         this.owner = Optional.of(owner);
     }
 
-    public void setType(pl.michal.szymanski.tictactoe.model.v2.BoardFieldType type) {
+    public void setType(pl.michal.szymanski.tictactoe.model.BoardFieldType type) {
         this.type = type;
     }
 

@@ -21,15 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.tictactoe.play.v2;
+package pl.michal.szymanski.tictactoe.play;
 
+import pl.michal.szymanski.tictactoe.play.PlayersPair;
 import pl.michal.szymanski.tictactoe.play.*;
 import java.util.Optional;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import pl.michal.szymanski.tictactoe.model.v2.Player;
+import pl.michal.szymanski.tictactoe.model.Player;
 
 /**
  *
@@ -51,8 +52,8 @@ public class PlayersPairTest {
     @Before
     public void setUp() {
         pair = new PlayersPair();
-        p1 = new NewTestParticipant();
-        p2 = new NewTestParticipant();
+        p1 = new TestParticipant();
+        p2 = new TestParticipant();
         pair.firstPlayer(p1);
         pair.secondPlayer(p2);
     }
@@ -127,7 +128,7 @@ public class PlayersPairTest {
 
     @Test
     public void testFiler() {
-        this.p1 = new NewTestParticipant("abcd");
+        this.p1 = new TestParticipant("abcd");
 
         this.pair = new PlayersPair();
         pair.firstPlayer(p1);

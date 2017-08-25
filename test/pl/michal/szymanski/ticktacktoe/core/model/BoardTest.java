@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package pl.michal.szymanski.ticktacktoe.core.model.v2;
+package pl.michal.szymanski.ticktacktoe.core.model;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,12 +29,12 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
-import pl.michal.szymanski.tictactoe.model.v2.Board;
-import pl.michal.szymanski.tictactoe.model.v2.BoardFieldType;
-import pl.michal.szymanski.tictactoe.model.v2.IntPoint;
-import pl.michal.szymanski.tictactoe.model.v2.Move;
-import pl.michal.szymanski.tictactoe.model.v2.Player;
-import pl.michal.szymanski.tictactoe.play.v2.NewTestParticipant;
+import pl.michal.szymanski.tictactoe.model.Board;
+import pl.michal.szymanski.tictactoe.model.BoardFieldType;
+import pl.michal.szymanski.tictactoe.model.IntPoint;
+import pl.michal.szymanski.tictactoe.model.Move;
+import pl.michal.szymanski.tictactoe.model.Player;
+import pl.michal.szymanski.tictactoe.play.TestParticipant;
 
 /**
  *
@@ -72,8 +72,8 @@ public class BoardTest {
      */
     @Test
     public void testDoMove() {
-        Player a = new NewTestParticipant();
-        Player b = new NewTestParticipant();
+        Player a = new TestParticipant();
+        Player b = new TestParticipant();
         a.setType(BoardFieldType.XMark);
         b.setType(BoardFieldType.OMark);
 
