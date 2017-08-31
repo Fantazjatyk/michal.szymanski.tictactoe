@@ -23,7 +23,6 @@
  */
 package tictactoe.transport;
 
-
 import java.util.Optional;
 
 /**

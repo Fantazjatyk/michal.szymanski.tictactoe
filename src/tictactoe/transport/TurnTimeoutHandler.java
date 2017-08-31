@@ -23,12 +23,11 @@
  */
 package tictactoe.transport;
 
-
-
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface TurnTimeoutHandler extends WatchdogHandler{
-void onTurnTimeout() throws Exception;
+public interface TurnTimeoutHandler extends WatchdogHandler {
+
+    void onTurnTimeout() throws Exception;
 }

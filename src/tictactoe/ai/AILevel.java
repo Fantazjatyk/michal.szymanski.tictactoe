@@ -28,5 +28,5 @@ package tictactoe.ai;
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
 public enum AILevel {
-Easy, Medium, Hard
+    Easy, Medium, Hard
 }

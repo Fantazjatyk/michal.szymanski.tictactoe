@@ -33,10 +33,11 @@ public class Play {
         info.getPlayers().assignBoardFieldsMarks();
     }
 
-    public void onFinish(){
+    public void onFinish() {
         this.info.getPlayers().getFirstPlayer().get().onGameEnd(info, settings.getters());
         this.info.getPlayers().getSecondPlayer().get().onGameEnd(info, settings.getters());
     }
+
     public PlaySettings getSettings() {
         return this.settings;
     }

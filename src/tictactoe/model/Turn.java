@@ -23,8 +23,6 @@
  */
 package tictactoe.model;
 
-
-
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com

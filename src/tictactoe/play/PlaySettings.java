@@ -5,7 +5,6 @@
  */
 package tictactoe.play;
 
-
 import java.util.concurrent.TimeUnit;
 
 /**

@@ -83,6 +83,4 @@ public abstract class Player extends Guest {
 
     public abstract void onTurnTimeout();
 
-
-
 }
