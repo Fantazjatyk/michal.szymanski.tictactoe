@@ -35,20 +35,20 @@ import java.util.logging.Logger;
 import tictactoe.control.GameTimeoutNotify;
 import tictactoe.control.TimerNotifier;
 import tictactoe.exceptions.NotAllPlayersPresentException;
+import tictactoe.exceptions.PlayerDisconnectedException;
 import tictactoe.model.IntPoint;
 import tictactoe.model.Move;
 import tictactoe.model.Player;
 import tictactoe.model.Turn;
 import tictactoe.transport.GameTimeoutHandler;
 import tictactoe.transport.LockProxyResponse;
-import tictactoe.transport.PlayerDisconnectedHandler;
 import tictactoe.transport.ProxyResponse;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedHandler, GameRunner {
+public class SimpleGameRunner implements GameTimeoutHandler, GameRunner {
 
     private Game play;
     private TimerNotifier gameTimeoutNotifier;
@@ -56,7 +56,7 @@ public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedH
     private boolean isTerminated = false;
     private boolean isTimedOut = false;
     private boolean isEnded = false;
-    private GameRunnerStatus status = GameRunnerStatus.Started;
+    private GameRunnerStatus status = GameRunnerStatus.Unknown;
     private PlayStartEndCallbacks startEnd = new PlayStartEndCallbacks();
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -68,7 +68,7 @@ public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedH
         return this.startEnd.get();
     }
 
-    private final void gameLoop() {
+    private final void gameLoop() throws PlayerDisconnectedException {
         sendBoard();
         while (!isDone() && !isTerminated) {
             Player player = play.getHistory().getTurns().isEmpty() ? play.getInfo().getPlayers().getRandomPlayer() : getNextPlayer();
@@ -77,7 +77,7 @@ public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedH
         }
     }
 
-    protected void doTurn(Player player) {
+    private void doTurn(Player player) throws PlayerDisconnectedException {
         LockProxyResponse<Boolean> rs = new LockProxyResponse();
 
         ReentrantLock lock = new ReentrantLock();
@@ -103,45 +103,14 @@ public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedH
             play.getHistory().getTurns().addLast(new Turn(player, play.getInfo().getBoard()));
             getMove(player);
         } else {
-            handleDisconnected(player);
+            throw new PlayerDisconnectedException(player);
         }
 
-    }
-
-    public void handleDisconnected(Player p) {
-        Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "one or two players disconnected. Terminating play...");
-        Optional<Player> winner = play.getInfo().getPlayers().filter((el) -> el.getId() != p.getId());
-        play.getInfo().setWinner((winner));
-        this.status = GameRunnerStatus.Walkover;
-        interrupt();
-    }
-
-    public void resign(Player p) {
-        Optional<Player> winner = play.getInfo().getPlayers().filter((el) -> el.getId() != p.getId());
-        play.getInfo().setWinner((winner));
-        this.status = GameRunnerStatus.Walkover;
-        interrupt();
     }
 
     private void findAndSetWinner() {
         List<Player> winners = GameMaster.getWinner(play.getInfo().getBoard());
         play.getInfo().setWinner(winners.size() == 1 ? Optional.of(winners.get(0)) : Optional.empty());
-    }
-
-    public GameRunnerStatus getStatus() {
-        return this.status;
-    }
-
-    private GameRunnerStatus evaluateStatus() {
-        GameRunnerStatus status = null;
-        if (this.status == GameRunnerStatus.Walkover) {
-            return GameRunnerStatus.Walkover;
-        } else if (this.play.getInfo().getWinner().isPresent()) {
-            status = GameRunnerStatus.Winner;
-        } else {
-            status = GameRunnerStatus.Remis;
-        }
-        return status;
     }
 
     private void getMove(Player player) {
@@ -193,8 +162,18 @@ public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedH
         this.play.getInfo().getPlayers().getSecondPlayer().get().receiveBoard(this.play.getInfo().getBoard());
     }
 
-    public final boolean isDone() {
-        return GameMaster.isDone(play.getInfo().getBoard()) || this.isTimedOut;
+    private void end() {
+        play.onFinish();
+        play.getInfo().setTotalTime((int) watch.elapsed(TimeUnit.MILLISECONDS));
+        watch.stop();
+        startEnd.onEnd();
+        isEnded = true;
+        status = evaluateStatus();
+        logger.log(Level.SEVERE, "GAME OVER");
+    }
+
+    private GameRunnerStatus evaluateStatus() {
+        return (status != GameRunnerStatus.Running) ? status : GameRunnerStatus.Done;
     }
 
     @Override
@@ -205,7 +184,7 @@ public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedH
     }
 
     @Override
-    public void start() {
+    public void start() throws PlayerDisconnectedException {
         if (!play.getInfo().getPlayers().isPair()) {
             throw new NotAllPlayersPresentException();
         }
@@ -236,14 +215,14 @@ public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedH
         return !isTerminated || !isTimedOut || !isEnded;
     }
 
-    private void end() {
-        play.onFinish();
-        play.getInfo().setTotalTime((int) watch.elapsed(TimeUnit.MILLISECONDS));
-        watch.stop();
-        startEnd.onEnd();
-        isEnded = true;
-        status = evaluateStatus();
-        logger.log(Level.SEVERE, "GAME OVER");
+    @Override
+    public GameRunnerStatus getStatus() {
+        return this.status;
+    }
+
+    @Override
+    public final boolean isDone() {
+        return GameMaster.isDone(play.getInfo().getBoard()) || this.isTimedOut;
     }
 
 }

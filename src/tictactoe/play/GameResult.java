@@ -23,10 +23,50 @@
  */
 package tictactoe.play;
 
+import java.util.Optional;
+import tictactoe.model.Player;
+
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class MultiplayerPlay extends Game {
+public class GameResult {
 
+    protected enum GameResultStatus {
+        Walkover, Winner
+    }
+
+    private GameResultStatus status;
+
+    public GameResult(GameResultBuilder b) {
+        status = b.status;
+    }
+
+    public GameResultStatus getStatus() {
+        return null;
+    }
+
+    protected static class GameResultBuilder {
+
+        private GameResultStatus status;
+        private Optional<Player> winner;
+
+        public GameResultBuilder() {
+
+        }
+
+        public GameResultBuilder setWinner(Optional<Player> winner) {
+            this.winner = winner;
+            return this;
+        }
+
+        public GameResultBuilder setStatus(GameResultStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public GameResult build() {
+            return new GameResult(this);
+        }
+    }
 }

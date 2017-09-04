@@ -27,6 +27,4 @@ package tictactoe.play;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public enum GameRunnerStatus {
-    Started, Running, Winner, Remis, Walkover
-}
+

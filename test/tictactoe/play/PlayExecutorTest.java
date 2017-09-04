@@ -34,8 +34,10 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
+import tictactoe.exceptions.PlayerDisconnectedException;
 import tictactoe.model.IntPoint;
 import tictactoe.model.Player;
+import tictactoe.play.GameRunner.GameRunnerStatus;
 
 /**
  *
@@ -74,7 +76,7 @@ public class PlayExecutorTest {
     }
 
     @Test(timeout = 1000)
-    public void testIfGameLastSpecifiedTime() {
+    public void testIfGameLastSpecifiedTime() throws PlayerDisconnectedException {
         play.settings().gameTimeLimit(500, TimeUnit.MILLISECONDS);
         play.settings().moveTimeLimit(100, TimeUnit.MILLISECONDS);
         p1.dontRespondOnGetField();
@@ -106,7 +108,7 @@ public class PlayExecutorTest {
     }
 
     @Test(timeout = 5000)
-    public void testIfAllParticipantsGetFieldsRequestResponsesWereMarkedAtBoard() {
+    public void testIfAllParticipantsGetFieldsRequestResponsesWereMarkedAtBoard() throws PlayerDisconnectedException {
         play.settings().moveTimeLimit(260, TimeUnit.MILLISECONDS).gameTimeLimit(1, TimeUnit.SECONDS);
         p1.setWaitTime(250);
         p2.setWaitTime(250);
@@ -118,7 +120,7 @@ public class PlayExecutorTest {
     }
 
     @Test(timeout = 5000)
-    public void testGameEndWhenPlayerHit3PointsInLine() {
+    public void testGameEndWhenPlayerHit3PointsInLine() throws PlayerDisconnectedException {
         play.settings().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(2, TimeUnit.SECONDS);
         Stack<IntPoint> a1Moves = new Stack();
         a1Moves.push(new IntPoint(0, 0));
@@ -142,7 +144,7 @@ public class PlayExecutorTest {
     }
 
     @Test(timeout = 5000)
-    public void testIsWinnerPresent() {
+    public void testIsWinnerPresent() throws PlayerDisconnectedException {
         play.settings().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(2, TimeUnit.SECONDS);
         Stack<IntPoint> a1Moves = new Stack();
         a1Moves.push(new IntPoint(0, 0));
@@ -165,7 +167,7 @@ public class PlayExecutorTest {
     }
 
     @Test(timeout = 5000)
-    public void testIsWinnerMatchParticipant() {
+    public void testIsWinnerMatchParticipant() throws PlayerDisconnectedException {
         play.settings().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(2, TimeUnit.SECONDS);
         Stack<IntPoint> a1Moves = new Stack();
         a1Moves.push(new IntPoint(0, 0));
@@ -190,7 +192,7 @@ public class PlayExecutorTest {
     }
 
     @Test(timeout = 5000)
-    public void testAllParticipantsWereNotifiedAboutGameEnd() {
+    public void testAllParticipantsWereNotifiedAboutGameEnd() throws PlayerDisconnectedException {
         play.settings().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(1, TimeUnit.SECONDS);
 
         p1 = Mockito.spy(TestParticipant.class);
@@ -206,7 +208,7 @@ public class PlayExecutorTest {
     }
 
     @Test
-    public void testCallbacksProperlyInvoked_TerminatedExecutor() {
+    public void testCallbacksProperlyInvoked_TerminatedExecutor() throws PlayerDisconnectedException {
         List onEnd = new ArrayList();
         List onStart = new ArrayList();
         SimpleGameRunner exe = new SimpleGameRunner(play);
@@ -221,14 +223,14 @@ public class PlayExecutorTest {
         play.join(p1);
         play.join(p2);
         exe.start();
-        exe.stop();
+        exe.interrupt();
 
         assertEquals(3, onEnd.size());
         assertEquals(3, onStart.size());
     }
 
     @Test
-    public void testExecutorTerminatedProperly() throws InterruptedException {
+    public void testExecutorTerminatedProperly() throws InterruptedException, PlayerDisconnectedException {
         play.join(p1);
         play.join(p2);
         play.getSettings().setters().moveTimeLimit(500, TimeUnit.MILLISECONDS);
@@ -236,7 +238,7 @@ public class PlayExecutorTest {
         ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(2);
 
         executor.schedule(() -> {
-            exe.stop();
+            exe.interrupt();
         }, 500, TimeUnit.MILLISECONDS);
         executor.schedule(() -> {
             assertTrue(exe.isRunning());
@@ -255,7 +257,7 @@ public class PlayExecutorTest {
     }
 
     @Test(timeout = 8000)
-    public void testTurnTimeoutEventDelivered() {
+    public void testTurnTimeoutEventDelivered() throws PlayerDisconnectedException {
         this.p1.dontRespondOnGetField();
 
         TestParticipant passive1 = Mockito.spy(TestParticipant.class);
@@ -272,7 +274,7 @@ public class PlayExecutorTest {
         Mockito.verify(passive2, Mockito.times(0)).onTurnTimeout();
     }
 
-    @Test(timeout = 500)
+    @Test(timeout = 500, expected = PlayerDisconnectedException.class)
     public void testGameEndDuePlayerDisconnected_WinsPresentPlayer() throws Exception {
         TestParticipant passive1 = Mockito.spy(TestParticipant.class);
         TestParticipant passive2 = Mockito.spy(TestParticipant.class);
@@ -293,13 +295,14 @@ public class PlayExecutorTest {
 
         Mockito.verify(passive1, Mockito.never()).onTurnTimeout();
         Mockito.verify(passive1, Mockito.never()).getMoveField(Mockito.any());
-        assertEquals(GameRunnerStatus.Walkover, exe.getStatus());
+
+        assertEquals(GameRunnerStatus.Interrupted, exe.getStatus());
         assertTrue(play.getInfo().getWinner().isPresent());
         Player winner = (Player) play.getInfo().getWinner().get();
         assertEquals(passive2, winner);
     }
 
-    @Test(timeout = 500)
+    @Test(timeout = 500, expected = PlayerDisconnectedException.class)
     public void testGameEndDueTwoPlayersDisconnected_WinsSecondTurnPlayer() throws Exception, Exception {
         TestParticipant passive1 = Mockito.spy(TestParticipant.class);
         TestParticipant passive2 = Mockito.spy(TestParticipant.class);
@@ -323,7 +326,7 @@ public class PlayExecutorTest {
         Mockito.verify(passive2, Mockito.never()).onTurnTimeout();
         Mockito.verify(passive2, Mockito.never()).getMoveField(Mockito.any());
 
-        assertEquals(GameRunnerStatus.Walkover, exe.getStatus());
+        assertEquals(GameRunnerStatus.Interrupted, exe.getStatus());
         assertTrue(play.getInfo().getWinner().isPresent());
     }
 

@@ -21,27 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package tictactoe.play;
+package tictactoe.exceptions;
 
-import tictactoe.exceptions.PlayerDisconnectedException;
+import tictactoe.model.Player;
 
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface GameRunner {
+public class PlayerDisconnectedException extends GameRunnerException {
 
-    void start() throws PlayerDisconnectedException;
+    private Player p;
 
-    void interrupt();
+    public PlayerDisconnectedException(Player p) {
+        this.p = p;
+    }
 
-    boolean isRunning();
-
-    boolean isDone();
-
-    GameRunnerStatus getStatus();
-
-    public enum GameRunnerStatus {
-        Unknown, Running, Done, Interrupted
+    public Player getPlayer() {
+        return this.p;
     }
 }
