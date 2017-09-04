@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2017 Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com.
@@ -36,6 +36,15 @@ public abstract class Player extends Guest {
     private String id;
     private String username;
     private BoardFieldType type;
+    private boolean isDisqualified = false;
+
+    public boolean isIsDisqualified() {
+        return isDisqualified;
+    }
+
+    public void disgualify() {
+        this.isDisqualified = true;
+    }
 
     public final String getId() {
         return id;

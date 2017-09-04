@@ -23,13 +23,14 @@
  */
 package tictactoe.play;
 
+import tictactoe.model.GameResult;
 import java.util.Optional;
+import java.util.Random;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import tictactoe.exceptions.PlayerDisconnectedException;
 import tictactoe.model.Player;
-import tictactoe.play.GameResult.GameResultBuilder;
-import tictactoe.play.GameResult.GameResultStatus;
 
 /**
  *
@@ -38,65 +39,47 @@ import tictactoe.play.GameResult.GameResultStatus;
 public class Game implements GameRunner {
 
     private PlaySettings settings = new PlaySettings();
-    private PlayInfo info = new PlayInfo();
-    private GameRunnerCallbackable runner;
+    private String id;
+    private PlayersPair players = new PlayersPair();
+    private AbstractGameRunner runner;
+    private Optional<GameResult> result = Optional.empty();
 
-    public Game(GameRunnerCallbackable runner) {
+    public Game(AbstractGameRunner runner) {
         this.runner = runner;
     }
 
     public Game() {
-        this.runner = new SimpleGameRunner();
-        this.runner.setOnStartCallback(()=> onStart());
+        this.id = UUID.randomUUID().toString() + new Random().nextInt(1000);
+        this.runner = new AbstractGameRunner(players);
     }
 
-    PlayInfo getInfo() {
-        return info;
-    }
-
-    PlaySettings getSettings() {
-        return settings;
+    AbstractGameRunner getRunner() {
+        return this.runner;
     }
 
     public PlaySettings.PlaySettingsSetters settings() {
         return this.settings.setters();
     }
 
-    void onStart() {
-        info.getPlayers().assignBoardFieldsMarks();
-    }
-
-    void onFinish() {
-        this.info.getPlayers().getFirstPlayer().get().onGameEnd(info, settings.getters());
-        this.info.getPlayers().getSecondPlayer().get().onGameEnd(info, settings.getters());
-    }
-
-    public GameResult getResult() {
-        GameResultStatus status = null;
-        if (getStatus() == GameRunnerStatus.Done && getInfo().getWinner().isPresent()) {
-            status = GameResult.GameResultStatus.Winner;
-        } else if (getStatus() == GameRunnerStatus.Interrupted && getInfo().getWinner().isPresent()) {
-            status = GameResult.GameResultStatus.Walkover;
+    public Optional<GameResult> getResult() {
+        if (!this.result.isPresent()) {
+            this.result = Optional.of(GameResultSimpleFactory.createGameResult(this));
         }
-        GameResultBuilder b = new GameResult.GameResultBuilder();
-        b.setStatus(status);
-        b.setWinner(getInfo().getWinner());
-        return b.build();
+        return this.result;
     }
 
     public void join(Player player) {
-        if (!this.getInfo().getPlayers().getFirstPlayer().isPresent()) {
-            this.getInfo().getPlayers().firstPlayer(player);
-        } else if (!this.getInfo().getPlayers().getSecondPlayer().isPresent()) {
-            this.getInfo().getPlayers().secondPlayer(player);
+        if (!this.players.getFirstPlayer().isPresent()) {
+            this.players.firstPlayer(player);
+        } else if (!this.players.getSecondPlayer().isPresent()) {
+            this.players.secondPlayer(player);
         }
 
     }
 
     public void throwPlayer(Player p) {
         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Throwing player " + p.getId() + ". Terminating play...");
-        Optional<Player> winner = getInfo().getPlayers().filter((el) -> el.getId() != p.getId());
-        getInfo().setWinner((winner));
+        p.disgualify();
         interrupt();
     }
 

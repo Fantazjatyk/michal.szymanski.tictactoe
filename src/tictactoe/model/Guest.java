@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2017 Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com.
@@ -23,9 +23,6 @@
  */
 package tictactoe.model;
 
-import tictactoe.play.PlayInfo;
-import tictactoe.play.PlaySettings;
-
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
@@ -36,5 +33,5 @@ public abstract class Guest {
 
     public abstract void receiveGameResult(GameResult r);
 
-    public abstract void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings);
+    public abstract void onGameEnd(tictactoe.model.GameResult result);
 }

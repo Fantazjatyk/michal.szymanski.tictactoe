@@ -25,8 +25,6 @@ package tictactoe.play;
 
 import com.google.common.base.Stopwatch;
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.logging.Level;
@@ -35,6 +33,7 @@ import tictactoe.control.GameTimeoutNotify;
 import tictactoe.control.TimerNotifier;
 import tictactoe.exceptions.NotAllPlayersPresentException;
 import tictactoe.exceptions.PlayerDisconnectedException;
+import tictactoe.model.Board;
 import tictactoe.model.IntPoint;
 import tictactoe.model.Move;
 import tictactoe.model.Player;
@@ -48,22 +47,24 @@ import tictactoe.transport.ProxyResponse;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class SimpleGameRunner implements GameTimeoutHandler, GameRunnerCallbackable {
+abstract class AbstractGameRunner implements GameTimeoutHandler, GameRunnerCallbackable {
 
     private TimerNotifier gameTimeoutNotifier;
     private Stopwatch watch;
     private PlaySettings settings;
-    private PlayInfo info;
     private PlayHistory history = new PlayHistory();
+    private PlayersPair players;
     private boolean isTerminated = false;
     private boolean isTimedOut = false;
     private boolean isEnded = false;
+    private Board board = new Board(3);
     private GameRunnerStatus status = GameRunnerStatus.Unknown;
     private PlayStartEndCallbacks startEnd = new PlayStartEndCallbacks();
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
-    PlayHistory getHistory() {
-        return history;
+    public AbstractGameRunner(PlayersPair players) {
+        this.board = board;
+        this.players = players;
     }
 
     public PlayStartEndCallbacks.ReducedVisiblity setCallbacks() {
@@ -73,7 +74,7 @@ public class SimpleGameRunner implements GameTimeoutHandler, GameRunnerCallbacka
     private final void gameLoop() throws PlayerDisconnectedException {
         sendBoard();
         while (!isDone() && !isTerminated) {
-            Player player = history.getTurns().isEmpty() ? info.getPlayers().getRandomPlayer() : getNextPlayer();
+            Player player = history.getTurns().isEmpty() ? players.getRandomPlayer() : getNextPlayer();
             doTurn(player);
             sendBoard();
         }
@@ -102,7 +103,7 @@ public class SimpleGameRunner implements GameTimeoutHandler, GameRunnerCallbacka
         }
 
         if (rs.getReal().isPresent()) {
-            history.getTurns().addLast(new Turn(player, info.getBoard()));
+            history.getTurns().addLast(new Turn(player, board));
             getMove(player);
         } else {
             throw new PlayerDisconnectedException(player);
@@ -110,9 +111,8 @@ public class SimpleGameRunner implements GameTimeoutHandler, GameRunnerCallbacka
 
     }
 
-    private void findAndSetWinner() {
-        List<Player> winners = GameMaster.getWinner(info.getBoard());
-        info.setWinner(winners.size() == 1 ? Optional.of(winners.get(0)) : Optional.empty());
+    Board getBoard() {
+        return this.board;
     }
 
     private void getMove(Player player) {
@@ -139,8 +139,8 @@ public class SimpleGameRunner implements GameTimeoutHandler, GameRunnerCallbacka
         }
         if (response.getReal().isPresent()) {
             move = new Move(player, response.getReal().get());
-            if (GameMaster.isValidMove(move, info.getBoard())) {
-                info.getBoard().doMove(move);
+            if (GameMaster.isValidMove(move, board)) {
+                board.doMove(move);
                 history.getMoves().addLast(move);
             }
         } else {
@@ -155,17 +155,16 @@ public class SimpleGameRunner implements GameTimeoutHandler, GameRunnerCallbacka
 
     private Player getNextPlayer() {
         Turn lastTurn = history.getTurns().getLast();
-        return lastTurn.getQuarterback().equals(info.getPlayers().getFirstPlayer().get())
-                ? info.getPlayers().getSecondPlayer().get() : info.getPlayers().getFirstPlayer().get();
+        return lastTurn.getQuarterback().equals(players.getFirstPlayer().get())
+                ? players.getSecondPlayer().get() : players.getFirstPlayer().get();
     }
 
     private void sendBoard() {
-        this.info.getPlayers().getFirstPlayer().get().receiveBoard(this.info.getBoard());
-        this.info.getPlayers().getSecondPlayer().get().receiveBoard(this.info.getBoard());
+        this.players.getFirstPlayer().get().receiveBoard(board);
+        this.players.getSecondPlayer().get().receiveBoard(board);
     }
 
     private void end() {
-        play.onFinish();
         watch.stop();
         startEnd.onEnd();
         isEnded = true;
@@ -186,21 +185,18 @@ public class SimpleGameRunner implements GameTimeoutHandler, GameRunnerCallbacka
 
     @Override
     public void start() throws PlayerDisconnectedException {
-        if (!info.getPlayers().isPair()) {
+        if (!players.isPair()) {
             throw new NotAllPlayersPresentException();
         }
+        players.assignBoardFieldsMarks();
         logger.log(Level.SEVERE, MessageFormat.format("GAME START.\nSettings: gameTimeLimit: {0} miliseconds, turnTimeLimit: {1} miliseconds",
                 settings.getters().getGameTimeLimitInMilis(), settings.getters().getTurnTimeLimitInMilis()));
         this.status = GameRunnerStatus.Running;
         watch = Stopwatch.createStarted();
-        play.onStart();
         startEnd.onStart();
         this.gameTimeoutNotifier = TimerNotifier.createStarted(settings.getters().getGameTimeLimitInMilis(), new GameTimeoutNotify());
         this.gameTimeoutNotifier.addObserver(this);
         gameLoop();
-        if (!this.isTerminated) {
-            findAndSetWinner();
-        }
         end();
     }
 
@@ -223,7 +219,7 @@ public class SimpleGameRunner implements GameTimeoutHandler, GameRunnerCallbacka
 
     @Override
     public final boolean isDone() {
-        return GameMaster.isDone(info.getBoard()) || this.isTimedOut;
+        return GameMaster.isDone(board) || this.isTimedOut;
     }
 
     @Override

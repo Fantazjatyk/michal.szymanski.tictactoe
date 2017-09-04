@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2017 Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com.
@@ -38,17 +38,17 @@ import tictactoe.model.Player;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public abstract class GameMaster {
+abstract class GameMaster {
 
     private GameMaster() {
 
     }
 
     public static boolean isDone(Board board) {
-        return !getWinner(board).isEmpty();
+        return !getWinners(board).isEmpty();
     }
 
-    public static List<Player> getWinner(Board board) {
+    public static List<Player> getWinners(Board board) {
         List<BoardField[]> possibleLines = board.getSelector().getAllPossibleWinningLines();
         Set<Player> players = findAllPlayersOnBoard(board);
 

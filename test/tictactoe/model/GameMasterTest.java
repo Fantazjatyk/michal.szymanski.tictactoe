@@ -83,7 +83,7 @@ public class GameMasterTest {
         board.doMove(new Move(player1, new IntPoint(2, 2)));
         board.doMove(new Move(player3, new IntPoint(0, 1)));
 
-        List<Player> winner = GameMaster.getWinner(board);
+        List<Player> winner = GameMaster.getWinners(board);
         assertTrue(winner.size() == 1);
         assertEquals(player1, winner.get(0));
 
@@ -127,7 +127,7 @@ public class GameMasterTest {
         board.doMove(new Move(player3, new IntPoint(1, 1)));
         board.doMove(new Move(player3, new IntPoint(1, 2)));
 
-        List<Player> winner = GameMaster.getWinner(board);
+        List<Player> winner = GameMaster.getWinners(board);
         assertEquals(2, winner.size());
     }
 

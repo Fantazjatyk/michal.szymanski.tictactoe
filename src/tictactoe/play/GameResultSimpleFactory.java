@@ -23,14 +23,43 @@
  */
 package tictactoe.play;
 
+import java.util.List;
+import java.util.Optional;
+import tictactoe.model.GameResult;
+import tictactoe.model.GameResult.GameResultStatus;
+import tictactoe.model.Player;
+
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface GameRunnerCallbackable extends GameRunner {
+class GameResultSimpleFactory {
 
-    void setOnEndCallback(Runnable r);
+    public static GameResult createGameResult(Game game) {
 
-    void setOnStartCallback(Runnable r);
+        List<Player> winners = GameMaster.getWinners(game.getRunner().getBoard());
+        GameResultStatus status = evaluateStatus(winners, game);
+        GameResult.GameResultBuilder b = new GameResult.GameResultBuilder();
+        b.setStatus(status);
 
+        if (winners.size() > 1) {
+            b.setStatus(GameResult.GameResultStatus.Remis);
+        } else {
+            b.setWinner(Optional.of(winners.get(0)));
+        }
+
+        return b.build();
+    }
+
+    private static GameResultStatus evaluateStatus(List<Player> winners, Game game) {
+        GameResult.GameResultStatus status = null;
+        if (game.getStatus() == GameRunner.GameRunnerStatus.Done) {
+            if (winners.size() == 1) {
+                status = GameResult.GameResultStatus.Winner;
+            } else {
+                status = GameResult.GameResultStatus.Remis;
+            }
+        }
+        return status;
+    }
 }

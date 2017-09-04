@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2017 Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com.
@@ -23,8 +23,8 @@
  */
 package tictactoe.model;
 
-import tictactoe.play.PlayInfo;
-import tictactoe.play.PlaySettings;
+import java.util.Optional;
+import tictactoe.model.Player;
 
 /**
  *
@@ -32,20 +32,43 @@ import tictactoe.play.PlaySettings;
  */
 public class GameResult {
 
-    private PlayInfo pI;
-    private PlaySettings.PlaySettingsGetters settings;
-
-    public GameResult(PlayInfo pI, PlaySettings.PlaySettingsGetters settings) {
-        this.pI = pI;
-        this.settings = settings;
+    public static enum GameResultStatus {
+        Walkover, Winner, Remis
     }
 
-    public PlayInfo getpI() {
-        return pI;
+    private GameResultStatus status;
+    private Optional<Player> winner;
+
+    public GameResult(GameResultBuilder b) {
+        status = b.status;
+        winner = b.winner;
     }
 
-    public PlaySettings.PlaySettingsGetters getSettings() {
-        return settings;
+    public GameResultStatus getStatus() {
+        return null;
     }
 
+    public static class GameResultBuilder {
+
+        private GameResultStatus status;
+        private Optional<Player> winner;
+
+        public GameResultBuilder() {
+
+        }
+
+        public GameResultBuilder setWinner(Optional<Player> winner) {
+            this.winner = winner;
+            return this;
+        }
+
+        public GameResultBuilder setStatus(GameResultStatus status) {
+            this.status = status;
+            return this;
+        }
+
+        public GameResult build() {
+            return new GameResult(this);
+        }
+    }
 }
