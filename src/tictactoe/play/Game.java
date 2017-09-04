@@ -38,24 +38,24 @@ import tictactoe.play.GameResult.GameResultStatus;
 public class Game implements GameRunner {
 
     private PlaySettings settings = new PlaySettings();
-    private PlayHistory history = new PlayHistory();
     private PlayInfo info = new PlayInfo();
-    private GameRunner runner;
+    private GameRunnerCallbackable runner;
 
-    public Game(GameRunner runner) {
+    public Game(GameRunnerCallbackable runner) {
         this.runner = runner;
     }
 
     public Game() {
-        this.runner = new SimpleGameRunner(this);
+        this.runner = new SimpleGameRunner();
+        this.runner.setOnStartCallback(()=> onStart());
     }
 
-    public PlayInfo getInfo() {
+    PlayInfo getInfo() {
         return info;
     }
 
-    public PlayHistory getHistory() {
-        return history;
+    PlaySettings getSettings() {
+        return settings;
     }
 
     public PlaySettings.PlaySettingsSetters settings() {

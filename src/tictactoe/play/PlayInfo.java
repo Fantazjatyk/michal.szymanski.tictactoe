@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2017 Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com.
@@ -36,7 +36,6 @@ import tictactoe.model.Player;
 public class PlayInfo {
 
     private String id;
-    private int totalTimeInMilis = 0;
     private Optional<Player> winner = Optional.empty();
     private PlayersPair players = new PlayersPair();
     private Board board = new Board(3);
@@ -59,14 +58,6 @@ public class PlayInfo {
 
     public void setWinner(Optional<Player> winner) {
         this.winner = winner;
-    }
-
-    void setTotalTime(int totalTime) {
-        this.totalTimeInMilis = totalTime;
-    }
-
-    public int getTotalTimeInMilis() {
-        return totalTimeInMilis;
     }
 
     public String getId() {

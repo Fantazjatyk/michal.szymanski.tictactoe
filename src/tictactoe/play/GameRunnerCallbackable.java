@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2017 Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com.
@@ -27,4 +27,10 @@ package tictactoe.play;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
+public interface GameRunnerCallbackable extends GameRunner {
 
+    void setOnEndCallback(Runnable r);
+
+    void setOnStartCallback(Runnable r);
+
+}

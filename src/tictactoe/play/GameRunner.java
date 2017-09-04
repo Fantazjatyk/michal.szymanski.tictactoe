@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2017 Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com.
@@ -40,6 +40,7 @@ public interface GameRunner {
     boolean isDone();
 
     GameRunnerStatus getStatus();
+
 
     public enum GameRunnerStatus {
         Unknown, Running, Done, Interrupted
