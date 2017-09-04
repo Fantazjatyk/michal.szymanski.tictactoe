@@ -31,7 +31,7 @@ import tictactoe.model.GameResult;
 import tictactoe.model.IntPoint;
 import tictactoe.model.Player;
 import tictactoe.play.PlayInfo;
-import tictactoe.play.PlaySettings;
+import tictactoe.play.GameSettings;
 import tictactoe.transport.ProxyResponse;
 
 /**
@@ -81,7 +81,7 @@ public class AIAdapter extends Player {
     }
 
     @Override
-    public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
+    public void onGameEnd(PlayInfo play, GameSettings.PlaySettingsGetters settings) {
     }
 
 }

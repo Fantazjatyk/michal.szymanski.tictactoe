@@ -38,32 +38,32 @@ import tictactoe.model.Player;
  */
 public class Game implements GameRunner {
 
-    private PlaySettings settings = new PlaySettings();
+    private GameSettings settings = new GameSettings();
     private String id;
     private PlayersPair players = new PlayersPair();
-    private AbstractGameRunner runner;
+    private BasicGameRunner runner;
     private Optional<GameResult> result = Optional.empty();
 
-    public Game(AbstractGameRunner runner) {
+    public Game(BasicGameRunner runner) {
         this.runner = runner;
     }
 
     public Game() {
         this.id = UUID.randomUUID().toString() + new Random().nextInt(1000);
-        this.runner = new AbstractGameRunner(players);
+        this.runner = new BasicGameRunner(players);
     }
 
-    AbstractGameRunner getRunner() {
-        return this.runner;
+    public String getId() {
+        return id;
     }
 
-    public PlaySettings.PlaySettingsSetters settings() {
+    public final GameSettings.PlaySettingsSetters configure() {
         return this.settings.setters();
     }
 
-    public Optional<GameResult> getResult() {
+    public final Optional<GameResult> getResult() {
         if (!this.result.isPresent()) {
-            this.result = Optional.of(GameResultSimpleFactory.createGameResult(this));
+            this.result = Optional.of(GameResultSimpleFactory.createGameResult(this, runner));
         }
         return this.result;
     }
@@ -77,7 +77,7 @@ public class Game implements GameRunner {
 
     }
 
-    public void throwPlayer(Player p) {
+    public void kickPlayer(Player p) {
         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "Throwing player " + p.getId() + ". Terminating play...");
         p.disgualify();
         interrupt();
@@ -94,7 +94,7 @@ public class Game implements GameRunner {
             this.runner.start();
         } catch (PlayerDisconnectedException ex) {
             Player p = ex.getPlayer();
-            this.throwPlayer(p);
+            this.kickPlayer(p);
             Logger.getLogger(Game.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -112,6 +112,18 @@ public class Game implements GameRunner {
     @Override
     public GameRunnerStatus getStatus() {
         return this.runner.getStatus();
+    }
+
+    protected final BasicGameRunner getRunner() {
+        return this.runner;
+    }
+
+    protected final PlayersPair getPlayers() {
+        return this.players;
+    }
+
+    protected final GameSettings getSettings() {
+        return this.settings;
     }
 
 }

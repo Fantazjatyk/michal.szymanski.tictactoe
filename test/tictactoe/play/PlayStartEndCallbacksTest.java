@@ -45,7 +45,7 @@ public class PlayStartEndCallbacksTest {
     @Test
     public void testOnStart() {
         List l = new ArrayList();
-        c.get().addOnStartEvent(() -> l.add(new Object()));
+        c.configure().addOnStartEvent(() -> l.add(new Object()));
         c.onStart();
         assertEquals(1, l.size());
     }
@@ -53,11 +53,11 @@ public class PlayStartEndCallbacksTest {
     @Test
     public void testOnStart_Many() {
         List l = new ArrayList();
-        c.get().addOnStartEvent(() -> l.add(new Object()));
-        c.get().addOnStartEvent(() -> l.add(new Object()));
-        c.get().addOnStartEvent(() -> l.add(new Object()));
-        c.get().addOnStartEvent(() -> l.add(new Object()));
-        c.get().addOnStartEvent(() -> l.add(new Object()));
+        c.configure().addOnStartEvent(() -> l.add(new Object()));
+        c.configure().addOnStartEvent(() -> l.add(new Object()));
+        c.configure().addOnStartEvent(() -> l.add(new Object()));
+        c.configure().addOnStartEvent(() -> l.add(new Object()));
+        c.configure().addOnStartEvent(() -> l.add(new Object()));
         c.onStart();
         assertEquals(5, l.size());
     }
@@ -65,7 +65,7 @@ public class PlayStartEndCallbacksTest {
     @Test
     public void testOnEnd() {
         List l = new ArrayList();
-        c.get().addOnEndEvent(() -> l.add(new Object()));
+        c.configure().addOnEndEvent(() -> l.add(new Object()));
         c.onEnd();
         assertEquals(1, l.size());
     }
@@ -73,11 +73,11 @@ public class PlayStartEndCallbacksTest {
     @Test
     public void testOnEnd_Many() {
         List l = new ArrayList();
-        c.get().addOnEndEvent(() -> l.add(new Object()));
-        c.get().addOnEndEvent(() -> l.add(new Object()));
-        c.get().addOnEndEvent(() -> l.add(new Object()));
-        c.get().addOnEndEvent(() -> l.add(new Object()));
-        c.get().addOnEndEvent(() -> l.add(new Object()));
+        c.configure().addOnEndEvent(() -> l.add(new Object()));
+        c.configure().addOnEndEvent(() -> l.add(new Object()));
+        c.configure().addOnEndEvent(() -> l.add(new Object()));
+        c.configure().addOnEndEvent(() -> l.add(new Object()));
+        c.configure().addOnEndEvent(() -> l.add(new Object()));
 
         c.onEnd();
         assertEquals(5, l.size());

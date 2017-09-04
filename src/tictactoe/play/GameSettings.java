@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class PlaySettings {
+public class GameSettings {
 
     private long timeout;
     private long turnLimit;
@@ -40,9 +40,9 @@ public class PlaySettings {
 
     public class PlaySettingsSetters {
 
-        private PlaySettings parent;
+        private GameSettings parent;
 
-        public PlaySettingsSetters(PlaySettings parent) {
+        public PlaySettingsSetters(GameSettings parent) {
             this.parent = parent;
         }
 
@@ -64,9 +64,9 @@ public class PlaySettings {
 
     public class PlaySettingsGetters {
 
-        private PlaySettings parent;
+        private GameSettings parent;
 
-        public PlaySettingsGetters(PlaySettings parent) {
+        public PlaySettingsGetters(GameSettings parent) {
             this.parent = parent;
         }
 

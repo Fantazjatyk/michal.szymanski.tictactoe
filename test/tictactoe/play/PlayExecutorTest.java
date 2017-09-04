@@ -48,7 +48,7 @@ public class PlayExecutorTest {
     TestParticipant p1;
     TestParticipant p2;
     Game play;
-    AbstractGameRunner exe;
+    BasicGameRunner exe;
 
     @Before
     public void setUp() {
@@ -71,26 +71,26 @@ public class PlayExecutorTest {
         p2.setProgrammedMoves(a2Moves);
 
         play = new Game();
-        play.settings().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(1, TimeUnit.SECONDS);
-        exe = new AbstractGameRunner(play);
+        play.configure().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(1, TimeUnit.SECONDS);
+        exe = new BasicGameRunner(play);
     }
 
     @Test(timeout = 1000)
     public void testIfGameLastSpecifiedTime() throws PlayerDisconnectedException {
-        play.settings().gameTimeLimit(500, TimeUnit.MILLISECONDS);
-        play.settings().moveTimeLimit(100, TimeUnit.MILLISECONDS);
+        play.configure().gameTimeLimit(500, TimeUnit.MILLISECONDS);
+        play.configure().moveTimeLimit(100, TimeUnit.MILLISECONDS);
         p1.dontRespondOnGetField();
         p1.setWaitTime(100);
         p1.setWaitTime(100);
         p2.dontRespondOnGetField();
         play.join(p1);
         play.join(p2);
-        new AbstractGameRunner(play).start();
+        new BasicGameRunner(play).start();
     }
 
     @Test(timeout = 2000)
     public void testIfAllParticipantsReceivedEXACTLYGetFieldRequests() throws Exception, Exception {
-        play.settings().moveTimeLimit(100, TimeUnit.MILLISECONDS).gameTimeLimit(200, TimeUnit.MILLISECONDS);
+        play.configure().moveTimeLimit(100, TimeUnit.MILLISECONDS).gameTimeLimit(200, TimeUnit.MILLISECONDS);
 
         p1 = Mockito.spy(TestParticipant.class);
         p1.setUsername("A");
@@ -100,7 +100,7 @@ public class PlayExecutorTest {
         p2.dontRespondOnGetField();
         play.join(p1);
         play.join(p2);
-        new AbstractGameRunner(play).start();
+        new BasicGameRunner(play).start();
 
         Mockito.verify(p1, Mockito.times(1)).getMoveField(Mockito.any());
         Mockito.verify(p2, Mockito.times(1)).getMoveField(Mockito.any());
@@ -109,19 +109,19 @@ public class PlayExecutorTest {
 
     @Test(timeout = 5000)
     public void testIfAllParticipantsGetFieldsRequestResponsesWereMarkedAtBoard() throws PlayerDisconnectedException {
-        play.settings().moveTimeLimit(260, TimeUnit.MILLISECONDS).gameTimeLimit(1, TimeUnit.SECONDS);
+        play.configure().moveTimeLimit(260, TimeUnit.MILLISECONDS).gameTimeLimit(1, TimeUnit.SECONDS);
         p1.setWaitTime(250);
         p2.setWaitTime(250);
         play.join(p1);
         play.join(p2);
-        new AbstractGameRunner(play).start();
+        new BasicGameRunner(play).start();
 
         assertEquals(4, play.getInfo().getBoard().getSelector().getAllFields().stream().filter(el -> el.getOwner().isPresent()).collect(Collectors.toList()).size());
     }
 
     @Test(timeout = 5000)
     public void testGameEndWhenPlayerHit3PointsInLine() throws PlayerDisconnectedException {
-        play.settings().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(2, TimeUnit.SECONDS);
+        play.configure().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(2, TimeUnit.SECONDS);
         Stack<IntPoint> a1Moves = new Stack();
         a1Moves.push(new IntPoint(0, 0));
         a1Moves.push(new IntPoint(1, 1));
@@ -137,7 +137,7 @@ public class PlayExecutorTest {
 
         play.join(p1);
         play.join(p2);
-        new AbstractGameRunner(play).start();
+        new BasicGameRunner(play).start();
 
         int totalMoves = play.getInfo().getBoard().getSelector().getAllFields().stream().filter(el -> el.getOwner().isPresent()).collect(Collectors.toList()).size();
         assertTrue(totalMoves == 5 || totalMoves == 6);
@@ -145,7 +145,7 @@ public class PlayExecutorTest {
 
     @Test(timeout = 5000)
     public void testIsWinnerPresent() throws PlayerDisconnectedException {
-        play.settings().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(2, TimeUnit.SECONDS);
+        play.configure().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(2, TimeUnit.SECONDS);
         Stack<IntPoint> a1Moves = new Stack();
         a1Moves.push(new IntPoint(0, 0));
         a1Moves.push(new IntPoint(1, 1));
@@ -161,14 +161,14 @@ public class PlayExecutorTest {
 
         play.join(p1);
         play.join(p2);
-        new AbstractGameRunner(play).start();
+        new BasicGameRunner(play).start();
 
         assertTrue(play.getInfo().getWinner().isPresent());
     }
 
     @Test(timeout = 5000)
     public void testIsWinnerMatchParticipant() throws PlayerDisconnectedException {
-        play.settings().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(2, TimeUnit.SECONDS);
+        play.configure().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(2, TimeUnit.SECONDS);
         Stack<IntPoint> a1Moves = new Stack();
         a1Moves.push(new IntPoint(0, 0));
         a1Moves.push(new IntPoint(1, 1));
@@ -184,7 +184,7 @@ public class PlayExecutorTest {
 
         play.join(p1);
         play.join(p2);
-        new AbstractGameRunner(play).start();
+        new BasicGameRunner(play).start();
 
         assertTrue(play.getInfo().getWinner().isPresent());
         Player winner = (Player) play.getInfo().getWinner().get();
@@ -193,7 +193,7 @@ public class PlayExecutorTest {
 
     @Test(timeout = 5000)
     public void testAllParticipantsWereNotifiedAboutGameEnd() throws PlayerDisconnectedException {
-        play.settings().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(1, TimeUnit.SECONDS);
+        play.configure().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(1, TimeUnit.SECONDS);
 
         p1 = Mockito.spy(TestParticipant.class);
         p1.setUsername("A");
@@ -201,7 +201,7 @@ public class PlayExecutorTest {
         p2.setUsername("B");
         play.join(p1);
         play.join(p2);
-        new AbstractGameRunner(play).start();
+        new BasicGameRunner(play).start();
 
         Mockito.verify(p1, Mockito.times(1)).onGameEnd(Mockito.any(), Mockito.any());
         Mockito.verify(p2, Mockito.times(1)).onGameEnd(Mockito.any(), Mockito.any());
@@ -211,7 +211,7 @@ public class PlayExecutorTest {
     public void testCallbacksProperlyInvoked_TerminatedExecutor() throws PlayerDisconnectedException {
         List onEnd = new ArrayList();
         List onStart = new ArrayList();
-        AbstractGameRunner exe = new AbstractGameRunner(play);
+        BasicGameRunner exe = new BasicGameRunner(play);
         exe.setCallbacks().addOnEndEvent(() -> onStart.add(1));
         exe.setCallbacks().addOnEndEvent(() -> onStart.add(1));
         exe.setCallbacks().addOnEndEvent(() -> onStart.add(1));
@@ -267,8 +267,8 @@ public class PlayExecutorTest {
         passive1.dontRespondOnGetField();
         play.join(passive1);
         play.join(passive2);
-        play.settings().moveTimeLimit(300, TimeUnit.MILLISECONDS);
-        play.settings().gameTimeLimit(600, TimeUnit.MILLISECONDS);
+        play.configure().moveTimeLimit(300, TimeUnit.MILLISECONDS);
+        play.configure().gameTimeLimit(600, TimeUnit.MILLISECONDS);
         exe.start();
         Mockito.verify(passive1, Mockito.atLeastOnce()).onTurnTimeout();
         Mockito.verify(passive2, Mockito.times(0)).onTurnTimeout();
@@ -284,11 +284,11 @@ public class PlayExecutorTest {
         passive1.dontRespondOnGetField();
         passive1.dontRespondOnConnected();
 
-        play.settings().moveTimeLimit(100, TimeUnit.MILLISECONDS);
-        play.settings().gameTimeLimit(1000, TimeUnit.MILLISECONDS);
+        play.configure().moveTimeLimit(100, TimeUnit.MILLISECONDS);
+        play.configure().gameTimeLimit(1000, TimeUnit.MILLISECONDS);
         play.join(passive1);
         play.join(passive2);
-        exe = new AbstractGameRunner(play);
+        exe = new BasicGameRunner(play);
         exe.start();
         Mockito.verify(passive2, Mockito.atLeastOnce()).onGameEnd(Mockito.any(), Mockito.any());
         Mockito.verify(passive1, Mockito.atLeastOnce()).onGameEnd(Mockito.any(), Mockito.any());
@@ -312,11 +312,11 @@ public class PlayExecutorTest {
         passive2.dontRespondOnGetField();
         passive1.dontRespondOnConnected();
 
-        play.settings().moveTimeLimit(100, TimeUnit.MILLISECONDS);
-        play.settings().gameTimeLimit(1000, TimeUnit.MILLISECONDS);
+        play.configure().moveTimeLimit(100, TimeUnit.MILLISECONDS);
+        play.configure().gameTimeLimit(1000, TimeUnit.MILLISECONDS);
         play.join(passive1);
         play.join(passive2);
-        exe = new AbstractGameRunner(play);
+        exe = new BasicGameRunner(play);
         exe.start();
         Mockito.verify(passive2, Mockito.atLeastOnce()).onGameEnd(Mockito.any(), Mockito.any());
         Mockito.verify(passive1, Mockito.atLeastOnce()).onGameEnd(Mockito.any(), Mockito.any());

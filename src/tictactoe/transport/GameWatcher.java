@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2017 Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com.
@@ -24,8 +24,7 @@
 package tictactoe.transport;
 
 import tictactoe.model.Board;
-import tictactoe.play.PlayInfo;
-import tictactoe.play.PlaySettings;
+import tictactoe.model.GameResult;
 
 /**
  *
@@ -35,5 +34,5 @@ public interface GameWatcher {
 
     void receiveBoard(Board board);
 
-    void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings);
+    void onGameEnd(GameResult result);
 }

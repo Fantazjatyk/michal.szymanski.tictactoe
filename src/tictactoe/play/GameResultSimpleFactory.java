@@ -35,9 +35,9 @@ import tictactoe.model.Player;
  */
 class GameResultSimpleFactory {
 
-    public static GameResult createGameResult(Game game) {
+    public static GameResult createGameResult(Game game, BasicGameRunner runner) {
 
-        List<Player> winners = GameMaster.getWinners(game.getRunner().getBoard());
+        List<Player> winners = GameMaster.getWinners(runner.getBoard());
         GameResultStatus status = evaluateStatus(winners, game);
         GameResult.GameResultBuilder b = new GameResult.GameResultBuilder();
         b.setStatus(status);
@@ -55,7 +55,12 @@ class GameResultSimpleFactory {
         GameResult.GameResultStatus status = null;
         if (game.getStatus() == GameRunner.GameRunnerStatus.Done) {
             if (winners.size() == 1) {
-                status = GameResult.GameResultStatus.Winner;
+                if (game.getPlayers().filter(el -> el.getId() != winners.get(0).getId() && el.isIsDisqualified()).isPresent()) {
+                    status = GameResult.GameResultStatus.Walkover;
+                } else {
+                    status = GameResult.GameResultStatus.Winner;
+                }
+
             } else {
                 status = GameResult.GameResultStatus.Remis;
             }

@@ -110,7 +110,7 @@ public class TestParticipant extends Player {
     }
 
     @Override
-    public void onGameEnd(PlayInfo play, PlaySettings.PlaySettingsGetters settings) {
+    public void onGameEnd(PlayInfo play, GameSettings.PlaySettingsGetters settings) {
     }
 
 }

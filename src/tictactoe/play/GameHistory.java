@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2017 Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com.
@@ -31,7 +31,7 @@ import tictactoe.model.Turn;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class PlayHistory {
+class GameHistory {
 
     private LinkedBlockingDeque<Move> moves = new LinkedBlockingDeque(9);
     private LinkedBlockingDeque<Turn> turns = new LinkedBlockingDeque();

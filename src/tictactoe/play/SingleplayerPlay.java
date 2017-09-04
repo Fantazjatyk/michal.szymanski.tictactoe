@@ -1,4 +1,4 @@
-/* 
+/*
  * The MIT License
  *
  * Copyright 2017 Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com.
@@ -61,7 +61,7 @@ public class SingleplayerPlay extends Game {
     }
 
     public Player getAiPlayer() {
-        return (Player) super.getInfo().getPlayers().getPlayer(aiAdapter.getUsername()).get();
+        return (Player) super.getPlayers().getPlayer(aiAdapter.getUsername()).get();
     }
 
 }

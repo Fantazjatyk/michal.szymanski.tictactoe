@@ -44,7 +44,7 @@ public class PlayStartEndCallbacks {
         onEnd.stream().forEach(el -> el.run());
     }
 
-    public ReducedVisiblity get() {
+    public ReducedVisiblity configure() {
         return this.setter;
     }
 
