@@ -103,7 +103,6 @@ public class PlayExecutorTest {
         Mockito.verify(p1, Mockito.times(1)).getMoveField(Mockito.any());
         Mockito.verify(p2, Mockito.times(1)).getMoveField(Mockito.any());
 
-
     }
 
     @Test(timeout = 5000)

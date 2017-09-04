@@ -23,13 +23,11 @@
  */
 package tictactoe.transport;
 
-
-
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface GameTimeoutHandler extends WatchdogHandler{
+public interface GameTimeoutHandler extends WatchdogHandler {
 
     void onGameTimeout();
 }

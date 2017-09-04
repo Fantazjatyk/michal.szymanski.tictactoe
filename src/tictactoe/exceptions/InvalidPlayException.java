@@ -27,6 +27,6 @@ package tictactoe.exceptions;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class InvalidPlayException extends RuntimeException{
+public class InvalidPlayException extends RuntimeException {
 
 }

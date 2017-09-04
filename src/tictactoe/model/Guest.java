@@ -26,8 +26,6 @@ package tictactoe.model;
 import tictactoe.play.PlayInfo;
 import tictactoe.play.PlaySettings;
 
-
-
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com

@@ -27,8 +27,6 @@ package tictactoe.play;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class MultiplayerPlay extends Play{
-
-
+public class MultiplayerPlay extends Play {
 
 }

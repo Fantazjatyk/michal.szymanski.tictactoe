@@ -25,12 +25,11 @@ package tictactoe.transport;
 
 import tictactoe.model.Player;
 
-
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public interface PlayerDisconnectedHandler{
+public interface PlayerDisconnectedHandler {
 
     void handleDisconnected(Player p);
 }

@@ -37,11 +37,11 @@ public class PlayStartEndCallbacks {
     private ReducedVisiblity setter = new ReducedVisiblity();
 
     public void onStart() {
-            onStart.stream().forEach(el -> el.run());
+        onStart.stream().forEach(el -> el.run());
     }
 
     public void onEnd() {
-            onEnd.stream().forEach(el -> el.run());
+        onEnd.stream().forEach(el -> el.run());
     }
 
     public ReducedVisiblity get() {
