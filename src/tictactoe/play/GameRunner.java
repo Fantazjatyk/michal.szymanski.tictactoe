@@ -23,45 +23,15 @@
  */
 package tictactoe.play;
 
-import pl.michal.szymanski.ai.tictactoe.ContextAwareAI;
-import pl.michal.szymanski.ai.tictactoe.behavior.EasyAIBehavior;
-import pl.michal.szymanski.ai.tictactoe.behavior.MediumAIBehavior;
-import tictactoe.ai.AIAdapter;
-import tictactoe.ai.AILevel;
-import tictactoe.model.Player;
-
 /**
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class SingleplayerPlay extends Game {
+public interface GameRunner {
 
-    private AIAdapter aiAdapter;
+    void start();
 
-    public SingleplayerPlay() {
-        this.aiAdapter = new AIAdapter(new ContextAwareAI());
-        super.join(aiAdapter);
-    }
+    void interrupt();
 
-    public void setAILevel(AILevel level) {
-
-        switch (level) {
-            case Easy:
-                aiAdapter.getAI().setBehavior(new EasyAIBehavior());
-                this.aiAdapter.setUsername("Easy AI");
-                break;
-            case Medium:
-                aiAdapter.getAI().setBehavior(new MediumAIBehavior());
-                this.aiAdapter.setUsername("Medium AI");
-                break;
-            default:
-                throw new UnsupportedOperationException();
-
-        }
-    }
-
-    public Player getAiPlayer() {
-        return (Player) super.getInfo().getPlayers().getPlayer(aiAdapter.getUsername()).get();
-    }
-
+    boolean isRunning();
 }

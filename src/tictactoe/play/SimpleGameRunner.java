@@ -48,9 +48,9 @@ import tictactoe.transport.ProxyResponse;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class PlayExecutor implements GameTimeoutHandler, PlayerDisconnectedHandler {
+public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedHandler, GameRunner {
 
-    private Play play;
+    private Game play;
     private TimerNotifier gameTimeoutNotifier;
     private Stopwatch watch;
     private boolean isTerminated = false;
@@ -60,7 +60,7 @@ public class PlayExecutor implements GameTimeoutHandler, PlayerDisconnectedHandl
     private PlayStartEndCallbacks startEnd = new PlayStartEndCallbacks();
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
-    public PlayExecutor(Play play) {
+    public SimpleGameRunner(Game play) {
         this.play = play;
     }
 
@@ -68,31 +68,12 @@ public class PlayExecutor implements GameTimeoutHandler, PlayerDisconnectedHandl
         return this.startEnd.get();
     }
 
-    public Play getPlay() {
+    public Game getPlay() {
         return play;
     }
 
     public boolean isRunning() {
         return !isTerminated || !isTimedOut || !isEnded;
-    }
-
-    public final void execute() {
-        if (!play.getInfo().getPlayers().isPair()) {
-            throw new NotAllPlayersPresentException();
-        }
-        logger.log(Level.SEVERE, MessageFormat.format("GAME START.\nSettings: gameTimeLimit: {0} miliseconds, turnTimeLimit: {1} miliseconds",
-                play.getSettings().getters().getGameTimeLimitInMilis(), play.getSettings().getters().getTurnTimeLimitInMilis()));
-        this.status = ExecutorStatus.Running;
-        watch = Stopwatch.createStarted();
-        play.onStart();
-        startEnd.onStart();
-        this.gameTimeoutNotifier = TimerNotifier.createStarted(play.getSettings().getters().getGameTimeLimitInMilis(), new GameTimeoutNotify());
-        this.gameTimeoutNotifier.addObserver(this);
-        gameLoop();
-        if (!this.isTerminated) {
-            findAndSetWinner();
-        }
-        end();
     }
 
     private final void gameLoop() {
@@ -165,17 +146,6 @@ public class PlayExecutor implements GameTimeoutHandler, PlayerDisconnectedHandl
         return this.status;
     }
 
-    public void end() {
-
-        play.onFinish();
-        play.getInfo().setTotalTime((int) watch.elapsed(TimeUnit.MILLISECONDS));
-        watch.stop();
-        startEnd.onEnd();
-        isEnded = true;
-        status = evaluateStatus();
-        logger.log(Level.SEVERE, "GAME OVER");
-    }
-
     public ExecutorStatus evaluateStatus() {
         ExecutorStatus status = null;
         if (this.status == ExecutorStatus.Walkover) {
@@ -246,6 +216,38 @@ public class PlayExecutor implements GameTimeoutHandler, PlayerDisconnectedHandl
         logger.log(Level.SEVERE, "GAME TIMEOUT");
         this.isTimedOut = true;
         this.isTerminated = true;
+    }
+
+    @Override
+    public void start() {
+        if (!play.getInfo().getPlayers().isPair()) {
+            throw new NotAllPlayersPresentException();
+        }
+        logger.log(Level.SEVERE, MessageFormat.format("GAME START.\nSettings: gameTimeLimit: {0} miliseconds, turnTimeLimit: {1} miliseconds",
+                play.getSettings().getters().getGameTimeLimitInMilis(), play.getSettings().getters().getTurnTimeLimitInMilis()));
+        this.status = ExecutorStatus.Running;
+        watch = Stopwatch.createStarted();
+        play.onStart();
+        startEnd.onStart();
+        this.gameTimeoutNotifier = TimerNotifier.createStarted(play.getSettings().getters().getGameTimeLimitInMilis(), new GameTimeoutNotify());
+        this.gameTimeoutNotifier.addObserver(this);
+        gameLoop();
+        if (!this.isTerminated) {
+            findAndSetWinner();
+        }
+        interrupt();
+    }
+
+    @Override
+    public void interrupt() {
+
+        play.onFinish();
+        play.getInfo().setTotalTime((int) watch.elapsed(TimeUnit.MILLISECONDS));
+        watch.stop();
+        startEnd.onEnd();
+        isEnded = true;
+        status = evaluateStatus();
+        logger.log(Level.SEVERE, "GAME OVER");
     }
 
 }

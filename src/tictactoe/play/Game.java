@@ -11,11 +11,12 @@ import tictactoe.model.Player;
  *
  * @author Michał Szymański, kontakt: michal.szymanski.aajar@gmail.com
  */
-public class Play {
+public class Game {
 
     private PlaySettings settings = new PlaySettings();
     private PlayHistory history = new PlayHistory();
     private PlayInfo info = new PlayInfo();
+    private GameRunner runner;
 
     public PlayInfo getInfo() {
         return info;
@@ -49,6 +50,21 @@ public class Play {
             this.getInfo().getPlayers().secondPlayer(player);
         }
 
+    }
+
+    public boolean isRunning() {
+        return runner.isRunning();
+    }
+
+    public void start() {
+        if (this.runner == null) {
+            runner = new SimpleGameRunner(this);
+        }
+        this.runner.start();
+    }
+
+    public void interrupt() {
+        this.runner.interrupt();
     }
 
 }

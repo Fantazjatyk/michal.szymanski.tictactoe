@@ -45,8 +45,8 @@ public class PlayExecutorTest {
 
     TestParticipant p1;
     TestParticipant p2;
-    Play play;
-    PlayExecutor exe;
+    Game play;
+    SimpleGameRunner exe;
 
     @Before
     public void setUp() {
@@ -68,9 +68,9 @@ public class PlayExecutorTest {
         p1.setProgrammedMoves(a1Moves);
         p2.setProgrammedMoves(a2Moves);
 
-        play = new Play();
+        play = new Game();
         play.settings().moveTimeLimit(250, TimeUnit.MILLISECONDS).gameTimeLimit(1, TimeUnit.SECONDS);
-        exe = new PlayExecutor(play);
+        exe = new SimpleGameRunner(play);
     }
 
     @Test(timeout = 1000)
@@ -83,7 +83,7 @@ public class PlayExecutorTest {
         p2.dontRespondOnGetField();
         play.join(p1);
         play.join(p2);
-        new PlayExecutor(play).execute();
+        new SimpleGameRunner(play).start();
     }
 
     @Test(timeout = 2000)
@@ -98,7 +98,7 @@ public class PlayExecutorTest {
         p2.dontRespondOnGetField();
         play.join(p1);
         play.join(p2);
-        new PlayExecutor(play).execute();
+        new SimpleGameRunner(play).start();
 
         Mockito.verify(p1, Mockito.times(1)).getMoveField(Mockito.any());
         Mockito.verify(p2, Mockito.times(1)).getMoveField(Mockito.any());
@@ -112,7 +112,7 @@ public class PlayExecutorTest {
         p2.setWaitTime(250);
         play.join(p1);
         play.join(p2);
-        new PlayExecutor(play).execute();
+        new SimpleGameRunner(play).start();
 
         assertEquals(4, play.getInfo().getBoard().getSelector().getAllFields().stream().filter(el -> el.getOwner().isPresent()).collect(Collectors.toList()).size());
     }
@@ -135,7 +135,7 @@ public class PlayExecutorTest {
 
         play.join(p1);
         play.join(p2);
-        new PlayExecutor(play).execute();
+        new SimpleGameRunner(play).start();
 
         int totalMoves = play.getInfo().getBoard().getSelector().getAllFields().stream().filter(el -> el.getOwner().isPresent()).collect(Collectors.toList()).size();
         assertTrue(totalMoves == 5 || totalMoves == 6);
@@ -159,7 +159,7 @@ public class PlayExecutorTest {
 
         play.join(p1);
         play.join(p2);
-        new PlayExecutor(play).execute();
+        new SimpleGameRunner(play).start();
 
         assertTrue(play.getInfo().getWinner().isPresent());
     }
@@ -182,7 +182,7 @@ public class PlayExecutorTest {
 
         play.join(p1);
         play.join(p2);
-        new PlayExecutor(play).execute();
+        new SimpleGameRunner(play).start();
 
         assertTrue(play.getInfo().getWinner().isPresent());
         Player winner = (Player) play.getInfo().getWinner().get();
@@ -199,7 +199,7 @@ public class PlayExecutorTest {
         p2.setUsername("B");
         play.join(p1);
         play.join(p2);
-        new PlayExecutor(play).execute();
+        new SimpleGameRunner(play).start();
 
         Mockito.verify(p1, Mockito.times(1)).onGameEnd(Mockito.any(), Mockito.any());
         Mockito.verify(p2, Mockito.times(1)).onGameEnd(Mockito.any(), Mockito.any());
@@ -209,7 +209,7 @@ public class PlayExecutorTest {
     public void testCallbacksProperlyInvoked_TerminatedExecutor() {
         List onEnd = new ArrayList();
         List onStart = new ArrayList();
-        PlayExecutor exe = new PlayExecutor(play);
+        SimpleGameRunner exe = new SimpleGameRunner(play);
         exe.setCallbacks().addOnEndEvent(() -> onStart.add(1));
         exe.setCallbacks().addOnEndEvent(() -> onStart.add(1));
         exe.setCallbacks().addOnEndEvent(() -> onStart.add(1));
@@ -220,7 +220,7 @@ public class PlayExecutorTest {
 
         play.join(p1);
         play.join(p2);
-        exe.execute();
+        exe.start();
         exe.stop();
 
         assertEquals(3, onEnd.size());
@@ -244,7 +244,7 @@ public class PlayExecutorTest {
 
         }, 1000, TimeUnit.MILLISECONDS);
 
-        exe.execute();
+        exe.start();
 
     }
 
@@ -267,7 +267,7 @@ public class PlayExecutorTest {
         play.join(passive2);
         play.settings().moveTimeLimit(300, TimeUnit.MILLISECONDS);
         play.settings().gameTimeLimit(600, TimeUnit.MILLISECONDS);
-        exe.execute();
+        exe.start();
         Mockito.verify(passive1, Mockito.atLeastOnce()).onTurnTimeout();
         Mockito.verify(passive2, Mockito.times(0)).onTurnTimeout();
     }
@@ -286,8 +286,8 @@ public class PlayExecutorTest {
         play.settings().gameTimeLimit(1000, TimeUnit.MILLISECONDS);
         play.join(passive1);
         play.join(passive2);
-        exe = new PlayExecutor(play);
-        exe.execute();
+        exe = new SimpleGameRunner(play);
+        exe.start();
         Mockito.verify(passive2, Mockito.atLeastOnce()).onGameEnd(Mockito.any(), Mockito.any());
         Mockito.verify(passive1, Mockito.atLeastOnce()).onGameEnd(Mockito.any(), Mockito.any());
 
@@ -313,8 +313,8 @@ public class PlayExecutorTest {
         play.settings().gameTimeLimit(1000, TimeUnit.MILLISECONDS);
         play.join(passive1);
         play.join(passive2);
-        exe = new PlayExecutor(play);
-        exe.execute();
+        exe = new SimpleGameRunner(play);
+        exe.start();
         Mockito.verify(passive2, Mockito.atLeastOnce()).onGameEnd(Mockito.any(), Mockito.any());
         Mockito.verify(passive1, Mockito.atLeastOnce()).onGameEnd(Mockito.any(), Mockito.any());
 
