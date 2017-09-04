@@ -293,7 +293,7 @@ public class PlayExecutorTest {
 
         Mockito.verify(passive1, Mockito.never()).onTurnTimeout();
         Mockito.verify(passive1, Mockito.never()).getMoveField(Mockito.any());
-        assertEquals(ExecutorStatus.Walkover, exe.getStatus());
+        assertEquals(GameRunnerStatus.Walkover, exe.getStatus());
         assertTrue(play.getInfo().getWinner().isPresent());
         Player winner = (Player) play.getInfo().getWinner().get();
         assertEquals(passive2, winner);
@@ -323,7 +323,7 @@ public class PlayExecutorTest {
         Mockito.verify(passive2, Mockito.never()).onTurnTimeout();
         Mockito.verify(passive2, Mockito.never()).getMoveField(Mockito.any());
 
-        assertEquals(ExecutorStatus.Walkover, exe.getStatus());
+        assertEquals(GameRunnerStatus.Walkover, exe.getStatus());
         assertTrue(play.getInfo().getWinner().isPresent());
     }
 

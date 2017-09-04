@@ -34,4 +34,6 @@ public interface GameRunner {
     void interrupt();
 
     boolean isRunning();
+
+    GameRunnerStatus getStatus();
 }

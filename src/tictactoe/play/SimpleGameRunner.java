@@ -56,7 +56,7 @@ public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedH
     private boolean isTerminated = false;
     private boolean isTimedOut = false;
     private boolean isEnded = false;
-    private ExecutorStatus status = ExecutorStatus.Started;
+    private GameRunnerStatus status = GameRunnerStatus.Started;
     private PlayStartEndCallbacks startEnd = new PlayStartEndCallbacks();
     private Logger logger = Logger.getLogger(this.getClass().getName());
 
@@ -66,14 +66,6 @@ public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedH
 
     public PlayStartEndCallbacks.ReducedVisiblity setCallbacks() {
         return this.startEnd.get();
-    }
-
-    public Game getPlay() {
-        return play;
-    }
-
-    public boolean isRunning() {
-        return !isTerminated || !isTimedOut || !isEnded;
     }
 
     private final void gameLoop() {
@@ -120,40 +112,34 @@ public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedH
         Logger.getLogger(this.getClass().getName()).log(Level.SEVERE, "one or two players disconnected. Terminating play...");
         Optional<Player> winner = play.getInfo().getPlayers().filter((el) -> el.getId() != p.getId());
         play.getInfo().setWinner((winner));
-        this.status = ExecutorStatus.Walkover;
-        stop();
+        this.status = GameRunnerStatus.Walkover;
+        interrupt();
     }
 
     public void resign(Player p) {
         Optional<Player> winner = play.getInfo().getPlayers().filter((el) -> el.getId() != p.getId());
         play.getInfo().setWinner((winner));
-        this.status = ExecutorStatus.Walkover;
-        stop();
+        this.status = GameRunnerStatus.Walkover;
+        interrupt();
     }
 
     private void findAndSetWinner() {
         List<Player> winners = GameMaster.getWinner(play.getInfo().getBoard());
         play.getInfo().setWinner(winners.size() == 1 ? Optional.of(winners.get(0)) : Optional.empty());
-
     }
 
-    public void stop() {
-        logger.log(Level.SEVERE, "GAME TERMINATED");
-        this.isTerminated = true;
-    }
-
-    public ExecutorStatus getStatus() {
+    public GameRunnerStatus getStatus() {
         return this.status;
     }
 
-    public ExecutorStatus evaluateStatus() {
-        ExecutorStatus status = null;
-        if (this.status == ExecutorStatus.Walkover) {
-            return ExecutorStatus.Walkover;
+    private GameRunnerStatus evaluateStatus() {
+        GameRunnerStatus status = null;
+        if (this.status == GameRunnerStatus.Walkover) {
+            return GameRunnerStatus.Walkover;
         } else if (this.play.getInfo().getWinner().isPresent()) {
-            status = ExecutorStatus.Winner;
+            status = GameRunnerStatus.Winner;
         } else {
-            status = ExecutorStatus.Remis;
+            status = GameRunnerStatus.Remis;
         }
         return status;
     }
@@ -196,13 +182,13 @@ public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedH
 
     }
 
-    protected Player getNextPlayer() {
+    private Player getNextPlayer() {
         Turn lastTurn = play.getHistory().getTurns().getLast();
         return lastTurn.getQuarterback().equals(play.getInfo().getPlayers().getFirstPlayer().get())
                 ? play.getInfo().getPlayers().getSecondPlayer().get() : play.getInfo().getPlayers().getFirstPlayer().get();
     }
 
-    protected void sendBoard() {
+    private void sendBoard() {
         this.play.getInfo().getPlayers().getFirstPlayer().get().receiveBoard(this.play.getInfo().getBoard());
         this.play.getInfo().getPlayers().getSecondPlayer().get().receiveBoard(this.play.getInfo().getBoard());
     }
@@ -225,7 +211,7 @@ public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedH
         }
         logger.log(Level.SEVERE, MessageFormat.format("GAME START.\nSettings: gameTimeLimit: {0} miliseconds, turnTimeLimit: {1} miliseconds",
                 play.getSettings().getters().getGameTimeLimitInMilis(), play.getSettings().getters().getTurnTimeLimitInMilis()));
-        this.status = ExecutorStatus.Running;
+        this.status = GameRunnerStatus.Running;
         watch = Stopwatch.createStarted();
         play.onStart();
         startEnd.onStart();
@@ -235,12 +221,22 @@ public class SimpleGameRunner implements GameTimeoutHandler, PlayerDisconnectedH
         if (!this.isTerminated) {
             findAndSetWinner();
         }
-        interrupt();
+        end();
     }
 
     @Override
     public void interrupt() {
+        logger.log(Level.SEVERE, "GAME TERMINATED");
+        this.isTerminated = true;
 
+    }
+
+    @Override
+    public boolean isRunning() {
+        return !isTerminated || !isTimedOut || !isEnded;
+    }
+
+    private void end() {
         play.onFinish();
         play.getInfo().setTotalTime((int) watch.elapsed(TimeUnit.MILLISECONDS));
         watch.stop();
